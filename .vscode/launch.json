@@ -1,0 +1,17 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Entia.Unity.Generate",
+			"type": "coreclr",
+			"request": "launch",
+			"preLaunchTask": "build debug",
+			"program": "${workspaceFolder}/Entia.Unity.Generate//bin/Debug/netcoreapp2.1/Entia.Unity.Generate.dll",
+			"args": [],
+			"cwd": "${workspaceFolder}/Entia.Unity.Generate/",
+			"console": "externalTerminal",
+			"stopAtEntry": false,
+			"internalConsoleOptions": "openOnSessionStart"
+		}
+	]
+}

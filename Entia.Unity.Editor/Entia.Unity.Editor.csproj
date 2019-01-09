@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  
+  <Target Name="Copy" AfterTargets="Publish" >
+    <Exec Command="xcopy /y /q &quot;$(PublishDir)*&quot; &quot;$(SolutionDir)Unity\Assets\Plugins\Entia\Editor\&quot;" />
+  </Target>
+
+  <Target Name="Copy Release" AfterTargets="Copy" Condition="'$(Configuration)' == 'Release'" >
+    <Exec Command="xcopy /y /q &quot;$(PublishDir)*&quot; &quot;$(SolutionDir)Releases\Current\Editor\&quot;" />
+  </Target>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Entia.Unity\Entia.Unity.csproj"> <Private>false</Private> </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Entia"> <HintPath>..\Entia\Entia.dll</HintPath> <Private>false</Private> </Reference>
+    <Reference Include="Entia.Core"> <HintPath>..\Entia\Entia.Core.dll</HintPath> <Private>false</Private> </Reference>
+    <Reference Include="UnityEditor"> <HintPath>..\Unity\DLLs\UnityEditor.dll</HintPath> <Private>false</Private> </Reference>
+    <Reference Include="UnityEngine"> <HintPath>..\Unity\DLLs\UnityEngine.dll</HintPath> <Private>false</Private> </Reference>
+    <Reference Include="UnityEngine.CoreModule"> <HintPath>..\Unity\DLLs\UnityEngine.CoreModule.dll</HintPath> <Private>false</Private> </Reference>
+    <Reference Include="UnityEngine.IMGUIModule"> <HintPath>..\Unity\DLLs\UnityEngine.IMGUIModule.dll</HintPath> <Private>false</Private> </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule"> <HintPath>..\Unity\DLLs\UnityEngine.TextRenderingModule.dll</HintPath> <Private>false</Private> </Reference>
+  </ItemGroup>
+</Project>

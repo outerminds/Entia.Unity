@@ -1,0 +1,16 @@
+**/bin/
+**/obj/
+**/.vs/
+*.user
+.vscode/solution-explorer
+
+// Unity
+**/Unity/Library/
+**/Unity/Temp/
+**/Unity/Build/
+**/Unity/Builds/
+**/Unity/[Dd][Ll][Ll]/
+**/Unity/[Dd][Ll][Ll][Ss]/
+**/Unity/*.sln
+**/Unity/*.csproj
+**/Generated/[Ll]og.*

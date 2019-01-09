@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+
+  <Target Name="Copy" AfterTargets="Publish">
+    <Exec Command="del /s /q &quot;$(PublishDir)Microsoft.CodeAnalysis*resources*&quot;" />
+    <Exec Command="xcopy /y /q /s &quot;$(PublishDir)*&quot; &quot;$(SolutionDir)Unity\Assets\Plugins\Entia\.Generator\&quot;" />
+  </Target>
+
+  <Target Name="Copy Release" AfterTargets="Copy" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="xcopy /y /q /s &quot;$(PublishDir)*&quot; &quot;$(SolutionDir)Releases\Current\.Generator\&quot;" />
+  </Target>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Entia.Unity\Entia.Unity.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Entia"> <HintPath>..\Entia\Entia.dll</HintPath> </Reference>
+    <Reference Include="Entia.Core"> <HintPath>..\Entia\Entia.Core.dll</HintPath> </Reference>
+  </ItemGroup>
+  
+</Project>

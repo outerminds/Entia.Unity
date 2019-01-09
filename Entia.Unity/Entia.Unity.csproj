@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+
+  <Target Name="Copy" AfterTargets="Publish">
+    <Exec Command="xcopy /y /q &quot;$(PublishDir)*&quot; &quot;$(SolutionDir)Unity\Assets\Plugins\Entia\&quot;" />
+  </Target>
+
+  <Target Name="Copy Release" AfterTargets="Copy" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="xcopy /y /q &quot;$(PublishDir)*&quot; &quot;$(SolutionDir)Releases\Current\&quot;" />
+  </Target>
+
+  <ItemGroup>
+    <Reference Include="Entia"> <HintPath>..\Entia\Entia.dll</HintPath> </Reference>
+    <Reference Include="Entia.Core"> <HintPath>..\Entia\Entia.Core.dll</HintPath> </Reference>
+    <Reference Include="UnityEngine.AIModule"> <HintPath>..\Unity\DLLs\UnityEngine.AIModule.dll</HintPath> <Private>false</Private> </Reference>
+    <Reference Include="UnityEngine.AnimationModule"> <HintPath>..\Unity\DLLs\UnityEngine.AnimationModule.dll</HintPath> <Private>false</Private> </Reference>
+    <Reference Include="UnityEngine.AudioModule"> <HintPath>..\Unity\DLLs\UnityEngine.AudioModule.dll</HintPath> <Private>false</Private> </Reference>
+    <Reference Include="UnityEngine.CoreModule"> <HintPath>..\Unity\DLLs\UnityEngine.CoreModule.dll</HintPath> <Private>false</Private> </Reference>
+    <Reference Include="UnityEngine.GridModule"> <HintPath>..\Unity\DLLs\UnityEngine.GridModule.dll</HintPath> <Private>false</Private> </Reference>
+    <Reference Include="UnityEngine.Physics2DModule"> <HintPath>..\Unity\DLLs\UnityEngine.Physics2DModule.dll</HintPath> <Private>false</Private> </Reference>
+    <Reference Include="UnityEngine.PhysicsModule"> <HintPath>..\Unity\DLLs\UnityEngine.PhysicsModule.dll</HintPath> <Private>false</Private> </Reference>
+    <Reference Include="UnityEngine.UI"> <HintPath>..\Unity\DLLs\UnityEngine.UI.dll</HintPath> <Private>false</Private> </Reference>
+    <Reference Include="UnityEngine.UIModule"> <HintPath>..\Unity\DLLs\UnityEngine.UIModule.dll</HintPath> <Private>false</Private> </Reference>
+    <Reference Include="UnityEngine.VideoModule"> <HintPath>..\Unity\DLLs\UnityEngine.VideoModule.dll</HintPath> <Private>false</Private> </Reference>
+    <Reference Include="UnityEngine"> <HintPath>..\Unity\DLLs\UnityEngine.dll</HintPath> <Private>false</Private> </Reference>
+  </ItemGroup>
+</Project>
