@@ -4,7 +4,6 @@ using Entia.Modules.Group;
 using Entia.Modules.Query;
 using Entia.Phases;
 using Entia.Queryables;
-using Entia.Segments;
 using Entia.Systems;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -17,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Entia.Unity
 {
-    struct Void : IComponent, ITag, IResource, Entia.Queryables.IQueryable, Injectables.IInjectable, IPhase, ISegment { }
+    struct Void : IComponent, IResource, Entia.Queryables.IQueryable, Injectables.IInjectable, IPhase { }
 
     sealed class Context
     {
@@ -35,15 +34,12 @@ namespace Entia.Unity
         public readonly INamedTypeSymbol Entities;
         public readonly INamedTypeSymbol Builders;
         public readonly INamedTypeSymbol IComponent;
-        public readonly INamedTypeSymbol ITag;
         public readonly INamedTypeSymbol IResource;
         public readonly INamedTypeSymbol IQueryable;
         public readonly INamedTypeSymbol ISystem;
-        public readonly INamedTypeSymbol ISegment;
         public readonly INamedTypeSymbol IPhase;
 
         public readonly INamedTypeSymbol[] Groups;
-        public readonly INamedTypeSymbol[] Queries;
         public readonly INamedTypeSymbol Write;
         public readonly INamedTypeSymbol Read;
         public readonly INamedTypeSymbol Maybe;
@@ -56,7 +52,6 @@ namespace Entia.Unity
         public readonly INamedTypeSymbol EntityReference;
         public readonly INamedTypeSymbol EntityRegistry;
         public readonly INamedTypeSymbol ComponentReference;
-        public readonly INamedTypeSymbol TagReference;
         public readonly INamedTypeSymbol ResourceReference;
 
         public readonly INamedTypeSymbol Proxy;
@@ -87,15 +82,12 @@ namespace Entia.Unity
             Entities = Global.Type<Modules.Entities>();
             Builders = Global.Type<Modules.Builders>();
             IComponent = Global.Type<IComponent>();
-            ITag = Global.Type<ITag>();
             IResource = Global.Type<IResource>();
             IQueryable = Global.Type<Entia.Queryables.IQueryable>();
             ISystem = Global.Type<ISystem>();
-            ISegment = Global.Type<ISegment>();
             IPhase = Global.Type<IPhase>();
 
             Groups = Global.Types(typeof(Injectables.Group<>)).OrderBy(type => type.TypeParameters.Length).ToArray();
-            Queries = Global.Types(typeof(Injectables.Query<>)).OrderBy(type => type.TypeParameters.Length).ToArray();
             Unity = Global.Type(true, nameof(Entia), nameof(Unity), nameof(Queryables), "Unity");
             Write = Global.Type(typeof(Write<>));
             Read = Global.Type(typeof(Read<>));
@@ -108,7 +100,6 @@ namespace Entia.Unity
             EntityReference = Global.Type(false, nameof(Entia), nameof(Unity), nameof(EntityReference));
             EntityRegistry = Global.Type(false, nameof(Entia), nameof(Unity), nameof(EntityRegistry));
             ComponentReference = Global.Type(true, nameof(Entia), nameof(Unity), nameof(ComponentReference<Void>));
-            TagReference = Global.Type(true, nameof(Entia), nameof(Unity), nameof(TagReference<Void>));
             ResourceReference = Global.Type(true, nameof(Entia), nameof(Unity), nameof(ResourceReference<Void>));
 
             Proxy = Global.Type<ProxyAttribute>();
@@ -127,7 +118,6 @@ namespace Entia.Unity
     {
         public (string[] type, string code)[] Generated;
         public (string[] from, string[] to)[] Renamed;
-        public string Preserve;
     }
 
     sealed class Extension
@@ -397,9 +387,7 @@ $@"{indentation}using System.Linq;
 {indentation}public sealed partial class {name} : {referenceName}<{fullName}>
 {indentation}{{
 {properties}
-
 {fields}
-
 {indentation}	public override {fullName} {property}
 {indentation}	{{
 {indentation}		get => new {fullName}
@@ -557,7 +545,7 @@ $@"{indentation}public static bool Try{name}(in this {queryName} {item}, out {re
                 system.Fields()
                     .Select(field => field.Type)
                     .OfType<INamedTypeSymbol>()
-                    .Where(type => context.Groups.Any(group => group == type.OriginalDefinition) || context.Queries.Any(query => query == type.OriginalDefinition))
+                    .Where(type => context.Groups.Any(group => group == type.OriginalDefinition))
                     .SelectMany(type => type.InstanceConstructors
                         .Where(constructor => constructor.Parameters.Length > 0)
                         .Select(constructor => constructor.Parameters[0].Type))
@@ -587,23 +575,6 @@ namespace {@namespace}
 {{
 {FormatData(1, component, context.ComponentReference, "Component", context)}
 }}";
-        }
-
-        static string FormatTag(INamedTypeSymbol tag, Context context)
-        {
-            var @namespace = string.Join(".", tag.Path().SkipLast().Append(context.Suffix));
-            var name = tag.Name;
-            var fullName = FormatPath(tag);
-            var referenceName = FormatPath(context.TagReference);
-
-            return
-$@"namespace {@namespace}
-{{
-	{FormatGenerated(tag, context)}
-	{FormatAddComponentMenu(tag, context)}
-	public sealed partial class {name} : {referenceName}<{fullName}> {{ }}
-}}
-";
         }
 
         static string FormatResource(INamedTypeSymbol resource, Context context)
@@ -662,7 +633,6 @@ namespace {@namespace}
             foreach (var (type, path) in types)
             {
                 if (type.Implements(context.IComponent)) yield return (path, FormatComponent(type, context));
-                if (type.Implements(context.ITag)) yield return (path, FormatTag(type, context));
                 if (type.Implements(context.IResource)) yield return (path, FormatResource(type, context));
             }
         }
@@ -694,32 +664,6 @@ namespace {@namespace}
                         yield return (path, sourcePath);
                 }
             }
-        }
-
-        static string Preserve((INamedTypeSymbol type, string[] path)[] types, Context context)
-        {
-            const string entities = nameof(entities);
-            const string builders = nameof(builders);
-
-            string Segment(string[] path) => $"			{entities}.{nameof(Modules.Entities.Create)}<{FormatPath(path)}>();";
-
-            var preserve = FormatPath(context.Preserve);
-            var segments = string.Join(
-                Environment.NewLine,
-                types.Where(pair => pair.type.Implements(context.ISegment)).Select(pair => Segment(pair.path)));
-            return
-$@"namespace {context.Suffix}
-{{
-	[{preserve}]
-	static class {nameof(Preserve)}
-	{{
-		[{preserve}]
-		static void Segments({FormatPath(context.Entities)} {entities})
-		{{
-{segments}
-		}}
-	}}
-}}";
         }
 
         public static async Task<Result> Generate(string suffix, string root, string[] inputFiles, string[] currentFiles, string[] assemblies)
@@ -768,13 +712,11 @@ $@"namespace {context.Suffix}
             var formatTypesTask = Task.Run(() => FormatTypes(validTypes, context).ToArray());
             var formatExtensionsTask = Task.Run(() => FormatExtensions(validTypes, context).ToArray());
             var renamedTask = Task.Run(() => Renamed(generatedTypes, context).ToArray());
-            var preserveTask = Task.Run(() => Preserve(validTypes, context));
 
             var formatTypes = await formatTypesTask;
             var formatExtensions = await formatExtensionsTask;
             var renamed = await renamedTask;
-            var preserve = await preserveTask;
-            return new Result { Generated = formatTypes.Concat(formatExtensions).ToArray(), Renamed = renamed, Preserve = preserve };
+            return new Result { Generated = formatTypes.Concat(formatExtensions).ToArray(), Renamed = renamed };
         }
     }
 }

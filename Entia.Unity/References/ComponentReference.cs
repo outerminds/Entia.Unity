@@ -1,5 +1,6 @@
 ﻿using Entia.Core;
 using Entia.Modules;
+using Entia.Modules.Component;
 using System;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ namespace Entia.Unity
         Entity Entity { get; }
         IComponent Component { get; set; }
         Type Type { get; }
+        Metadata Metadata { get; }
 
         void Initialize(Entity entity, World world);
         void Dispose();
@@ -27,6 +29,7 @@ namespace Entia.Unity
         public abstract T Component { get; set; }
 
         Type IComponentReference.Type => typeof(T);
+        Metadata IComponentReference.Metadata => ComponentUtility.Cache<T>.Data;
         IComponent IComponentReference.Component { get => Component; set => Component = value is T component ? component : default; }
 
         bool _initialized;

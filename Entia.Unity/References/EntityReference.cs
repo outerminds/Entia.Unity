@@ -1,8 +1,7 @@
 ﻿using Entia.Core;
 using Entia.Modules;
-using Entia.Segments;
+using Entia.Unity.Components;
 using Entia.Unity.Mappers;
-using Entia.Unity.Tags;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +12,6 @@ namespace Entia.Unity
     {
         World World { get; }
         Entity Entity { get; }
-        Type Segment { get; }
 
         void PreInitialize();
         void Initialize(World world);
@@ -41,12 +39,7 @@ namespace Entia.Unity
 
         public World World { get; private set; }
         public Entity Entity { get; private set; }
-        public Type Segment => _cache ?? (_cache = Type.GetType(_segment)) ?? (_cache = typeof(Default));
 
-        [SerializeField]
-        [TypeEnum(Implementations = new[] { typeof(ISegment) }, Default = typeof(Default), Filter = TypeEnumAttribute.Filters.IsNotAbstract | TypeEnumAttribute.Filters.IsNotGeneric)]
-        string _segment = "";
-        Type _cache;
         States _initialized;
         States _disposed;
 
@@ -60,8 +53,8 @@ namespace Entia.Unity
             }
         }
 
-        void OnEnable() => World?.Tags().Remove<Disabled>(Entity);
-        void OnDisable() => World?.Tags().Set<Disabled>(Entity);
+        void OnEnable() => World?.Components().Remove<IsDisabled>(Entity);
+        void OnDisable() => World?.Components().Set(Entity, default(IsDisabled));
         void OnDestroy()
         {
             PreDispose();
@@ -76,7 +69,7 @@ namespace Entia.Unity
             if (_initialized.Change(_initialized | States.Current))
             {
                 World = world;
-                Entity = World.Entities().Create(Segment);
+                Entity = World.Entities().Create();
                 EntityRegistry.Set(this);
             }
         }
@@ -96,7 +89,6 @@ namespace Entia.Unity
                     switch (current)
                     {
                         case IComponentReference component: component.Initialize(Entity, World); break;
-                        case ITagReference tag: tag.Initialize(Entity, World); break;
                         default: current.Map<SetComponent, Unit>(new SetComponent(Entity, components)); break;
                     }
                 }
@@ -116,7 +108,6 @@ namespace Entia.Unity
                     switch (current)
                     {
                         case IComponentReference component: component.Dispose(); break;
-                        case ITagReference tag: tag.Dispose(); break;
                         default: current.Map<RemoveComponent, Unit>(new RemoveComponent(Entity, components)); break;
                     }
                 }

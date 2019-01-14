@@ -10,12 +10,10 @@ namespace Entia.Unity.Resources.Generated
 	{
 		public ref global::System.Single Delta => ref this._Delta;
 		public ref global::System.Single Current => ref this._Current;
-
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Delta))] [global::Entia.Unity.DisableAttribute()]
 		global::System.Single _Delta;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Current))] [global::Entia.Unity.DisableAttribute()]
 		global::System.Single _Current;
-
 		public override global::Entia.Unity.Resources.Time Resource
 		{
 			get => new global::Entia.Unity.Resources.Time

@@ -269,11 +269,7 @@ namespace Entia.Unity.Editor
 
             if (fields.Length == 0) Label(label);
             else if (Foldout(label, type, path))
-            {
-                using (Indent())
-                using (Vertical())
-                    foreach (var field in value.GetType().GetFields()) Field(field, value);
-            }
+                using (Indent()) using (Vertical()) foreach (var field in fields) Field(field, value);
 
             return value;
         }

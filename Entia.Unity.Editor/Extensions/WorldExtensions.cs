@@ -2,6 +2,7 @@
 using Entia.Dependencies;
 using Entia.Injectables;
 using Entia.Modules;
+using Entia.Modules.Component;
 using Entia.Modules.Control;
 using Entia.Modules.Group;
 using Entia.Modules.Message;
@@ -22,13 +23,8 @@ namespace Entia.Unity.Editor
     {
         public static string Name(this World world, Entity entity)
         {
-            if (world.Entities().TryData(entity, out var data) && world.Entities().TrySegment(entity, out var segment))
-            {
-                return world.Components().TryRead<Components.Debug>(entity, out var read) ?
-                    $"{read.Value.Name} [{segment.Format()}: {data.Index}] {entity}" :
-                    $"[{segment.Format()}: {data.Index}] {entity}";
-            }
-
+            ref var debug = ref world.Components().GetOrDummy<Components.Debug>(entity, out var success);
+            if (success) return $"{debug.Name}: {entity}";
             return entity.ToString();
         }
 
@@ -40,7 +36,6 @@ namespace Entia.Unity.Editor
                 case Entity entity: world.ShowEntity(label, entity, path); break;
                 case Controller controller: world.ShowController(controller, new Dictionary<Node, TimeSpan>(), path); break;
                 case IGroup group: world.ShowGroup(label, group, path); break;
-                case IQuery query: world.ShowQuery(label, query, path); break;
                 case IEmitter emitter: world.ShowEmitter(label, emitter); break;
                 case IReceiver receiver: world.ShowReceiver(label, receiver); break;
                 case IReaction reaction: world.ShowReaction(label, reaction); break;
@@ -65,12 +60,6 @@ namespace Entia.Unity.Editor
             var type = injectable.GetType();
             if (injectable is AllEntities || injectable is AllEntities.Read) world.ShowEntities(label, world.Entities(), path);
             else if (injectable is AllComponents) world.ShowComponents(label, world.Entities(), path);
-            else if (injectable is AllTags) world.ShowTags(label, world.Entities(), path);
-            else if (injectable.Is(typeof(Entities<>), definition: true) || injectable.Is(typeof(Entities<>.Read), definition: true))
-            {
-                var segment = type.GetGenericArguments()[0];
-                world.ShowEntities(label, world.Entities().Get(segment), path);
-            }
             else if (injectable.Is(typeof(Resource<>), definition: true) || injectable.Is(typeof(Resource<>.Read), definition: true))
             {
                 var resource = type.GetGenericArguments()[0];
@@ -84,25 +73,12 @@ namespace Entia.Unity.Editor
                     .Where(pair => pair.component != null);
                 world.ShowComponents(label, pairs, component, path);
             }
-            else if (injectable.Is(typeof(Tags<>), definition: true) || injectable.Is(typeof(Tags<>.Read), definition: true))
-            {
-                var tag = type.GetGenericArguments()[0];
-                var pairs = world.Entities()
-                    .Select(entity => world.Tags().Has(entity, tag) ? (entity, tag) : default)
-                    .Where(pair => pair.tag != null);
-                world.ShowTags(label, pairs, tag, path);
-            }
             else if (injectable.Is(typeof(Injectables.Emitter<>), definition: true) && injectable.GetValue<IEmitter>("_emitter").TryValue(out var emitter))
                 world.ShowEmitter(label, emitter);
             else if (injectable.Is(typeof(Injectables.Receiver<>), definition: true) && injectable.GetValue<IReceiver>("_receiver").TryValue(out var receiver))
                 world.ShowReceiver(label, receiver);
             else if (injectable.Is(typeof(Injectables.Reaction<>), definition: true) && injectable.GetValue<IReaction>("_reaction").TryValue(out var reaction))
                 world.ShowReaction(label, reaction);
-            else if (injectable is IEnumerable enumerable && type.TryElement(out var element) && element.Is<Entia.Queryables.IQueryable>())
-            {
-                var query = world.Queriers().Query(element);
-                world.ShowQuery(label, query, path);
-            }
             else LayoutUtility.Label(label);
         }
 
@@ -114,20 +90,8 @@ namespace Entia.Unity.Editor
             path = path.Append(entity.ToString()).ToArray();
             LayoutUtility.ChunksFoldout(
                 label,
-                world.Tags().Get(entity).Cast<object>().Concat(world.Components().Get(entity)).ToArray(),
-                (value, index) =>
-                {
-                    switch (value)
-                    {
-                        case Type tag:
-                            world.ShowTag(tag.Format(), entity, tag);
-                            break;
-                        case IComponent component:
-                            world.ShowComponent(component.GetType().Format(), entity, component, path.Append(index.ToString()).ToArray());
-                            break;
-                        default: break;
-                    }
-                },
+                world.Components().Get(entity).ToArray(),
+                (value, index) => world.ShowComponent(value.GetType().Format(), entity, value, path.Append(index.ToString()).ToArray()),
                 entity.GetType(),
                 path: path,
                 foldout: format =>
@@ -137,19 +101,10 @@ namespace Entia.Unity.Editor
                         var folded = LayoutUtility.Foldout(format, entity.GetType(), path);
                         if (LayoutUtility.PlusButton())
                         {
-                            IEnumerable<Type> Types<T>() => IndexUtility<T>.Types.Select(data => data.type).OrderBy(type => type.FullName);
-                            GUIContent Format(Type type) => new GUIContent(string.Join("/", type.Path().SkipLast().Append(type.Format())));
-
                             var menu = new GenericMenu();
-                            foreach (var type in Types<ITag>())
+                            foreach (var type in ComponentUtility.Types.Select(data => data.Type).OrderBy(type => type.FullName))
                             {
-                                var content = Format(type);
-                                if (world.Tags().Has(entity, type)) menu.AddDisabledItem(content, false);
-                                else menu.AddItem(content, false, () => world.Tags().Set(entity, type));
-                            }
-                            foreach (var type in Types<IComponent>())
-                            {
-                                var content = Format(type);
+                                var content = new GUIContent(string.Join("/", type.Path().SkipLast().Append(type.Format())));
                                 if (world.Components().Has(entity, type)) menu.AddDisabledItem(content, false);
                                 else menu.AddItem(content, false, () => world.Components().Set(entity, TypeUtility.GetDefault(type) as IComponent));
                             }
@@ -162,32 +117,13 @@ namespace Entia.Unity.Editor
                 });
         }
 
-        public static void ShowSegments(this World world, string label, IEnumerable<Entity> entities, params string[] path)
-        {
-            var groups = entities
-                .Select(entity => world.Entities().TrySegment(entity, out var segment) ? (entity, segment) : (entity, segment: typeof(Segments.Default)))
-                .GroupBy(pair => pair.segment)
-                .Select(group => (group.Key, group.Select(pair => pair.entity).ToArray()))
-                .ToArray();
-
-            LayoutUtility.ChunksFoldout(
-                label,
-                groups,
-                (group, index) => world.ShowEntities(group.Key.Format(), group.Item2, group.Key, path.Append(index.ToString()).ToArray()),
-                entities.GetType(),
-                path);
-        }
-
         public static void ShowEntities(this World world, string label, IEnumerable<Entity> entities, params string[] path) =>
-            world.ShowEntities(label, entities, entities.GetType(), path);
-
-        public static void ShowEntities(this World world, string label, IEnumerable<Entity> entities, Type type, params string[] path) =>
             LayoutUtility.ChunksFoldout(
                 label,
                 entities.ToArray(),
                 (entity, index) => world.ShowEntity(world.Name(entity), entity, path.Append(index.ToString()).ToArray()),
-                type,
-                path.Append(type.FullName).ToArray());
+                entities.GetType(),
+                path.Append(entities.GetType().FullName).ToArray());
 
         public static void ShowComponents(this World world, string label, IEnumerable<Entity> entities, params string[] path)
         {
@@ -232,48 +168,8 @@ namespace Entia.Unity.Editor
             }
         }
 
-        public static void ShowTags(this World world, string label, IEnumerable<Entity> entities, params string[] path)
-        {
-            var groups = world.Entities()
-                .SelectMany(entity => world.Tags().Get(entity).Select(tag => (entity, tag)))
-                .GroupBy(pair => pair.tag)
-                .Select(group => (group.Key, group.ToArray()))
-                .ToArray();
-
-            LayoutUtility.ChunksFoldout(
-                label,
-                groups,
-                (group, index) => world.ShowTags(group.Key.Format(), group.Item2, group.Key, path.Append(index.ToString()).ToArray()),
-                entities.GetType(),
-                path);
-        }
-
-        public static void ShowTags(this World world, string label, IEnumerable<(Entity entity, Type tag)> tags, Type type, params string[] path) =>
-            LayoutUtility.ChunksFoldout(
-                label,
-                tags.ToArray(),
-                (pair, __) => world.ShowTag(world.Name(pair.entity), pair.entity, pair.tag),
-                type,
-                path.Append(type.FullName).ToArray());
-
-        public static void ShowTag(this World world, string label, Entity entity, Type tag)
-        {
-            using (LayoutUtility.Horizontal())
-            {
-                using (LayoutUtility.Vertical())
-                using (LayoutUtility.Disable(tag.GetCustomAttributes(true).OfType<DisableAttribute>().Any()))
-                    LayoutUtility.Label(label);
-
-                if (LayoutUtility.MinusButton())
-                    world.Tags().Remove(entity, tag);
-            }
-        }
-
         public static void ShowGroup(this World world, string label, IGroup group, params string[] path) =>
-            world.ShowEntities(label, group.Entities, typeof(Segments.Default), path);
-
-        public static void ShowQuery(this World world, string label, IQuery query, params string[] path) =>
-            world.ShowEntities(label, world.Entities().Pairs.Where(pair => query.Fits(pair.data.Mask)).Select(pair => pair.entity), typeof(Segments.Default), path);
+            world.ShowEntities(label, group.Entities, path);
 
         public static void ShowResource(this World world, string label, IResource resource, params string[] path)
         {

@@ -12,7 +12,8 @@ namespace Controllers
     {
         public override Node Node =>
             Sequence("TestController",
-                Nodes.Default
+                Nodes.Default,
+                System<Systems.Move>()
             );
     }
 }

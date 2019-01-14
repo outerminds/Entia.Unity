@@ -10,8 +10,6 @@ namespace Components.Inner.Generated
 	{
 
 
-
-
 		public override global::Components.Inner.Component2 Component
 		{
 			get => new global::Components.Inner.Component2

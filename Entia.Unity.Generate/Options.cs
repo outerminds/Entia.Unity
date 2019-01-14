@@ -8,7 +8,6 @@ namespace Entia.Unity
         public string Output { get; private set; } = "";
         public string[] Assemblies { get; private set; } = { };
         public string Suffix { get; private set; } = "";
-        public string Preserve { get; private set; } = "";
         public string Log { get; private set; } = "";
         public string Link { get; private set; } = "";
         public string Watch { get; private set; } = "";
@@ -31,7 +30,6 @@ namespace Entia.Unity
                     case "-s":
                     case "--suffix": next.Suffix = arguments[index + 1]; break;
                     case "-p":
-                    case "--preserve": next.Preserve = arguments[index + 1]; break;
                     case "--log": next.Log = arguments[index + 1]; break;
                     case "--link": next.Link = arguments[index + 1]; break;
                     case "-w":

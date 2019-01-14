@@ -10,8 +10,6 @@ namespace Resources.Generated
 	{
 
 
-
-
 		public override global::Resources.Resource1 Resource
 		{
 			get => new global::Resources.Resource1

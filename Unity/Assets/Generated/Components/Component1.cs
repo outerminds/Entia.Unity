@@ -10,8 +10,6 @@ namespace Components.Generated
 	{
 
 
-
-
 		public override global::Components.Component1 Component
 		{
 			get => new global::Components.Component1

@@ -99,9 +99,6 @@ namespace Entia.Unity
                 var result = await Generator.Generate(options.Suffix, Directory.GetCurrentDirectory(), inputFiles, currentFiles, assemblies);
                 var outputFiles = result.Generated
                     .Select(generated => (path: AsPath(generated.type), generated.code))
-                    .Concat(string.IsNullOrWhiteSpace(options.Preserve) ?
-                        Enumerable.Empty<(string path, string code)>() :
-                        new[] { (Path.Combine(options.Output, options.Preserve), result.Preserve) })
                     .ToArray();
                 var renamedFiles = result.Renamed
                     .Select(pair => (from: AsPath(pair.from), to: AsPath(pair.to)))

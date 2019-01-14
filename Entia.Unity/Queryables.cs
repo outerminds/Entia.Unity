@@ -1,6 +1,6 @@
 ﻿using Entia.Core;
-using Entia.Dependables;
 using Entia.Modules;
+using Entia.Modules.Component;
 using Entia.Modules.Query;
 using Entia.Queriers;
 using Entia.Queryables;
@@ -8,34 +8,30 @@ using UnityEngine;
 
 namespace Entia.Unity.Queryables
 {
-	public readonly struct Unity<T> : IQueryable, IDepend<Components.Unity<T>> where T : Object
-	{
-		sealed class Querier : Querier<Unity<T>>
-		{
-			public override Query<Unity<T>> Query(World world)
-			{
-				var components = world.Components();
-				var mask = IndexUtility<IComponent>.Cache<Components.Unity<T>>.Mask;
-				return new Query<Unity<T>>(
-					new Query(new Filter(mask, null, typeof(Components.Unity<T>)), current => current.HasAll(mask)),
-					(Entity entity, out Unity<T> unity) =>
-					{
-						if (components.TryRead<Components.Unity<T>>(entity, out var component) && component.Value.Value is T @object)
-						{
-							unity = new Unity<T>(@object);
-							return true;
-						}
+    public readonly struct Unity<T> : IQueryable, Dependables.IDepend<Dependables.Write<Components.Unity<T>>> where T : Object
+    {
+        sealed class Querier : Querier<Unity<T>>
+        {
+            public override bool TryQuery(Segment segment, World world, out Query<Unity<T>> query)
+            {
+                if (world.Queriers().TryQuery<Write<Components.Unity<T>>>(segment, out var write))
+                {
+                    query = new Query<Unity<T>>(index => new Unity<T>(write.Get(index)), write.Types);
+                    return true;
+                }
 
-						unity = default;
-						return false;
-					});
-			}
-		}
+                query = default;
+                return false;
+            }
+        }
 
-		[Querier]
-		static readonly Querier _querier = new Querier();
+        [Querier]
+        static readonly Querier _querier = new Querier();
 
-		public readonly T Value;
-		public Unity(T value) { Value = value; }
-	}
+        public ref readonly T Value => ref _value.Value.Value;
+
+        readonly Write<Components.Unity<T>> _value;
+
+        public Unity(Write<Components.Unity<T>> value) { _value = value; }
+    }
 }

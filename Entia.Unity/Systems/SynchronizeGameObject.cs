@@ -17,11 +17,8 @@ namespace Entia.Unity.Systems
 
         void IReact<OnAdd<Unity<GameObject>>>.React(in OnAdd<Unity<GameObject>> message)
         {
-            if (GameObjects.TryGet(message.Entity, out var write))
-            {
-                ref var gameObject = ref write.Value;
-                _gameObjects[message.Entity] = gameObject.Value;
-            }
+            ref var gameObject = ref GameObjects.GetOrDummy(message.Entity, out var success);
+            if (success) _gameObjects[message.Entity] = gameObject.Value;
         }
 
         void IReact<OnRemove<Unity<GameObject>>>.React(in OnRemove<Unity<GameObject>> message)

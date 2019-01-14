@@ -31,7 +31,6 @@ namespace Entia.Unity.Editor
         public bool Automatic => _automatic;
         public bool Debug => _debug;
         public float Timeout => _timeout;
-        public string Preserve => _preserve;
         public string Log => _log;
         public string[] Inputs => Array.ConvertAll(_inputs, PathUtility.Replace);
         public string Output => PathUtility.Replace(_output);
@@ -54,8 +53,6 @@ namespace Entia.Unity.Editor
         string[] _assemblies = { "{Editor.Mono}", "{Editor.Managed}", "{Editor.Extensions}" };
         [SerializeField]
         string _suffix = "Generated";
-        [SerializeField]
-        string _preserve = "Preserve.cs";
         [SerializeField]
         string _log = "Log.txt";
     }

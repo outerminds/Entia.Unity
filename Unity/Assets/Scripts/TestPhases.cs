@@ -1,6 +1,5 @@
 ﻿using Entia;
 using Entia.Phases;
-using Entia.Segments;
 
 namespace Phases
 {

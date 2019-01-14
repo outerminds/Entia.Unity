@@ -140,8 +140,6 @@ $@"Generation failed after '{timer.Elapsed}'.
                 $@"{string.Join(";", settings.Assemblies)}",
                 "--log",
                 $@"{settings.Log}",
-                "--preserve",
-                $@"{settings.Preserve}",
                 "--watch",
                 $@"{tool}"
             };

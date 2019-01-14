@@ -16,25 +16,24 @@ namespace Entia.Unity.Editor
             if (property.objectReferenceValue is EntityReference reference)
             {
                 var types = reference.GetComponents<IComponentReference>().Select(component => component.Type)
-                    .Concat(reference.GetComponents<ITagReference>().Select(tag => tag.Type))
                     .Concat(reference.GetComponents<Component>().SelectMany(component => new[] { component.GetType(), component.Map<ToComponent, IComponent>(new ToComponent()).GetType() }))
                     .ToArray();
                 var attributes = fieldInfo.GetCustomAttributes(false);
                 var missing = attributes
                     .OfType<AllAttribute>()
-                    .SelectMany(all => all.Types)
+                    .SelectMany(all => all.Types.Select(metadata => metadata.Type))
                     .Except(types)
-                    .Select(type => $"Missing component, tag or segment of type '{type.FullFormat()}'.");
+                    .Select(type => $"Missing component of type '{type.FullFormat()}'.");
                 var either = attributes
                     .OfType<AnyAttribute>()
-                    .Select(any => any.Types)
-                    .Select(any => any.Intersect(types).Any() ? null : $"Missing at least one component, tag or segment from types '{string.Join(", ", any.Select(type => type.FullFormat()))}'.")
+                    .Select(any => any.Types.Select(metadata => metadata.Type))
+                    .Select(any => any.Intersect(types).Any() ? null : $"Missing at least one component from types '{string.Join(", ", any.Select(type => type.FullFormat()))}'.")
                     .Some();
                 var exceeding = attributes
                     .OfType<NoneAttribute>()
-                    .SelectMany(none => none.Types)
+                    .SelectMany(none => none.Types.Select(metadata => metadata.Type))
                     .Intersect(types)
-                    .Select(type => $"Exceeding component, tag or segment of type '{type.FullFormat()}'.");
+                    .Select(type => $"Exceeding component of type '{type.FullFormat()}'.");
                 return string.Join(Environment.NewLine, missing.Concat(either).Concat(exceeding));
             }
 

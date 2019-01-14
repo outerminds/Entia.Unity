@@ -82,8 +82,5 @@ namespace Entia.Unity.Editor
                 }
             });
         }
-
-        public static Disposable Tag<T>(IEnumerable<T> references) where T : ITagReference =>
-            LayoutUtility.Disable(references.First().Type.GetCustomAttributes(false).OfType<DisableAttribute>().Any());
     }
 }

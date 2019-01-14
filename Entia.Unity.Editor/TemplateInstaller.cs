@@ -88,13 +88,6 @@ namespace Components
 	}
 }");
 
-            Write("Tag", 53,
-@"using Entia;
-
-namespace Tags
-{
-	public struct #SCRIPTNAME# : ITag { }
-}");
 
             Write("Message", 54,
 @"using Entia;

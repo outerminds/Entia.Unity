@@ -72,12 +72,8 @@ namespace Entia.Unity.Editor
             var label = module.GetType().Name;
             switch (module)
             {
-                case Modules.Entities entities:
-                    World.ShowEntities(label, entities, label);
-                    World.ShowSegments("Segments", entities, "Segments");
-                    break;
+                case Modules.Entities entities: World.ShowEntities(label, entities, label); break;
                 case Modules.Components components: World.ShowComponents(label, World.Entities(), label); break;
-                case Modules.Tags tags: World.ShowTags(label, World.Entities(), label); break;
                 case Modules.Resources resources: World.ShowResources(label, World.Resources(), label); break;
                 case Modules.Messages messages: World.ShowEmitters(label, messages, label); break;
                 case Modules.Groups groups: ShowGroups(groups); break;
