@@ -33,7 +33,7 @@ namespace Entia.Unity
         protected virtual Result<Controller> Create(World world)
         {
             var node = Application.isEditor || Debug.isDebugBuild ? Node.Profile() : Node;
-            return world.Controllers().Control(node);
+            return world.Controllers().Control(node.Separate(Entia.Nodes.Node.Resolve));
         }
 
         void Awake()
