@@ -10,6 +10,14 @@ namespace Entia.Unity.Editor
 {
     public static class ReferenceUtility
     {
+        static readonly Dictionary<Type, string> _typeToLink = TypeUtility.AllTypes()
+            .SelectMany(type => type.GetCustomAttributes(true)
+                .OfType<GeneratedAttribute>()
+                .Select(attribute => (attribute.Type, attribute.Link))
+                .Where(pair => pair.Type != null && !string.IsNullOrWhiteSpace(pair.Link)))
+            .DistinctBy(pair => pair.Type)
+            .ToDictionary(pair => pair.Type, pair => pair.Link);
+
         public static SerializedProperty Script(SerializedObject serialized)
         {
             var iterator = serialized.GetIterator();
@@ -29,13 +37,14 @@ namespace Entia.Unity.Editor
 
         public static bool TryFindScript(Type type, out MonoScript script)
         {
-            var path = type.GetCustomAttributes(true)
-                .OfType<GeneratedAttribute>()
-                .Select(attribute => attribute.Link)
-                .FirstOrDefault(link => !string.IsNullOrWhiteSpace(link));
+            if (_typeToLink.TryGetValue(type, out var link))
+            {
+                script = AssetDatabase.LoadAssetAtPath<MonoScript>(link);
+                return script != null;
+            }
 
-            script = string.IsNullOrWhiteSpace(path) ? default : AssetDatabase.LoadAssetAtPath<MonoScript>(path);
-            return script != null;
+            script = default;
+            return false;
         }
 
         public static Disposable Component<T>(IEnumerable<T> references) where T : IComponentReference

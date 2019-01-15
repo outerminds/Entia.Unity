@@ -8,6 +8,7 @@ namespace Systems
     public struct Move : IRun
     {
         public AllComponents Components;
+        [None(typeof(Components.Inner.Component2))]
         public Group<Read<Components.Component1>> Group;
 
         public void Run()
