@@ -14,6 +14,6 @@ namespace Controllers
             Sequence("TestController",
                 Nodes.Default,
                 System<Systems.Move>()
-            );
+            ).Separate(Resolve());
     }
 }

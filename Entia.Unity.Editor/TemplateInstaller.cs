@@ -122,7 +122,7 @@ namespace Controllers
 			Sequence(""#SCRIPTNAME#"",
 				Nodes.Default
 				// Insert systems here using System<T>() where 'T' is your system type.
-			);
+			).Separate(Resolve());
 	}
 }");
 
