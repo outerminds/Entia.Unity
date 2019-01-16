@@ -34,7 +34,7 @@ namespace Entia.Unity.Builders
                     return new Runner<T>(runners, (in T phase) =>
                         JobUtility.Parallel(
                             (phase, runners),
-                            (int index, in (T phase, Runner<T>[] runners) state) => state.runners[index].Run(state.phase))
+                            (in (T phase, Runner<T>[] runners) state, int index) => state.runners[index].Run(state.phase))
                         .Schedule(runners.Length, 1)
                         .Complete());
             }
