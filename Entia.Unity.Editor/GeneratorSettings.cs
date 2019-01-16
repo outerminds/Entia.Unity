@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Entia.Unity.Editor
 {
-    [CreateAssetMenu(fileName = "Settings", menuName = "Entia/Generator Settings")]
+    [CreateAssetMenu(fileName = "Settings", menuName = "Entia/Generator/Settings")]
     public class GeneratorSettings : ScriptableObject
     {
         public static GeneratorSettings Instance
@@ -38,7 +38,7 @@ namespace Entia.Unity.Editor
         public string Suffix => _suffix;
 
         [SerializeField]
-        string _tool = "|Entia.Unity.Generate.exe|";
+        string _tool = "|Entia.Unity.Generate.dll|";
         [SerializeField]
         bool _automatic = true;
         [SerializeField]
@@ -50,7 +50,7 @@ namespace Entia.Unity.Editor
         [SerializeField]
         string _output = Path.Combine("{Assets}", "Generated");
         [SerializeField]
-        string[] _assemblies = { "{Editor.Mono}", "{Editor.Managed}", "{Editor.Extensions}" };
+        string[] _assemblies = { "{Editor.Mono}", "{Editor.Mono.Facades}", "{Editor.Managed}" };
         [SerializeField]
         string _suffix = "Generated";
         [SerializeField]

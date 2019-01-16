@@ -48,6 +48,7 @@ namespace Entia.Unity
 
         void Initialize(Entity entity, World world)
         {
+            if (entity == Entity.Zero || world == null) return;
             if (_initialized.Change(true))
             {
                 World = world;

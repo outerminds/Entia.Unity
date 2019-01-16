@@ -13,7 +13,7 @@ namespace Systems
 
         public void Run()
         {
-            foreach (var (entity, item) in Group)
+            foreach (ref readonly var item in Group)
             {
                 ref readonly var component1 = ref item.Component1();
             }

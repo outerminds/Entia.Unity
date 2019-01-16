@@ -13,6 +13,7 @@ namespace Entia.Unity.Editor
             .Replace("{Editor.Managed}", Path.Combine("{Editor.Data}", "Managed"))
             .Replace("{Editor.Extensions}", Path.Combine("{Editor.Data}", "UnityExtensions", "Unity"))
             .Replace("{Editor.Templates}", Path.Combine("{Editor.Data}", "Resources", "ScriptTemplates"))
+            .Replace("{Editor.Mono.Facades}", Path.Combine("{Editor.Mono}", "Facades"))
             .Replace("{Editor.Mono}", Path.Combine("{Editor.Data}", "MonoBleedingEdge", "lib", "mono", "unityjit"))
             .Replace("{Editor.Data}", EditorApplication.applicationContentsPath)
             .Replace("{Editor}", EditorApplication.applicationPath.Directory())

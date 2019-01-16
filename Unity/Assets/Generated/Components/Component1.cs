@@ -8,17 +8,18 @@ namespace Components.Generated
 	[global::UnityEngine.AddComponentMenu("Components/Components.Component1")]
 	public sealed partial class Component1 : global::Entia.Unity.ComponentReference<global::Components.Component1>
 	{
-
-
+		public ref global::System.Single X => ref this._X;
+		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(X))] [global::UnityEngine.Serialization.FormerlySerializedAsAttribute("Poulah")]
+		global::System.Single _X;
 		public override global::Components.Component1 Component
 		{
 			get => new global::Components.Component1
 			{
-
+				X = this.X
 			};
 			set
 			{
-
+				this.X = value.X;
 			}
 		}
 	}

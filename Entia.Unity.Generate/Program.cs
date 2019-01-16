@@ -81,7 +81,7 @@ namespace Entia.Unity
 
                 var assembliesTask = Task.Run(() => options.Assemblies
                     .Where(assembly => !string.IsNullOrWhiteSpace(assembly))
-                    .SelectMany(assembly => assembly.Files("*.dll", SearchOption.AllDirectories))
+                    .SelectMany(assembly => assembly.Files("*.dll", SearchOption.TopDirectoryOnly))
                     .Distinct()
                     .ToArray());
                 var currentFilesTask = Task.Run(() => options.Output.Files("*.cs", SearchOption.AllDirectories).ToArray());

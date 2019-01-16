@@ -167,7 +167,7 @@ $@"Generation failed after '{timer.Elapsed}'.
             }
             catch (Exception exception)
             {
-                UnityEngine.Debug.LogWarning($"Could not find a '{nameof(GeneratorSettings)}' asset in project. A default instance was used instead. It can be created from menu 'Assets/Create/Entia/Generator Settings'.");
+                UnityEngine.Debug.LogWarning($"Could not find a '{nameof(GeneratorSettings)}' asset in project. A default instance was used instead. It can be created from menu 'Assets/Create/Entia/Generator/Settings'.");
                 UnityEngine.Debug.LogException(exception);
             }
 

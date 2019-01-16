@@ -336,7 +336,7 @@ $@"{indentation}{(@new ? "new " : "")}public {type} {field.Name}
         {
             var replacements = new Dictionary<ITypeSymbol, (ITypeSymbol type, string from, string to)>
             {
-                { context.Entity, (context.EntityReference, $".FromECS({{0}})", $".ToECS({{0}})") }
+                { context.Entity, (context.EntityReference, $".FromEntia({{0}})", $".ToEntia({{0}})") }
             };
             var conversions = new Dictionary<ITypeSymbol, (bool changed, string type, string from, string to)>();
             var declarations = new Dictionary<INamedTypeSymbol, (string[] declaration, string[] extension)>();

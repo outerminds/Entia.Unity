@@ -21,7 +21,7 @@ MonoBehaviour:
   _output: '{Assets}\Generated'
   _assemblies:
   - '{Editor.Mono}'
+  - '{Editor.Mono.Facades}'
   - '{Editor.Managed}'
-  - '{Editor.Extensions}'
   _suffix: Generated
   _log: Log.txt

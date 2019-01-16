@@ -35,6 +35,7 @@ namespace Entia.Unity
             Post = 1 << 2
         }
 
+        static readonly List<IEntityReference> _entities = new List<IEntityReference>();
         static readonly List<Component> _components = new List<Component>();
 
         public World World { get; private set; }
@@ -48,7 +49,7 @@ namespace Entia.Unity
             if (WorldRegistry.TryGet(gameObject.scene, out var reference) && reference.World is World world)
             {
                 PreInitialize();
-                Initialize(world);
+                Initialize(world, true);
                 PostInitialize();
             }
         }
@@ -62,20 +63,30 @@ namespace Entia.Unity
             PostDispose();
         }
 
-        void PreInitialize() { _initialized.Change(_initialized | States.Pre); }
+        void PreInitialize()
+        {
+            _initialized.Change(_initialized | States.Pre);
+        }
 
-        void Initialize(World world)
+        void Initialize(World world, bool propagate)
         {
             if (_initialized.Change(_initialized | States.Current))
             {
                 World = world;
                 Entity = World.Entities().Create();
                 EntityRegistry.Set(this);
+
+                if (propagate)
+                {
+                    GetComponentsInChildren(_entities);
+                    foreach (var entity in _entities) entity.Initialize(world);
+                }
             }
         }
 
         void PostInitialize()
         {
+            if (World == null || Entity == Entity.Zero) return;
             if (_initialized.Change(_initialized | States.Post))
             {
                 var components = World.Components();
@@ -135,7 +146,7 @@ namespace Entia.Unity
         }
 
         void IEntityReference.PreInitialize() => PreInitialize();
-        void IEntityReference.Initialize(World world) => Initialize(world);
+        void IEntityReference.Initialize(World world) => Initialize(world, false);
         void IEntityReference.PostInitialize() => PostInitialize();
         void IEntityReference.PreDispose() => PreDispose();
         void IEntityReference.Dispose() => Dispose();
