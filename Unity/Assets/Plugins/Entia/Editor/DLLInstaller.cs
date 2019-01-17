@@ -27,7 +27,7 @@ namespace Entia.Unity.Editor
                 try { File.Copy(dll, path, true); }
                 catch
                 {
-                    Debug.LogWarning($"Failed to install DLL '{dll}' at path '{path}'. This may be happening because Unity is not running in admninistrator mode.");
+                    Debug.LogWarning($"Failed to install DLL '{dll}' at path '{path}'. This may be happening because Unity is not running in administrator mode.");
                     throw;
                 }
             }

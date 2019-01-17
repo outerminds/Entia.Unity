@@ -25,7 +25,7 @@ namespace Entia.Unity.Editor
                 {
                     if (log)
                     {
-                        Debug.LogWarning($"Failed to install template '{name}' at path '{path}'. This may be happening because Unity is not running in admninistrator mode.");
+                        Debug.LogWarning($"Failed to install template '{name}' at path '{path}'. This may be happening because Unity is not running in administrator mode.");
                         throw;
                     }
                 }
