@@ -2,6 +2,6 @@
 
 namespace Entia.Unity.Phases
 {
-	public readonly struct RunFixed : IPhase { }
-	public readonly struct RunLate : IPhase { }
+    public readonly struct RunFixed : IResolve { }
+    public readonly struct RunLate : IResolve { }
 }

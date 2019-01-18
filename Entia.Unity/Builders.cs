@@ -49,8 +49,9 @@ namespace Entia.Unity.Builders
         {
             if (world.Builders().Build<T>(Node.Sequence(node.Name, node.Children), controller).TryValue(out var runner))
             {
-                var index = _names[node.Name] = _names.TryGetValue(node.Name, out var value) ? ++value : 0;
-                var sampler = CustomSampler.Create($"{node.Name}[{index}]");
+                var name = $"{typeof(T).Format()}.{node.Name}";
+                var index = _names[name] = _names.TryGetValue(name, out var value) ? ++value : 0;
+                var sampler = CustomSampler.Create($"{name}[{index}]");
                 var recorder = sampler.GetRecorder();
                 var messages = world.Messages();
                 return new Runner<T>(

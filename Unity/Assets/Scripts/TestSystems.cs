@@ -19,4 +19,22 @@ namespace Systems
             }
         }
     }
+
+    public struct Emitter : IRun
+    {
+        public Emitter<Messages.MessageA> MessageA;
+
+        public void Run()
+        {
+            for (int i = 0; i < 10000; i++) MessageA.Emit(default);
+        }
+    }
+
+    public struct Reactive : IReact<Messages.MessageA>
+    {
+        public void React(in Messages.MessageA message)
+        {
+
+        }
+    }
 }
