@@ -52,6 +52,7 @@ namespace Entia.Unity.Builders
                 var index = _names[node.Name] = _names.TryGetValue(node.Name, out var value) ? ++value : 0;
                 var sampler = CustomSampler.Create($"{node.Name}[{index}]");
                 var recorder = sampler.GetRecorder();
+                var messages = world.Messages();
                 return new Runner<T>(
                     runner,
                     (in T phase) =>
@@ -59,7 +60,7 @@ namespace Entia.Unity.Builders
                         sampler.Begin();
                         runner.Run(phase);
                         sampler.End();
-                        world.Messages().Emit(new OnProfile { Node = node, Elapsed = TimeSpan.FromTicks(recorder.elapsedNanoseconds / 100) });
+                        messages.Emit(new OnProfile { Node = node, Phase = typeof(T), Elapsed = TimeSpan.FromTicks(recorder.elapsedNanoseconds / 100) });
                     });
             }
 
