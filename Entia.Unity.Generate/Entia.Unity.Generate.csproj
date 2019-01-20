@@ -7,6 +7,7 @@
 
   <Target Name="Copy" AfterTargets="Publish">
     <Exec Command="del /s /q &quot;$(PublishDir)Microsoft.CodeAnalysis*resources*&quot;" />
+    <Exec Command="del /s /q &quot;$(PublishDir)*.xml&quot;" />
     <Exec Command="xcopy /y /q /s &quot;$(PublishDir)*&quot; &quot;$(SolutionDir)Unity\Assets\Plugins\Entia\.Generator\&quot;" />
   </Target>
 

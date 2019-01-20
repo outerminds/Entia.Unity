@@ -29,7 +29,9 @@ namespace Entia.Unity.Editor
             var tool = Tool(settings);
             if (string.IsNullOrWhiteSpace(tool))
             {
-                UnityEngine.Debug.LogError($"Could not find a valid executable at path '{settings.Tool}'. Make sure a proper path is defined in the '{nameof(GeneratorSettings)}' asset.");
+                UnityEngine.Debug.LogError(
+$@"Could not find a valid executable at path '{settings.Tool}'.
+Make sure a proper path is defined in the '{nameof(GeneratorSettings)}' asset.");
                 return;
             }
 
@@ -90,14 +92,24 @@ $@"Generation failed after '{timer.Elapsed}'.
             var process = Processes(tool).FirstOrDefault();
             if (process == null)
             {
-                process = Process.Start(new ProcessStartInfo
+                try
                 {
-                    WorkingDirectory = Application.dataPath,
-                    FileName = $"dotnet",
-                    Arguments = $"{tool} --watch {Process.GetCurrentProcess().Id};{tool}",
-                    CreateNoWindow = !debug,
-                    WindowStyle = debug ? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden
-                });
+                    process = Process.Start(new ProcessStartInfo
+                    {
+                        WorkingDirectory = Application.dataPath,
+                        FileName = $"dotnet",
+                        Arguments = $"{tool} --watch {Process.GetCurrentProcess().Id};{tool}",
+                        CreateNoWindow = !debug,
+                        WindowStyle = debug ? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden
+                    });
+                }
+                catch
+                {
+                    UnityEngine.Debug.LogError(
+$@"Failed to birth generator process. 
+This may happen because the .Net Core Runtime is not installed on this machine. See https://dotnet.microsoft.com/download and install the .Net Core Runtime version 2.1+.");
+                    throw;
+                }
 
                 if (log) UnityEngine.Debug.Log($"Gave birth to generator in process '{process.Id}'.");
 
@@ -156,11 +168,15 @@ $@"Generation failed after '{timer.Elapsed}'.
                 Directory.CreateDirectory(directory);
                 AssetDatabase.CreateAsset(settings, path);
                 AssetDatabase.Refresh();
-                UnityEngine.Debug.LogWarning($"Could not find a '{nameof(GeneratorSettings)}' asset in project. A default instance was created at path '{path}'.");
+                UnityEngine.Debug.LogWarning(
+$@"Could not find a '{nameof(GeneratorSettings)}' asset in project.
+A default instance was created at path '{path}'.");
             }
             catch (Exception exception)
             {
-                UnityEngine.Debug.LogWarning($"Could not find a '{nameof(GeneratorSettings)}' asset in project. A default instance was used instead. It can be created from menu 'Assets/Create/Entia/Generator/Settings'.");
+                UnityEngine.Debug.LogError(
+$@"Could not find or create a '{nameof(GeneratorSettings)}' asset in project. 
+A default instance was used instead. It can be created from menu 'Assets/Create/Entia/Generator/Settings'.");
                 UnityEngine.Debug.LogException(exception);
             }
 
