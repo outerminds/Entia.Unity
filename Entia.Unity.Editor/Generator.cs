@@ -14,11 +14,6 @@ namespace Entia.Unity.Editor
 {
     public class Generator : AssetPostprocessor
     {
-        static Generator()
-        {
-            EditorApplication.wantsToQuit += () => { Kill(); return true; };
-        }
-
         [MenuItem("Entia/Generator/Birth")]
         public static bool Birth() => TrySettings(out var settings) && Tool(settings) is string tool && Birth(tool, settings.Debug, true);
 
@@ -99,7 +94,7 @@ $@"Generation failed after '{timer.Elapsed}'.
                 {
                     WorkingDirectory = Application.dataPath,
                     FileName = $"dotnet",
-                    Arguments = $"{tool} --watch {tool}",
+                    Arguments = $"{tool} --watch {Process.GetCurrentProcess().Id};{tool}",
                     CreateNoWindow = !debug,
                     WindowStyle = debug ? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden
                 });
@@ -139,9 +134,7 @@ $@"Generation failed after '{timer.Elapsed}'.
                 "--assemblies",
                 $@"{string.Join(";", settings.Assemblies)}",
                 "--log",
-                $@"{settings.Log}",
-                "--watch",
-                $@"{tool}"
+                $@"{settings.Log}"
             };
 
         static Process[] Processes() => Process.GetProcessesByName("dotnet");

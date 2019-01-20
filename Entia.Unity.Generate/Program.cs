@@ -6,6 +6,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Entia.Unity
@@ -19,52 +20,64 @@ namespace Entia.Unity
 
             Console.WriteLine($"-> Birth: {string.Join(", ", arguments)}");
 
-            if (string.IsNullOrWhiteSpace(options.Watch)) Run(logger, options, arguments).Wait();
+            if (string.IsNullOrWhiteSpace(options.Watch.pipe)) Run(logger, options, arguments).Wait();
             else
             {
-                var buffer = new byte[4096];
-                var response = "";
-
-                Console.WriteLine($"-> Server: {options.Watch}");
-                using (var server = new NamedPipeServerStream(options.Watch, PipeDirection.InOut, 1))
+                var cancel = new CancellationTokenSource();
+                try
                 {
-                    while (true)
-                    {
-                        try
-                        {
-                            Console.WriteLine($"-> Wait For Connection");
-                            server.WaitForConnection();
-                            var count = server.Read(buffer, 0, buffer.Length);
-                            var request = Encoding.UTF32.GetString(buffer, 0, count);
-
-                            Console.WriteLine($"-> Request: {request}");
-
-                            arguments = request.Split('|');
-                            options = Options.Parse(arguments);
-                            logger.Clear();
-                            Run(logger, options, arguments).Wait();
-                            response = "Success";
-                        }
-                        catch (Exception exception) { response = exception.ToString(); }
-                        finally
-                        {
-                            Console.WriteLine($"-> Response: {response}");
-
-                            var count = Encoding.UTF32.GetBytes(response, 0, response.Length, buffer, 0);
-                            server.Write(buffer, 0, count);
-
-                            Console.WriteLine($"-> Wait For Pipe Drain");
-                            server.WaitForPipeDrain();
-
-                            Console.WriteLine($"-> Disconnect");
-                            server.Disconnect();
-                            Console.WriteLine();
-                        }
-                    }
+                    Task.Run(() => Run(logger, options), cancel.Token);
+                    while (Process.GetProcessById(options.Watch.process) is Process) Thread.Sleep(100);
                 }
+                catch { }
+                finally { cancel.Cancel(); }
             }
 
             Console.WriteLine($"-> Kill: {string.Join(", ", arguments)}");
+        }
+
+        static void Run(StringBuilder logger, Options options)
+        {
+            var buffer = new byte[4096];
+            var response = "";
+
+            Console.WriteLine($"-> Server: {options.Watch}");
+            using (var server = new NamedPipeServerStream(options.Watch.pipe, PipeDirection.InOut, 1))
+            {
+                while (true)
+                {
+                    try
+                    {
+                        Console.WriteLine($"-> Wait For Connection");
+                        server.WaitForConnection();
+                        var count = server.Read(buffer, 0, buffer.Length);
+                        var request = Encoding.UTF32.GetString(buffer, 0, count);
+
+                        Console.WriteLine($"-> Request: {request}");
+
+                        var arguments = request.Split('|');
+                        options = Options.Parse(arguments);
+                        logger.Clear();
+                        Run(logger, options, arguments).Wait();
+                        response = "Success";
+                    }
+                    catch (Exception exception) { response = exception.ToString(); }
+                    finally
+                    {
+                        Console.WriteLine($"-> Response: {response}");
+
+                        var count = Encoding.UTF32.GetBytes(response, 0, response.Length, buffer, 0);
+                        server.Write(buffer, 0, count);
+
+                        Console.WriteLine($"-> Wait For Pipe Drain");
+                        server.WaitForPipeDrain();
+
+                        Console.WriteLine($"-> Disconnect");
+                        server.Disconnect();
+                        Console.WriteLine();
+                    }
+                }
+            }
         }
 
         static async Task Run(StringBuilder logger, Options options, string[] arguments)
