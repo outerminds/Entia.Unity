@@ -26,7 +26,7 @@ namespace Systems
 
         public void Run()
         {
-            for (int i = 0; i < 10000; i++) MessageA.Emit(default);
+            for (int i = 0; i < 10; i++) MessageA.Emit(default);
         }
     }
 

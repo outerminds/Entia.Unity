@@ -16,7 +16,7 @@ namespace Entia.Unity.Editor
         public TypeEnumAttribute Attribute => attribute as TypeEnumAttribute;
         public Type[] Types =>
             _filterToTypes.TryGetValue(Attribute, out var types) ? types :
-            _filterToTypes[Attribute] = TypeUtility.AllTypes().Where(Valid).OrderBy(type => type.FullName).ToArray();
+            _filterToTypes[Attribute] = TypeUtility.AllTypes.Where(Valid).OrderBy(type => type.FullName).ToArray();
 
         bool Valid(Type type) => !type.IsInterface &&
             Valid(TypeEnumAttribute.Filters.IsAbstract, TypeEnumAttribute.Filters.IsNotAbstract, type.IsAbstract) &&

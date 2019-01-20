@@ -107,8 +107,7 @@ namespace Entia.Unity.Editor
             LayoutUtility.ChunksFoldout(
                 nameof(Modules.Groups),
                 module.ToArray(),
-                (group, index) =>
-                    World.ShowGroup(group.Type.Format(), group, nameof(Modules.Groups), index.ToString()),
+                (group, index) => World.ShowGroup(group.Type.Format(), group, nameof(Modules.Groups), index.ToString()),
                 module.GetType());
 
         void ShowControllers(Modules.Controllers module) =>

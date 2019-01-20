@@ -8,9 +8,13 @@ namespace Entia.Unity.Editor
     {
         static bool _details;
 
-        public World World => Target?.World ?? Target.GetComponent<IWorldReference>()?.Create();
+        public IWorldReference Reference => _reference ?? (_reference = Target.GetComponent<IWorldReference>());
+        public World World => Target?.World ?? Reference?.World ?? _world ?? (_world = Reference?.Create());
         public Node Node => Target?.Node;
         public ControllerReference Target => target as ControllerReference;
+
+        IWorldReference _reference;
+        World _world;
 
         public override void OnInspectorGUI()
         {

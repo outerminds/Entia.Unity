@@ -10,11 +10,13 @@ namespace Entia.Unity.Editor
 {
     public static class ReferenceUtility
     {
-        static readonly Dictionary<Type, string> _typeToLink = TypeUtility.AllTypes()
-            .SelectMany(type => type.GetCustomAttributes(true)
+        static readonly Dictionary<Type, string> _typeToLink = TypeUtility.AllTypes
+            .AsParallel()
+            .SelectMany(type => type.GetCustomAttributes(typeof(GeneratedAttribute), true)
                 .OfType<GeneratedAttribute>()
                 .Select(attribute => (attribute.Type, attribute.Link))
-                .Where(pair => pair.Type != null && !string.IsNullOrWhiteSpace(pair.Link)))
+                .Where(pair => pair.Type != null && !string.IsNullOrWhiteSpace(pair.Link))
+                .SelectMany(pair => new[] { (Type: type, pair.Link), pair }))
             .DistinctBy(pair => pair.Type)
             .ToDictionary(pair => pair.Type, pair => pair.Link);
 
