@@ -89,7 +89,7 @@ namespace Entia.Unity
             IPhase = Global.Type<IPhase>();
 
             Groups = Global.Types(typeof(Injectables.Group<>)).OrderBy(type => type.TypeParameters.Length).ToArray();
-            Unity = Global.Type(true, nameof(Entia), nameof(Unity), nameof(Queryables), "Unity");
+            Unity = Global.Type(true, nameof(Entia), nameof(Queryables), "Unity");
             Write = Global.Type(typeof(Write<>));
             Read = Global.Type(typeof(Read<>));
             Maybe = Global.Type(typeof(Maybe<>));
