@@ -1,9 +1,10 @@
 ﻿using Entia.Modules.Control;
 using Entia.Modules.Schedule;
 using Entia.Schedulers;
+using Entia.Systems;
 using Entia.Unity.Systems;
 
-namespace Entia.Unity.Schedulers
+namespace Entia.Schedulers
 {
     public sealed class RunFixed : Scheduler<IRunFixed>
     {

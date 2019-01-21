@@ -5,6 +5,7 @@ using Entia.Modules.Query;
 using Entia.Phases;
 using Entia.Queryables;
 using Entia.Systems;
+using Entia.Unity.Generation;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

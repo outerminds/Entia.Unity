@@ -1,6 +1,6 @@
 ﻿using Entia.Injectables;
-using Entia.Unity.Components;
-using Entia.Unity.Mappers;
+using Entia.Components;
+using Entia.Mappers;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Animations;

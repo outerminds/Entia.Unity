@@ -1,7 +1,7 @@
 ﻿using System;
 using Entia.Core;
 
-namespace Entia.Unity
+namespace Entia.Unity.Generation
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false)]
     public sealed class GeneratedAttribute : Attribute

@@ -39,8 +39,6 @@ using Entia.Injectables;
 using Entia.Queryables;
 using Entia.Modules;
 using Entia.Unity;
-using Entia.Unity.Queryables;
-using Entia.Unity.Systems;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -60,7 +58,6 @@ namespace Systems
 @"using Entia;
 using Entia.Core;
 using Entia.Unity;
-using Entia.Queryables;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -76,7 +73,6 @@ namespace Resources
 @"using Entia;
 using Entia.Core;
 using Entia.Unity;
-using Entia.Queryables;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -93,7 +89,6 @@ namespace Components
 @"using Entia;
 using Entia.Core;
 using Entia.Unity;
-using Entia.Queryables;
 using System.Collections;
 using System.Collections.Generic;
 

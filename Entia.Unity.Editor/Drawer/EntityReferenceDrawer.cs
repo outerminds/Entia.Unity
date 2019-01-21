@@ -1,6 +1,6 @@
 ﻿using Entia.Core;
 using Entia.Queryables;
-using Entia.Unity.Mappers;
+using Entia.Mappers;
 using System;
 using System.Linq;
 using UnityEditor;

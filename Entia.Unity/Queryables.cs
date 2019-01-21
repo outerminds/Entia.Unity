@@ -1,4 +1,5 @@
 ﻿using Entia.Core;
+using Entia.Dependables;
 using Entia.Modules;
 using Entia.Modules.Component;
 using Entia.Modules.Query;
@@ -6,9 +7,9 @@ using Entia.Queriers;
 using Entia.Queryables;
 using UnityEngine;
 
-namespace Entia.Unity.Queryables
+namespace Entia.Queryables
 {
-    public readonly struct Unity<T> : IQueryable, Dependables.IDepend<Dependables.Write<Components.Unity<T>>> where T : Object
+    public readonly struct Unity<T> : IQueryable, IDependable<Dependers.Unity<T>> where T : Object
     {
         sealed class Querier : Querier<Unity<T>>
         {

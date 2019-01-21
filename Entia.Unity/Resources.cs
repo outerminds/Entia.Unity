@@ -1,10 +1,12 @@
-﻿namespace Entia.Unity.Resources
+﻿using Entia.Unity;
+
+namespace Entia.Resources
 {
-	public struct Time : IResource
-	{
-		[Disable]
-		public float Delta;
-		[Disable]
-		public float Current;
-	}
+    public struct Time : IResource
+    {
+        [Disable]
+        public float Delta;
+        [Disable]
+        public float Current;
+    }
 }

@@ -1,7 +1,7 @@
 ﻿using Entia.Injectables;
 using Entia.Messages;
 using Entia.Systems;
-using Entia.Unity.Components;
+using Entia.Components;
 using System.Collections.Generic;
 using UnityEngine;
 

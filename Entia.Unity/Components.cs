@@ -1,9 +1,9 @@
 ﻿using Entia.Dependables;
 using UnityEngine;
 
-namespace Entia.Unity.Components
+namespace Entia.Components
 {
     public struct IsDisabled : IComponent { }
     public struct Debug : IComponent { public string Name; }
-    public struct Unity<T> : IComponent, IDepend<Dependencies.Unity, T> where T : Object { public T Value; }
+    public struct Unity<T> : IComponent, IDependable<Dependers.Unity<T>> where T : Object { public T Value; }
 }

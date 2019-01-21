@@ -1,9 +1,9 @@
 ﻿using Entia.Core;
 using Entia.Modules;
-using Entia.Unity.Components;
+using Entia.Components;
 using UnityEngine;
 
-namespace Entia.Unity.Mappers
+namespace Entia.Mappers
 {
     public interface IMapper<T, TOut>
     {

@@ -7,12 +7,13 @@ using Entia.Modules.Build;
 using Entia.Modules.Control;
 using Entia.Nodes;
 using Entia.Phases;
+using Entia.Unity;
 using System;
 using System.Collections.Generic;
 using Unity.Jobs;
 using UnityEngine.Profiling;
 
-namespace Entia.Unity.Builders
+namespace Entia.Builders
 {
     public sealed class Parallel : IBuilder
     {

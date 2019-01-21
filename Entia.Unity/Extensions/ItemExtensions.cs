@@ -1,4 +1,4 @@
-using Entia.Unity.Queryables;
+using Entia.Queryables;
 
 namespace Entia.Unity
 {

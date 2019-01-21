@@ -1,7 +1,7 @@
 ﻿using Entia.Core;
 using Entia.Modules;
-using Entia.Unity.Components;
-using Entia.Unity.Mappers;
+using Entia.Components;
+using Entia.Mappers;
 using System;
 using System.Collections.Generic;
 using UnityEngine;

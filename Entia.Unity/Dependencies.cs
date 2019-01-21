@@ -1,6 +1,6 @@
 ﻿using Entia.Dependencies;
 
-namespace Entia.Unity.Dependencies
+namespace Entia.Dependencies
 {
-	public readonly struct Unity : IDependency { }
+    public readonly struct Unity : IDependency { }
 }
