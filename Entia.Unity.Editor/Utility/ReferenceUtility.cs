@@ -52,8 +52,8 @@ namespace Entia.Unity.Editor
 
         public static Disposable Component<T>(IEnumerable<T> references) where T : IComponentReference
         {
-            var disable = LayoutUtility.Disable(references.First().Type.GetCustomAttributes(false).OfType<DisableAttribute>().Any());
             EditorGUI.BeginChangeCheck();
+            var disable = LayoutUtility.Disable(references.First().Type.GetCustomAttributes(false).OfType<DisableAttribute>().Any());
 
             return new Disposable(() =>
             {

@@ -41,10 +41,6 @@ namespace Entia.Unity
                 Initialize(reference.Entity, world);
         }
         void OnDestroy() => Dispose();
-        void OnEnable() => Add();
-        void OnDisable() => Remove();
-        void Add() => World?.Components().Set(Entity, Component);
-        void Remove() => World?.Components().Remove<T>(Entity);
 
         void Initialize(Entity entity, World world)
         {
@@ -53,7 +49,7 @@ namespace Entia.Unity
             {
                 World = world;
                 Entity = entity;
-                Add();
+                World.Components().Set(Entity, Component);
             }
         }
 
@@ -61,7 +57,7 @@ namespace Entia.Unity
         {
             if (_initialized && _disposed.Change(true))
             {
-                Remove();
+                World.Components().Remove<T>(Entity);
                 Entity = Entity.Zero;
                 World = null;
             }
