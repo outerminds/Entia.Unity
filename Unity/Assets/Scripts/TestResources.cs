@@ -1,4 +1,5 @@
 ﻿using Entia;
+using UnityEngine;
 
 namespace Resources
 {
@@ -7,5 +8,10 @@ namespace Resources
     namespace Inner
     {
         public struct Resource2 : IResource { }
+    }
+
+    public struct Prefabs : IResource
+    {
+        public GameObject Prefab;
     }
 }

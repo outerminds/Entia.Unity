@@ -2,6 +2,7 @@
 using Entia.Injectables;
 using Entia.Queryables;
 using Entia.Systems;
+using UnityEngine;
 
 namespace Systems
 {
@@ -35,6 +36,16 @@ namespace Systems
         public void React(in Messages.MessageA message)
         {
 
+        }
+    }
+
+    public struct Spawner : IRun
+    {
+        public Resource<Resources.Prefabs> Prefabs;
+
+        public void Run()
+        {
+            if (Input.GetKeyDown(KeyCode.K)) Object.Instantiate(Prefabs.Value.Prefab);
         }
     }
 }

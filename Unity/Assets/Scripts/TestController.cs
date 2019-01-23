@@ -15,6 +15,7 @@ namespace Controllers
                 Nodes.Default,
                 System<Systems.Move>(),
                 System<Systems.Emitter>(),
+                System<Systems.Spawner>(),
                 System<Systems.Reactive>()
             );
     }
