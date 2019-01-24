@@ -12,7 +12,7 @@
 ___
 ### Table of contents
 <!--ts-->
-   * [Dowload][releases]
+   * [Download][releases]
    * [Getting Started](#getting-started)
    * [Generator](#generator)
    * [Manual][manual]
