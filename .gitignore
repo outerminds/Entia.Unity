@@ -1,16 +1,17 @@
-**/bin/
-**/obj/
-**/.vs/
+bin/
+obj/
+.vs/
+Releases/
 *.user
 .vscode/solution-explorer
 
 // Unity
-**/Unity/Library/
-**/Unity/Temp/
-**/Unity/Build/
-**/Unity/Builds/
-**/Unity/[Dd][Ll][Ll]/
-**/Unity/[Dd][Ll][Ll][Ss]/
-**/Unity/*.sln
-**/Unity/*.csproj
-**/Generated/[Ll]og.*
+Unity/Library/
+Unity/Temp/
+Unity/Build/
+Unity/Builds/
+Unity/[Dd][Ll][Ll]/
+Unity/[Dd][Ll][Ll][Ss]/
+Unity/*.sln
+Unity/*.csproj
+[Ll]og.*
