@@ -16,6 +16,7 @@ namespace Controllers
                 System<Systems.Move>(),
                 System<Systems.Emitter>(),
                 System<Systems.Spawner>(),
+                System<Systems.Queries>(),
                 System<Systems.Reactive>()
             );
     }

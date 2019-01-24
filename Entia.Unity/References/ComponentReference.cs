@@ -29,7 +29,7 @@ namespace Entia.Unity
         public abstract T Component { get; set; }
 
         Type IComponentReference.Type => typeof(T);
-        Metadata IComponentReference.Metadata => ComponentUtility.Cache<T>.Data;
+        Metadata IComponentReference.Metadata => ComponentUtility.Concrete<T>.Data;
         IComponent IComponentReference.Component { get => Component; set => Component = value is T component ? component : default; }
 
         bool _initialized;

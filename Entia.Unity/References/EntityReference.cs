@@ -54,8 +54,6 @@ namespace Entia.Unity
             }
         }
 
-        void OnEnable() => World?.Components().Remove<IsDisabled>(Entity);
-        void OnDisable() => World?.Components().Set(Entity, default(IsDisabled));
         void OnDestroy()
         {
             PreDispose();

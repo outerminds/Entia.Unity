@@ -39,6 +39,18 @@ namespace Systems
         }
     }
 
+    public struct Queries : ISystem
+    {
+        [All(typeof(IComponent))]
+        public Group<Entity> NoEmpty;
+        [None(typeof(IComponent))]
+        public Group<Entity> OnlyEmpty;
+        [None(typeof(Entia.Components.Unity<>))]
+        public Group<Entity> NoUnity;
+        [All(typeof(Entia.Components.Unity<>))]
+        public Group<Entity> OnlyUnity;
+    }
+
     public struct Spawner : IRun
     {
         public Resource<Resources.Prefabs> Prefabs;

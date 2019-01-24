@@ -73,6 +73,7 @@ namespace Resources
 @"using Entia;
 using Entia.Core;
 using Entia.Unity;
+using Entia.Queryables;
 using System.Collections;
 using System.Collections.Generic;
 

@@ -21,6 +21,12 @@ namespace Entia.Unity.Editor
 {
     public static class WorldExtensions
     {
+        static Type[] Concretes => _concretes ?? (_concretes = TypeUtility.AllTypes
+            .Where(ComponentUtility.IsConcrete)
+            .OrderBy(type => type.FullName)
+            .ToArray());
+        static Type[] _concretes;
+
         public static string Name(this World world, Entity entity)
         {
             ref var debug = ref world.Components().GetOrDummy<Components.Debug>(entity, out var success);
@@ -79,6 +85,8 @@ namespace Entia.Unity.Editor
                 world.ShowReceiver(label, receiver);
             else if (injectable.Is(typeof(Injectables.Reaction<>), definition: true) && injectable.GetValue<IReaction>("_reaction").TryValue(out var reaction))
                 world.ShowReaction(label, reaction);
+            else if (injectable.GetValue<IGroup>("_group").TryValue(out var group))
+                world.ShowGroup(label, group, path);
             else LayoutUtility.Label(label);
         }
 
@@ -88,33 +96,36 @@ namespace Entia.Unity.Editor
         public static void ShowEntity(this World world, string label, Entity entity, params string[] path)
         {
             path = path.Append(entity.ToString()).ToArray();
-            LayoutUtility.ChunksFoldout(
-                label,
-                world.Components().Get(entity).ToArray(),
-                (value, index) => world.ShowComponent(value.GetType().Format(), entity, value, path.Append(index.ToString()).ToArray()),
-                entity.GetType(),
-                path: path,
-                foldout: format =>
-                {
-                    using (LayoutUtility.Horizontal())
+            using (LayoutUtility.Disable(!world.Entities().Has(entity)))
+            {
+                LayoutUtility.ChunksFoldout(
+                    label,
+                    world.Components().Get(entity).ToArray(),
+                    (value, index) => world.ShowComponent(value.GetType().Format(), entity, value, path.Append(index.ToString()).ToArray()),
+                    entity.GetType(),
+                    path: path,
+                    foldout: format =>
                     {
-                        var folded = LayoutUtility.Foldout(format, entity.GetType(), path);
-                        if (LayoutUtility.PlusButton())
+                        using (LayoutUtility.Horizontal())
                         {
-                            var menu = new GenericMenu();
-                            foreach (var type in ComponentUtility.Types.Select(data => data.Type).OrderBy(type => type.FullName))
+                            var folded = LayoutUtility.Foldout(format, entity.GetType(), path);
+                            if (LayoutUtility.PlusButton())
                             {
-                                var content = new GUIContent(string.Join("/", type.Path().SkipLast().Append(type.Format())));
-                                if (world.Components().Has(entity, type)) menu.AddDisabledItem(content, false);
-                                else menu.AddItem(content, false, () => world.Components().Set(entity, TypeUtility.GetDefault(type) as IComponent));
+                                var menu = new GenericMenu();
+                                foreach (var type in Concretes)
+                                {
+                                    var content = new GUIContent(string.Join("/", type.Path().SkipLast().Append(type.Format())));
+                                    if (world.Components().Has(entity, type)) menu.AddDisabledItem(content, false);
+                                    else menu.AddItem(content, false, () => world.Components().Set(entity, TypeUtility.GetDefault(type) as IComponent));
+                                }
+                                menu.ShowAsContext();
                             }
-                            menu.ShowAsContext();
-                        }
 
-                        if (LayoutUtility.MinusButton()) world.Entities().Destroy(entity);
-                        return folded;
-                    }
-                });
+                            if (LayoutUtility.MinusButton()) world.Entities().Destroy(entity);
+                            return folded;
+                        }
+                    });
+            }
         }
 
         public static void ShowEntities(this World world, string label, IEnumerable<Entity> entities, params string[] path) =>

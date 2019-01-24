@@ -21,18 +21,18 @@ namespace Entia.Unity.Editor
                 var attributes = fieldInfo.GetCustomAttributes(false);
                 var missing = attributes
                     .OfType<AllAttribute>()
-                    .SelectMany(all => all.Types.Select(metadata => metadata.Type))
-                    .Except(types)
-                    .Select(type => $"Missing component of type '{type.FullFormat()}'.");
+                    .SelectMany(all => all.Components)
+                    .Where(component => types.None(type => type.Is(component, true, true)))
+                    .Select(component => $"Missing component of type '{component.FullFormat()}'.");
                 var either = attributes
                     .OfType<AnyAttribute>()
-                    .Select(any => any.Types.Select(metadata => metadata.Type))
-                    .Select(any => any.Intersect(types).Any() ? null : $"Missing at least one component from types '{string.Join(", ", any.Select(type => type.FullFormat()))}'.")
-                    .Some();
+                    .Select(any => any.Components)
+                    .Where(components => components.None(component => types.Any(type => type.Is(component, true, true))))
+                    .Select(components => $"Missing at least one component from types '{string.Join(", ", components.Select(type => type.FullFormat()))}'.");
                 var exceeding = attributes
                     .OfType<NoneAttribute>()
-                    .SelectMany(none => none.Types.Select(metadata => metadata.Type))
-                    .Intersect(types)
+                    .SelectMany(none => none.Components)
+                    .Where(component => types.Any(type => type.Is(component, true, true)))
                     .Select(type => $"Exceeding component of type '{type.FullFormat()}'.");
                 return string.Join(Environment.NewLine, missing.Concat(either).Concat(exceeding));
             }
