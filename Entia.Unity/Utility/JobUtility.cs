@@ -1,10 +1,12 @@
-﻿using Unity.Jobs;
+﻿using Entia.Core.Documentation;
+using Unity.Jobs;
 
 namespace Entia.Unity
 {
     public delegate void ParallelExecute(int index);
     public delegate void ParallelExecute<T>(in T state, int index);
 
+    [ThreadSafe]
     public readonly struct ParallelJob<T> : IJobParallelFor
     {
         readonly T _state;
@@ -19,6 +21,7 @@ namespace Entia.Unity
         public void Execute(int index) => _execute(_state, index);
     }
 
+    [ThreadSafe]
     public readonly struct ParallelJob : IJobParallelFor
     {
         readonly ParallelExecute _execute;
@@ -26,6 +29,7 @@ namespace Entia.Unity
         public void Execute(int index) => _execute(index);
     }
 
+    [ThreadSafe]
     public static class JobUtility
     {
         public static ParallelJob<T> Parallel<T>(T state, ParallelExecute<T> execute) => new ParallelJob<T>(state, execute);

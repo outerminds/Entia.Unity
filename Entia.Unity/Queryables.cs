@@ -1,4 +1,5 @@
 ﻿using Entia.Core;
+using Entia.Core.Documentation;
 using Entia.Dependables;
 using Entia.Modules;
 using Entia.Modules.Component;
@@ -9,6 +10,7 @@ using UnityEngine;
 
 namespace Entia.Queryables
 {
+    [ThreadSafe]
     public readonly struct Unity<T> : IQueryable, IDependable<Dependers.Unity<T>> where T : Object
     {
         sealed class Querier : Querier<Unity<T>>
