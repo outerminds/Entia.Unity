@@ -41,12 +41,6 @@ namespace Systems
 
     public struct Queries : ISystem
     {
-        [All(typeof(Entia.Components.Unity<>))]
-        public struct Query : IQueryable
-        {
-            public Read<Components.Component1> Component1;
-        }
-
         [All(typeof(IComponent))]
         public Group<Entity> NoEmpty;
         [None(typeof(IComponent))]
@@ -55,16 +49,48 @@ namespace Systems
         public Group<Entity> NoUnity;
         [All(typeof(Entia.Components.Unity<>))]
         public Group<Entity> OnlyUnity;
-        public Group<Query> UsingStruct;
     }
 
     public struct Spawner : IRun
     {
+        [All(typeof(Entia.Components.Unity<>))]
+        public struct Query : IQueryable
+        {
+            public Entity Entity;
+            public Read<Components.Component1> Component1;
+            public Maybe<Read<Components.Inner.Component2>> Component2;
+        }
+
+        public struct Queryz : IQueryable
+        {
+            public Query Query1;
+            public Query Query2;
+            public Query Query3;
+        }
+
         public Resource<Resources.Prefabs> Prefabs;
+        public Group<Query> Group;
+        public Group<Queryz> Groupz;
+        public AllEntities Entities;
+        public AllComponents Components;
 
         public void Run()
         {
             if (Input.GetKeyDown(KeyCode.K)) Object.Instantiate(Prefabs.Value.Prefab);
+
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                foreach (var item in Group)
+                {
+                    Entities.Destroy(item.Entity);
+                    break;
+                }
+
+                foreach (var item in Groupz)
+                {
+
+                }
+            }
         }
     }
 }

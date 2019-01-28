@@ -44,8 +44,6 @@ namespace Entia.Unity
         public readonly INamedTypeSymbol Write;
         public readonly INamedTypeSymbol Read;
         public readonly INamedTypeSymbol Maybe;
-        public readonly INamedTypeSymbol[] Alls;
-        public readonly INamedTypeSymbol[] Anys;
 
         public readonly INamedTypeSymbol Unity;
         public readonly INamedTypeSymbol WorldReference;
@@ -93,8 +91,6 @@ namespace Entia.Unity
             Write = Global.Type(typeof(Write<>));
             Read = Global.Type(typeof(Read<>));
             Maybe = Global.Type(typeof(Maybe<>));
-            Alls = Global.Types(typeof(All<,>)).OrderBy(type => type.TypeParameters.Length).ToArray();
-            Anys = Global.Types(typeof(Any<,>)).OrderBy(type => type.TypeParameters.Length).ToArray();
 
             WorldReference = Global.Type(false, nameof(Entia), nameof(Unity), nameof(WorldReference));
             WorldRegistry = Global.Type(false, nameof(Entia), nameof(Unity), nameof(WorldRegistry));
@@ -121,14 +117,22 @@ namespace Entia.Unity
         public (string[] from, string[] to)[] Renamed;
     }
 
-    sealed class Extension
+    sealed class Extension : IEquatable<Extension>
     {
         public INamedTypeSymbol Outer;
         public ITypeSymbol Inner;
-        public IEnumerable<string> Accesses = new string[] { };
+        public IEnumerable<string> Accesses = Array.Empty<string>();
         public bool Ref;
         public bool Readonly;
         public int? Try;
+
+        public bool Equals(Extension other) =>
+            this == other ? true :
+            other == null ? false :
+            (Outer, Inner, Ref, Readonly, Try) == (other.Outer, other.Inner, other.Ref, other.Readonly, other.Try) &&
+            Accesses.SequenceEqual(other.Accesses);
+        public override bool Equals(object obj) => obj is Extension extension && Equals(extension);
+        public override int GetHashCode() => (Outer, Inner, Ref, Readonly, Try).GetHashCode() ^ ArrayUtility.GetHashCode(Accesses.ToArray());
     }
 
     public static class Generator
@@ -451,7 +455,7 @@ $@"{indentation}using System.Linq;
                     }
                     else if (context.Maybe == definition)
                     {
-                        foreach (var field in named.Fields())
+                        foreach (var field in named.InstanceFields().DistinctBy(field => field.Type))
                         {
                             foreach (var extension in Next(field.Type, depth + 1))
                             {
@@ -461,9 +465,9 @@ $@"{indentation}using System.Linq;
                             }
                         }
                     }
-                    else if (context.Alls.Contains(definition) || context.Anys.Contains(definition))
+                    else
                     {
-                        foreach (var field in named.Fields())
+                        foreach (var field in named.InstanceFields().DistinctBy(field => field.Type))
                         {
                             foreach (var extension in Next(field.Type, depth + 1))
                             {
@@ -472,7 +476,6 @@ $@"{indentation}using System.Linq;
                             }
                         }
                     }
-                    else yield return new Extension { Outer = named, Inner = named };
                 }
             }
 

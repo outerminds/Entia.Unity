@@ -1,4 +1,5 @@
 ﻿using Entia;
+using Entia.Unity;
 using UnityEngine;
 
 namespace Resources
@@ -12,6 +13,6 @@ namespace Resources
 
     public struct Prefabs : IResource
     {
-        public GameObject Prefab;
+        public EntityReference Prefab;
     }
 }

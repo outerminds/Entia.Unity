@@ -8,9 +8,9 @@ namespace Resources.Generated
 	[global::UnityEngine.AddComponentMenu("Resources/Resources.Prefabs")]
 	public sealed partial class Prefabs : global::Entia.Unity.ResourceReference<global::Resources.Prefabs>
 	{
-		public ref global::UnityEngine.GameObject Prefab => ref this._Prefab;
+		public ref global::Entia.Unity.EntityReference Prefab => ref this._Prefab;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Prefab))]
-		global::UnityEngine.GameObject _Prefab;
+		global::Entia.Unity.EntityReference _Prefab;
 		public override global::Resources.Prefabs Resource
 		{
 			get => new global::Resources.Prefabs

@@ -12,7 +12,7 @@
   </Target>
 
   <Target Name="Copy Release" AfterTargets="Copy" Condition="'$(Configuration)' == 'Release'">
-    <Exec Command="xcopy /y /q /s &quot;$(PublishDir)*&quot; &quot;$(SolutionDir)Releases\Current\.Generator\&quot;" />
+    <Exec Command="xcopy /y /q /s &quot;$(PublishDir)*&quot; &quot;$(SolutionDir)Release\.Generator\&quot;" />
   </Target>
 
   <ItemGroup>

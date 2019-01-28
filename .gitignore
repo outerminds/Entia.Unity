@@ -2,6 +2,7 @@ bin/
 obj/
 .vs/
 Releases/
+Release/
 *.user
 .vscode/solution-explorer
 

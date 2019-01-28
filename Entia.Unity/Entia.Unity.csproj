@@ -9,7 +9,8 @@
   </Target>
 
   <Target Name="Copy Release" AfterTargets="Copy" Condition="'$(Configuration)' == 'Release'">
-    <Exec Command="xcopy /y /q &quot;$(PublishDir)*&quot; &quot;$(SolutionDir)Releases\Current\&quot;" />
+    <Exec Command="xcopy /y /q &quot;$(SolutionDir)\Entia\*&quot; &quot;$(SolutionDir)Release\&quot;" />
+    <Exec Command="xcopy /y /q &quot;$(PublishDir)*&quot; &quot;$(SolutionDir)Release\&quot;" />
   </Target>
 
   <ItemGroup>
