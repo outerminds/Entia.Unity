@@ -1,7 +1,7 @@
-﻿[entia]:https://github.com/outerminds/Entia
+[entia]:https://github.com/outerminds/Entia
 [logo]:https://github.com/outerminds/Entia/blob/master/Resources/Logo.png
 [releases]:https://github.com/outerminds/Entia.Unity/releases
-[manual]:./
+[wiki]:https://github.com/outerminds/Entia.Unity/wiki
 [documentation]:./
 # ![Entia.Unity][logo]
 
@@ -13,13 +13,12 @@ ___
 ### Table of contents
 <!--ts-->
    * [Download][releases]
-   * [Getting Started](#getting-started)
+   * [Installation](#installation)
    * [Generator](#generator)
-   * [Manual][manual]
-   * [Documentation][documentation]
+   * [Wiki][wiki]
 <!--te-->
 
-# Getting Started
+# Installation
 - [Download][releases] the most recent stable version of Entia.Unity.
 - Extract the content of the _zip_ file in a _Plugins_ folder in your Unity project (ex: _Project/Assets/Plugins/Entia/_).
 - Optionally install the Visual Studio extension _Entia.Analyze.vsix_ to get _Entia_ specific code analysis.
@@ -27,7 +26,7 @@ ___
 ```csharp
 
 ```
-- For more details, please consult the [manual][manual].
+- For more details, please consult the [wiki][wiki].
 
 # Generator
 
