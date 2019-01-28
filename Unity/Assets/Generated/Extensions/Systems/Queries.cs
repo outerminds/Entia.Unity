@@ -4,5 +4,6 @@ namespace Systems
 	public static class QueriesExtensions
 	{
 		public static global::Entia.Entity Entity(in this global::Entia.Entity item) => item;
+		public static global::Systems.Queries.Query Query(in this global::Systems.Queries.Query item) => item;
 	}
 }

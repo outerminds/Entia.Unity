@@ -41,6 +41,12 @@ namespace Systems
 
     public struct Queries : ISystem
     {
+        [All(typeof(Entia.Components.Unity<>))]
+        public struct Query : IQueryable
+        {
+            public Read<Components.Component1> Component1;
+        }
+
         [All(typeof(IComponent))]
         public Group<Entity> NoEmpty;
         [None(typeof(IComponent))]
@@ -49,6 +55,7 @@ namespace Systems
         public Group<Entity> NoUnity;
         [All(typeof(Entia.Components.Unity<>))]
         public Group<Entity> OnlyUnity;
+        public Group<Query> UsingStruct;
     }
 
     public struct Spawner : IRun

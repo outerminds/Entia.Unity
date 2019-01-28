@@ -496,7 +496,7 @@ PlayerSettings:
   managedStrippingLevel:
     Standalone: 2
   incrementalIl2cppBuild: {}
-  allowUnsafeCode: 0
+  allowUnsafeCode: 1
   additionalIl2CppArgs: 
   scriptingRuntimeVersion: 1
   apiCompatibilityLevelPerPlatform: {}
