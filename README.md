@@ -9,7 +9,7 @@
 
 **Entia.Unity** is a full integration of the [**Entia**][entia] framework for the Unity game engine. It consists of a generator, inspectors, templates, tools and other conveniences that make the usage of the framework simple and accessible to Unity developers.
 
-___
+---
 ### Table of contents
 <!--ts-->
    * [Download][releases]
@@ -22,11 +22,6 @@ ___
 - [Download][releases] the most recent stable version of Entia.Unity.
 - Extract the content of the _zip_ file in a _Plugins_ folder in your Unity project (ex: _Project/Assets/Plugins/Entia/_).
 - Optionally install the Visual Studio extension _Entia.Analyze.vsix_ to get _Entia_ specific code analysis.
-- Here is a snippet of code to get you up and running:
-```csharp
-
-```
 - For more details, please consult the [wiki][wiki].
 
 # Generator
-
