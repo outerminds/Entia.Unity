@@ -12,7 +12,6 @@ _[**Entia**][entia] is a free, open-source, data-oriented, highly performant, pa
 ---
 ### Table of contents
 <!--ts-->
-   * [Download][releases]
    * [Installation](#installation)
    * [Generator](#generator)
    * [Wiki][wiki]
