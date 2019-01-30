@@ -556,8 +556,8 @@ $@"{indentation}public static bool Try{name}(in this {queryName} {item}, out {re
                         .Where(constructor => constructor.Parameters.Length > 0)
                         .Select(constructor => constructor.Parameters[0].Type))
                     .OfType<INamedTypeSymbol>()
-                    .SelectMany(type => FormatQueryExtensions(indent + 1, type.TypeArguments[0], set, context))
-                    .Distinct());
+                    .Distinct()
+                    .SelectMany(type => FormatQueryExtensions(indent + 1, type.TypeArguments[0], set, context)));
             var content =
 $@"{indentation}{FormatGenerated(system, context)}
 {indentation}public static class {system.Name}Extensions

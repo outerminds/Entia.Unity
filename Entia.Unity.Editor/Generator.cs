@@ -122,7 +122,7 @@ $@"Generation failed after '{timer.Elapsed}'.
                     CreateNoWindow = !debug,
                     WindowStyle = debug ? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden,
                 });
-                SaveProcess(ProcessPath(tool), process);
+                SaveProcess(tool, process);
             }
             catch
             {
@@ -150,15 +150,6 @@ This may happen because the .Net Core Runtime is not installed on this machine.
 
             if (log) UnityEngine.Debug.Log($"Generator processes was not found.");
             return false;
-            // var killed = false;
-            // foreach (var process in Processes(tool))
-            // {
-            //     process.Kill();
-            //     killed = true;
-            //     if (log) UnityEngine.Debug.Log($"Killed generator process '{process.Id}'.");
-            // }
-
-            // return killed;
         }
 
         static string[] Arguments(string tool, GeneratorSettings settings) =>
@@ -178,7 +169,7 @@ This may happen because the .Net Core Runtime is not installed on this machine.
 
         static bool TryProcess(string tool, out Process process)
         {
-            if (TryLoadProcess(ProcessPath(tool), out var identifier, out var time))
+            if (TryLoadProcess(tool, out var identifier, out var time))
             {
                 process = Process.GetProcessById(identifier);
                 return process != null && !process.HasExited && process.StartTime.Ticks == time;
@@ -188,32 +179,24 @@ This may happen because the .Net Core Runtime is not installed on this machine.
             return false;
         }
 
-        static void SaveProcess(string path, Process process)
-        {
-            try { File.WriteAllText(path, $"{process.Id};{process.StartTime.Ticks}"); }
-            catch { }
-        }
+        static void SaveProcess(string tool, Process process) =>
+            EditorPrefs.SetString(ProcessKey(tool), $"{process.Id};{process.StartTime.Ticks}");
 
-        static bool TryLoadProcess(string path, out int identifier, out long ticks)
+        static bool TryLoadProcess(string tool, out int identifier, out long ticks)
         {
-            try
+            if (EditorPrefs.GetString(ProcessKey(tool), null) is string value)
             {
-                if (File.Exists(path))
-                {
-                    var text = File.ReadAllText(path);
-                    var splits = text.Split(';');
-                    if (splits.Length == 2 && int.TryParse(splits[0], out identifier) && long.TryParse(splits[1], out ticks))
-                        return true;
-                }
+                var splits = value.Split(';');
+                if (splits.Length == 2 && int.TryParse(splits[0], out identifier) && long.TryParse(splits[1], out ticks))
+                    return true;
             }
-            catch { }
 
             identifier = default;
             ticks = default;
             return false;
         }
 
-        static string ProcessPath(string tool) => Path.Combine(tool.Directory(), "Process");
+        static string ProcessKey(string tool) => $"Entia_Generator:{tool}";
 
         static string Tool(GeneratorSettings settings) => settings.Tool.Files("*.dll").FirstOrDefault();
 
