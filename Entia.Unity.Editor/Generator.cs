@@ -15,7 +15,11 @@ namespace Entia.Unity.Editor
     public class Generator : AssetPostprocessor
     {
         [MenuItem("Entia/Generator/Birth")]
-        public static bool Birth() => TrySettings(out var settings) && Tool(settings) is string tool && Birth(tool, settings.Debug, true);
+        public static void Birth()
+        {
+            if (TrySettings(out var settings) && Tool(settings) is string tool)
+                Birth(tool, settings.Debug, true);
+        }
 
         [MenuItem("Entia/Generator/Kill")]
         public static bool Kill() => TrySettings(out var settings) && Tool(settings) is string tool && Kill(tool, true);
@@ -35,8 +39,7 @@ Make sure a proper path is defined in the '{nameof(GeneratorSettings)}' asset.")
                 return;
             }
 
-            Birth(tool, settings.Debug, settings.Debug || log);
-
+            var process = Birth(tool, settings.Debug, settings.Debug || log);
             var arguments = Arguments(tool, settings);
             var buffer = new byte[4096];
             var input = string.Join("|", arguments);
@@ -50,7 +53,20 @@ Make sure a proper path is defined in the '{nameof(GeneratorSettings)}' asset.")
                     while (!client.IsConnected && timer.Elapsed.TotalSeconds < settings.Timeout)
                     {
                         try { client.Connect(); }
-                        catch { Thread.Sleep(100); }
+                        catch
+                        {
+                            Thread.Sleep(100);
+                            if (process.HasExited)
+                            {
+                                UnityEngine.Debug.LogError(
+$@"Failed to connect to generator process.
+This may happen because the .Net Core Runtime is not installed on this machine. 
+-> Go to 'https://dotnet.microsoft.com/download' 
+-> Install the .Net Core Runtime version 2.1+.
+-> Restart Unity.");
+                                throw;
+                            }
+                        }
                     }
 
                     var count = Encoding.UTF32.GetBytes(input, 0, input.Length, buffer, 0);
@@ -87,51 +103,62 @@ $@"Generation failed after '{timer.Elapsed}'.
             return false;
         }
 
-        static bool Birth(string tool, bool debug, bool log)
+        static Process Birth(string tool, bool debug, bool log)
         {
-            var process = Processes(tool).FirstOrDefault();
-            if (process == null)
+            if (TryProcess(tool, out var process))
             {
-                try
-                {
-                    process = Process.Start(new ProcessStartInfo
-                    {
-                        WorkingDirectory = Application.dataPath,
-                        FileName = $"dotnet",
-                        Arguments = $"{tool} --watch {Process.GetCurrentProcess().Id};{tool}",
-                        CreateNoWindow = !debug,
-                        WindowStyle = debug ? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden
-                    });
-                }
-                catch
-                {
-                    UnityEngine.Debug.LogError(
-$@"Failed to birth generator process. 
-This may happen because the .Net Core Runtime is not installed on this machine. See https://dotnet.microsoft.com/download and install the .Net Core Runtime version 2.1+.");
-                    throw;
-                }
-
-                if (log) UnityEngine.Debug.Log($"Gave birth to generator in process '{process.Id}'.");
-
-                return true;
+                if (log) UnityEngine.Debug.Log($"Generator is already alive in process '{process.Id}'.");
+                return process;
             }
 
-            if (log) UnityEngine.Debug.Log($"Generator is already alive in process '{process.Id}'.");
-            return false;
+            var input = $"--watch {Process.GetCurrentProcess().Id};{tool}";
+            try
+            {
+                process = Process.Start(new ProcessStartInfo
+                {
+                    WorkingDirectory = Application.dataPath,
+                    FileName = $"dotnet",
+                    Arguments = $"{tool} {input}",
+                    CreateNoWindow = !debug,
+                    WindowStyle = debug ? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden,
+                });
+                SaveProcess(ProcessPath(tool), process);
+            }
+            catch
+            {
+                UnityEngine.Debug.LogError(
+$@"Failed to birth generator process. 
+This may happen because the .Net Core Runtime is not installed on this machine. 
+-> Go to 'https://dotnet.microsoft.com/download' 
+-> Install the .Net Core Runtime version 2.1+.
+-> Restart Unity.");
+                throw;
+            }
+
+            if (log) UnityEngine.Debug.Log($"Gave birth to generator in process '{process.Id}' with input '{input}'.");
+            return process;
         }
 
         static bool Kill(string tool, bool log)
         {
-            var killed = false;
-            foreach (var process in Processes(tool))
+            if (TryProcess(tool, out var process))
             {
                 process.Kill();
-                killed = true;
                 if (log) UnityEngine.Debug.Log($"Killed generator process '{process.Id}'.");
+                return true;
             }
 
-            if (log && !killed) UnityEngine.Debug.Log($"Generator processes was not found.");
-            return killed;
+            if (log) UnityEngine.Debug.Log($"Generator processes was not found.");
+            return false;
+            // var killed = false;
+            // foreach (var process in Processes(tool))
+            // {
+            //     process.Kill();
+            //     killed = true;
+            //     if (log) UnityEngine.Debug.Log($"Killed generator process '{process.Id}'.");
+            // }
+
+            // return killed;
         }
 
         static string[] Arguments(string tool, GeneratorSettings settings) =>
@@ -149,8 +176,44 @@ This may happen because the .Net Core Runtime is not installed on this machine. 
                 $@"{settings.Log}"
             };
 
-        static Process[] Processes() => Process.GetProcessesByName("dotnet");
-        static IEnumerable<Process> Processes(string tool) => Processes().Where(process => process.Modules.Cast<ProcessModule>().Any(module => module.FileName == tool));
+        static bool TryProcess(string tool, out Process process)
+        {
+            if (TryLoadProcess(ProcessPath(tool), out var identifier, out var time))
+            {
+                process = Process.GetProcessById(identifier);
+                return process != null && !process.HasExited && process.StartTime.Ticks == time;
+            }
+
+            process = default;
+            return false;
+        }
+
+        static void SaveProcess(string path, Process process)
+        {
+            try { File.WriteAllText(path, $"{process.Id};{process.StartTime.Ticks}"); }
+            catch { }
+        }
+
+        static bool TryLoadProcess(string path, out int identifier, out long ticks)
+        {
+            try
+            {
+                if (File.Exists(path))
+                {
+                    var text = File.ReadAllText(path);
+                    var splits = text.Split(';');
+                    if (splits.Length == 2 && int.TryParse(splits[0], out identifier) && long.TryParse(splits[1], out ticks))
+                        return true;
+                }
+            }
+            catch { }
+
+            identifier = default;
+            ticks = default;
+            return false;
+        }
+
+        static string ProcessPath(string tool) => Path.Combine(tool.Directory(), "Process");
 
         static string Tool(GeneratorSettings settings) => settings.Tool.Files("*.dll").FirstOrDefault();
 

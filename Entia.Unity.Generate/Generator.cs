@@ -425,7 +425,9 @@ $@"{indentation}using System.Linq;
                 if (current is INamedTypeSymbol named && named.Implements(context.IQueryable))
                 {
                     var definition = named.OriginalDefinition;
-                    if (context.Write == definition)
+                    if (context.Entity == definition)
+                        yield return new Extension { Outer = named, Inner = named };
+                    else if (context.Write == definition)
                         yield return new Extension
                         {
                             Outer = named,
@@ -554,7 +556,8 @@ $@"{indentation}public static bool Try{name}(in this {queryName} {item}, out {re
                         .Where(constructor => constructor.Parameters.Length > 0)
                         .Select(constructor => constructor.Parameters[0].Type))
                     .OfType<INamedTypeSymbol>()
-                    .SelectMany(type => FormatQueryExtensions(indent + 1, type.TypeArguments[0], set, context)));
+                    .SelectMany(type => FormatQueryExtensions(indent + 1, type.TypeArguments[0], set, context))
+                    .Distinct());
             var content =
 $@"{indentation}{FormatGenerated(system, context)}
 {indentation}public static class {system.Name}Extensions
