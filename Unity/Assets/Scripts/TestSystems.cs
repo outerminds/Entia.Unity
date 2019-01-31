@@ -63,6 +63,7 @@ namespace Systems
 
         public Resource<Resources.Prefabs> Prefabs;
         public Group<Query> Group1;
+        [All(typeof(Entia.Components.Unity<>))]
         public Group<Entity, Read<Components.Component1>, Maybe<Read<Components.Inner.Component2>>> Group2;
         public AllEntities Entities;
         public AllComponents Components;
