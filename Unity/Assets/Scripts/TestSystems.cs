@@ -76,9 +76,9 @@ namespace Systems
 
         public void Run()
         {
-            if (Input.GetKeyDown(KeyCode.K)) Object.Instantiate(Prefabs.Value.Prefab);
+            if (Input.GetKey(KeyCode.K)) Object.Instantiate(Prefabs.Value.Prefab);
 
-            if (Input.GetKeyDown(KeyCode.L))
+            if (Input.GetKey(KeyCode.L))
             {
                 foreach (var item in Group)
                 {

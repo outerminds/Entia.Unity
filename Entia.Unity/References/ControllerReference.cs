@@ -45,7 +45,7 @@ namespace Entia.Unity
 
         protected virtual void OnEnable() => Controller?.Enable();
         protected virtual void OnDisable() => Controller?.Disable();
-        protected virtual void Update() => Controller?.Run();
+        protected virtual void Update() => Controller?.Run<Run>();
         protected virtual void FixedUpdate() => Controller?.Run<RunFixed>();
         protected virtual void LateUpdate() => Controller?.Run<RunLate>();
 
@@ -66,13 +66,18 @@ namespace Entia.Unity
                 }
 
                 Controller = result.Or(default(Controller));
-                Controller?.Initialize();
+                Controller?.Run<Initialize>();
+                Controller?.Run<React.Initialize>();
             }
         }
 
         void Dispose()
         {
-            if (_initialized && _disposed.Change(true)) Controller?.Dispose();
+            if (_initialized && _disposed.Change(true))
+            {
+                Controller?.Run<React.Dispose>();
+                Controller?.Run<Dispose>();
+            }
         }
 
         void IControllerReference.Initialize(World world) => Initialize(world);
