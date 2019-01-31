@@ -16,13 +16,13 @@ namespace Systems
 			value = default;
 			return false;
 		}
-		public static global::Entia.Entity Entity(in this global::Systems.Spawner.Queryz item) => item.Query1.Entity;
-		public static ref readonly global::Components.Component1 Component1(in this global::Systems.Spawner.Queryz item) => ref item.Query1.Component1.Value;
-		public static bool TryComponent2(in this global::Systems.Spawner.Queryz item, out global::Entia.Queryables.Read<global::Components.Inner.Component2> value)
+		public static global::Entia.Entity Entity(in this global::Entia.Queryables.All<global::Entia.Entity, global::Entia.Queryables.Read<global::Components.Component1>, global::Entia.Queryables.Maybe<global::Entia.Queryables.Read<global::Components.Inner.Component2>>> item) => item.Value1;
+		public static ref readonly global::Components.Component1 Component1(in this global::Entia.Queryables.All<global::Entia.Entity, global::Entia.Queryables.Read<global::Components.Component1>, global::Entia.Queryables.Maybe<global::Entia.Queryables.Read<global::Components.Inner.Component2>>> item) => ref item.Value2.Value;
+		public static bool TryComponent2(in this global::Entia.Queryables.All<global::Entia.Entity, global::Entia.Queryables.Read<global::Components.Component1>, global::Entia.Queryables.Maybe<global::Entia.Queryables.Read<global::Components.Inner.Component2>>> item, out global::Entia.Queryables.Read<global::Components.Inner.Component2> value)
 		{
-			if (item.Query1.Component2.Has)
+			if (item.Value3.Has)
 			{
-				value = item.Query1.Component2.Value;
+				value = item.Value3.Value;
 				return true;
 			}
 			

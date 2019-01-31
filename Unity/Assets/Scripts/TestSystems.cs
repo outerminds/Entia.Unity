@@ -61,16 +61,9 @@ namespace Systems
             public Maybe<Read<Components.Inner.Component2>> Component2;
         }
 
-        public struct Queryz : IQueryable
-        {
-            public Query Query1;
-            public Query Query2;
-            public Query Query3;
-        }
-
         public Resource<Resources.Prefabs> Prefabs;
-        public Group<Query> Group;
-        public Group<Queryz> Groupz;
+        public Group<Query> Group1;
+        public Group<Entity, Read<Components.Component1>, Maybe<Read<Components.Inner.Component2>>> Group2;
         public AllEntities Entities;
         public AllComponents Components;
 
@@ -80,15 +73,19 @@ namespace Systems
 
             if (Input.GetKey(KeyCode.L))
             {
-                foreach (var item in Group)
+                foreach (var item in Group1)
                 {
                     Entities.Destroy(item.Entity);
                     break;
                 }
+            }
 
-                foreach (var item in Groupz)
+            if (Input.GetKey(KeyCode.J))
+            {
+                foreach (var item in Group2)
                 {
-
+                    Entities.Destroy(item.Entity());
+                    break;
                 }
             }
         }

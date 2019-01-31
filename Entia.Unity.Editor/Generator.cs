@@ -171,8 +171,12 @@ This may happen because the .Net Core Runtime is not installed on this machine.
         {
             if (TryLoadProcess(tool, out var identifier, out var time))
             {
-                process = Process.GetProcessById(identifier);
-                return process != null && !process.HasExited && process.StartTime.Ticks == time;
+                try
+                {
+                    process = Process.GetProcessById(identifier);
+                    return !process.HasExited && process.StartTime.Ticks == time;
+                }
+                catch { }
             }
 
             process = default;
