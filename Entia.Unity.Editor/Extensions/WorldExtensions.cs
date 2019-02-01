@@ -209,8 +209,7 @@ namespace Entia.Unity.Editor
         public static void ShowEmitter(this World _, string label, IEmitter emitter)
         {
             var receivers = string.Join(", ", emitter.Receivers.Select(receiver => receiver.Count));
-            var reactions = string.Join(", ", emitter.Reactions.Select(reaction => reaction.Count));
-            LayoutUtility.Label($"{label} [{receivers}] [{reactions}]");
+            LayoutUtility.Label($"{label} [{emitter.Reaction.Count()}] [{receivers}]");
         }
 
         public static void ShowController(this World world, Controller controller, Dictionary<Node, TimeSpan> elapsed, params string[] path)
@@ -414,6 +413,6 @@ namespace Entia.Unity.Editor
             LayoutUtility.Label($"{label} ({receiver.Count})");
 
         public static void ShowReaction(this World _, string label, IReaction reaction) =>
-            LayoutUtility.Label($"{label} ({reaction.Count})");
+            LayoutUtility.Label($"{label} ({reaction.Count()})");
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Entia;
+using Entia.Core;
 using Entia.Injectables;
 using Entia.Queryables;
 using Entia.Systems;
@@ -90,5 +91,41 @@ namespace Systems
                 }
             }
         }
+    }
+
+    public struct EmitterA : IRun
+    {
+        public AllEmitters Emitters;
+
+        public void Run()
+        {
+            Debug.Log("A | " + Time.frameCount);
+            Emitters.Emit(new Messages.MessageA());
+            Debug.Log("B | " + Time.frameCount);
+            Emitters.Emit(new Messages.MessageB());
+            Debug.Log("C | " + Time.frameCount);
+            Emitters.Emit(new Messages.MessageC());
+        }
+    }
+
+    public struct Reactor1 : IReact<Messages.MessageA>, IReact<Messages.MessageB>, IReact<Messages.MessageC>
+    {
+        public void React(in Messages.MessageA message) => Debug.Log(GetType().Format() + " | " + message);
+        public void React(in Messages.MessageB message) => Debug.Log(GetType().Format() + " | " + message);
+        public void React(in Messages.MessageC message) => Debug.Log(GetType().Format() + " | " + message);
+    }
+
+    public struct Reactor2 : IReact<Messages.MessageB>
+    {
+        public void React(in Messages.MessageA message) => Debug.Log(GetType().Format() + " | " + message);
+        public void React(in Messages.MessageB message) => Debug.Log(GetType().Format() + " | " + message);
+        public void React(in Messages.MessageC message) => Debug.Log(GetType().Format() + " | " + message);
+    }
+
+    public struct Reactor3 : IReact<Messages.MessageA>, IReact<Messages.MessageB>
+    {
+        public void React(in Messages.MessageA message) => Debug.Log(GetType().Format() + " | " + message);
+        public void React(in Messages.MessageB message) => Debug.Log(GetType().Format() + " | " + message);
+        public void React(in Messages.MessageC message) => Debug.Log(GetType().Format() + " | " + message);
     }
 }

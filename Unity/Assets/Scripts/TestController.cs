@@ -14,7 +14,11 @@ namespace Controllers
             Sequence("TestController",
                 Nodes.Default,
                 System<Systems.Move>(),
-                System<Systems.Emitter>(),
+                // System<Systems.Emitter>(),
+                System<Systems.EmitterA>(),
+                System<Systems.Reactor1>(),
+                System<Systems.Reactor2>(),
+                System<Systems.Reactor3>(),
                 System<Systems.Spawner>(),
                 System<Systems.Queries>(),
                 System<Systems.Reactive>()

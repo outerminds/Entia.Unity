@@ -27,7 +27,8 @@ namespace Entia.Unity
                 try
                 {
                     Task.Run(() => Run(logger, options), cancel.Token);
-                    while (Process.GetProcessById(options.Watch.process) is Process) Thread.Sleep(100);
+                    while (Process.GetProcessById(options.Watch.process) is Process process && process.StartTime.Ticks == options.Watch.ticks)
+                        Thread.Sleep(100);
                 }
                 catch { }
                 finally { cancel.Cancel(); }

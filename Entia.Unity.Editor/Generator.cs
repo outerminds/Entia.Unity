@@ -111,7 +111,7 @@ $@"Generation failed after '{timer.Elapsed}'.
                 return process;
             }
 
-            var input = $"--watch {Process.GetCurrentProcess().Id};{tool}";
+            var input = $"--watch {SerializeProcess(Process.GetCurrentProcess())};{tool}";
             try
             {
                 process = Process.Start(new ProcessStartInfo
@@ -183,8 +183,10 @@ This may happen because the .Net Core Runtime is not installed on this machine.
             return false;
         }
 
+        static string SerializeProcess(Process process) => $"{process.Id};{process.StartTime.Ticks}";
+
         static void SaveProcess(string tool, Process process) =>
-            EditorPrefs.SetString(ProcessKey(tool), $"{process.Id};{process.StartTime.Ticks}");
+            EditorPrefs.SetString(ProcessKey(tool), SerializeProcess(process));
 
         static bool TryLoadProcess(string tool, out int identifier, out long ticks)
         {

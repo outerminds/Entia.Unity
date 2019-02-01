@@ -10,7 +10,7 @@ namespace Entia.Unity
         public string Suffix { get; private set; } = "";
         public string Log { get; private set; } = "";
         public string Link { get; private set; } = "";
-        public (int process, string pipe) Watch { get; private set; } = (0, "");
+        public (int process, long ticks, string pipe) Watch { get; private set; } = (0, 0L, "");
 
         public static Options Parse(params string[] arguments)
         {
@@ -29,7 +29,8 @@ namespace Entia.Unity
                     case "--link": next.Link = arguments[index + 1]; break;
                     case "--watch":
                         var splits = arguments[index + 1].Split(";");
-                        if (splits.Length == 2 && int.TryParse(splits[0], out var process)) next.Watch = (process, splits[1]);
+                        if (splits.Length == 3 && int.TryParse(splits[0], out var process) && long.TryParse(splits[1], out var ticks))
+                            next.Watch = (process, ticks, splits[2]);
                         break;
                     default: return next;
                 }
