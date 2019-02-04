@@ -26,19 +26,21 @@ namespace Entia.Runners
         public IEnumerable<Phase> Phases(Controller controller) => Children.SelectMany(child => child.Phases(controller));
         public Option<Runner<T>> Specialize<T>(Controller controller) where T : struct, IPhase
         {
-            var children = Children
-                .TrySelect((IRunner child, out Runner<T> special) => child.Specialize<T>(controller).TryValue(out special))
-                .ToArray();
-            switch (children.Length)
+            var children = (items: new Runner<T>[Children.Length], count: 0);
+            foreach (var child in Children)
+                if (child.Specialize<T>(controller).TryValue(out var special)) children.Push(special);
+
+            switch (children.count)
             {
                 case 0: return Option.None();
-                case 1: return children[0];
+                case 1: return children.items[0];
                 default:
+                    var runners = children.ToArray();
                     return new Runner<T>((in T phase) =>
                         JobUtility.Parallel(
-                            (phase, children),
+                            (phase, runners),
                             (in (T phase, Runner<T>[] runners) state, int index) => state.runners[index].Run(state.phase))
-                        .Schedule(children.Length, 1)
+                        .Schedule(runners.Length, 1)
                         .Complete());
             }
         }
@@ -53,8 +55,9 @@ namespace Entia.Runners
 
         public IEnumerable<Type> Phases() => Child.Phases();
         public IEnumerable<Phase> Phases(Controller controller) => Child.Phases(controller);
-        public Option<Runner<T>> Specialize<T>(Controller controller) where T : struct, IPhase =>
-            Child.Specialize<T>(controller).Map(child =>
+        public Option<Runner<T>> Specialize<T>(Controller controller) where T : struct, IPhase
+        {
+            if (Child.Specialize<T>(controller).TryValue(out var child))
             {
                 if (Map.TryGet<T>(out var pair))
                 {
@@ -69,6 +72,8 @@ namespace Entia.Runners
                     });
                 }
                 return child;
-            });
+            }
+            return Option.None();
+        }
     }
 }
