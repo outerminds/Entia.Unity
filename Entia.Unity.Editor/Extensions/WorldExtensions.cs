@@ -2,12 +2,14 @@
 using Entia.Dependencies;
 using Entia.Injectables;
 using Entia.Modules;
+using Entia.Modules.Build;
 using Entia.Modules.Component;
 using Entia.Modules.Control;
 using Entia.Modules.Group;
 using Entia.Modules.Message;
 using Entia.Modules.Query;
 using Entia.Nodes;
+using Entia.Phases;
 using Entia.Systems;
 using System;
 using System.Collections;
@@ -40,7 +42,7 @@ namespace Entia.Unity.Editor
             {
                 case World _: LayoutUtility.Label(label); break;
                 case Entity entity: world.ShowEntity(label, entity, path); break;
-                case Controller controller: world.ShowController(controller, new Dictionary<Node, TimeSpan>(), path); break;
+                case Controller controller: world.ShowController(controller, new Dictionary<IRunner, TimeSpan>(), path); break;
                 case IGroup group: world.ShowGroup(label, group, path); break;
                 case IEmitter emitter: world.ShowEmitter(label, emitter); break;
                 case IReceiver receiver: world.ShowReceiver(label, receiver); break;
@@ -212,9 +214,9 @@ namespace Entia.Unity.Editor
             LayoutUtility.Label($"{label} [{emitter.Reaction.Count()}] [{receivers}]");
         }
 
-        public static void ShowController(this World world, Controller controller, Dictionary<Node, TimeSpan> elapsed, params string[] path)
+        public static void ShowController(this World world, Controller controller, Dictionary<IRunner, TimeSpan> elapsed, params string[] path)
         {
-            void Node(Node node, Node profile = null, Node state = null, params string[] current)
+            void Node(Node node, IRunner profile = null, IRunner state = null, params string[] current)
             {
                 var type = node.Value.GetType();
                 var label = string.IsNullOrWhiteSpace(node.Name) ? type.Format() : node.Name;
@@ -265,28 +267,26 @@ namespace Entia.Unity.Editor
 
                 switch (node.Value)
                 {
-                    case Profile _: profile = node; Descend(); break;
-                    case State _: state = node; Descend(); break;
-                    case IWrapper _: Descend(); break;
-                    case Entia.Nodes.System _ when controller.Runners(node).Select(runner => runner.Instance).OfType<ISystem>().TryFirst(out var instance):
+                    case Profile _ when controller.TryRunner(node, out var runner): profile = runner; Descend(); break;
+                    case State _ when controller.TryRunner(node, out var runner): state = runner; Descend(); break;
+                    case Entia.Nodes.System _ when controller.TryRunner(node, out var runner) && runner.Instance is ISystem system:
+                        using (LayoutUtility.Box())
                         {
-                            using (LayoutUtility.Box())
+                            var fields = TypeUtility.GetFields(system.GetType());
+                            var (enabled, expanded) = Label(system.GetType());
+                            if (expanded)
                             {
-                                var fields = TypeUtility.GetFields(instance.GetType());
-                                var (enabled, expanded) = Label(instance.GetType());
-                                if (expanded)
+                                using (LayoutUtility.Disable(!enabled))
+                                using (LayoutUtility.Indent())
                                 {
-                                    using (LayoutUtility.Disable(!enabled))
-                                    using (LayoutUtility.Indent())
-                                    {
-                                        fields.Iterate((field, index) => world.ShowField(
-                                            $"{field.Name}: {field.FieldType.Format()}", field, instance,
-                                            current.Append(field.Name, field.FieldType.FullName, index.ToString()).ToArray()));
-                                    }
+                                    fields.Iterate((field, index) => world.ShowField(
+                                        $"{field.Name}: {field.FieldType.Format()}", field, system,
+                                        current.Append(field.Name, field.FieldType.FullName, index.ToString()).ToArray()));
                                 }
                             }
-                            break;
                         }
+                        break;
+                    case IWrapper _: Descend(); break;
                     default:
                         {
                             var (enabled, expanded) = Label(node.Value.GetType());
@@ -300,7 +300,7 @@ namespace Entia.Unity.Editor
                 }
             }
 
-            Node(controller.Node, null, null, path);
+            Node(controller.Root.node, null, null, path);
         }
 
         public static void ShowNode(this World world, Node node, bool details, params string[] path)
@@ -311,16 +311,23 @@ namespace Entia.Unity.Editor
                 var prefix = string.IsNullOrWhiteSpace(currentNode.Name) ? type.Format() : currentNode.Name;
                 var suffix = !string.IsNullOrWhiteSpace(currentNode.Name) && details ? $": {type.Format()}" : "";
                 var label = prefix + suffix;
-                var result = world.Analyzers().Analyze(currentNode, node);
+                var analysis = world.Analyzers().Analyze(currentNode, node);
+                var building = world.Builders().Build(currentNode, node);
 
                 currentPath = currentPath.Append(prefix).ToArray();
 
                 void Descend()
                 {
-                    if (details && result.TryValue(out var dependencies))
+                    if (details && analysis.TryValue(out var dependencies) && building.TryValue(out var runner))
                     {
                         using (LayoutUtility.Disable())
                         {
+                            LayoutUtility.ChunksFoldout(
+                                nameof(Phases),
+                                runner.Phases().Distinct().ToArray(),
+                                (phase, _) => LayoutUtility.Label(phase.Format()),
+                                typeof(IPhase),
+                                currentPath.Append(nameof(IPhase)).ToArray());
                             LayoutUtility.ChunksFoldout(
                                 nameof(Dependencies),
                                 dependencies,
@@ -391,7 +398,7 @@ namespace Entia.Unity.Editor
                             }
                         }
                         break;
-                    case Parallel _ when result.TryMessages(out var messages):
+                    case Parallel _ when analysis.TryMessages(out var messages):
                         Label();
                         using (LayoutUtility.Indent())
                         {

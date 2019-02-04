@@ -430,11 +430,6 @@
             The selection of component types that are stored in this segment with the minimum and maximum indices of those types.
             </summary>
     </member>
-    <member name="F:Entia.Modules.Component.Segment.Stores">
-      <summary>
-            The component stores.
-            </summary>
-    </member>
     <member name="F:Entia.Modules.Component.Segment.Entities">
       <summary>
             The entities.
@@ -479,6 +474,7 @@
       <param name="index">The component type index.</param>
       <returns>The component store.</returns>
     </member>
+    <!-- Badly formed XML comment ignored for member "M:Entia.Modules.Component.Segment.Ensure" -->
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>
       <returns>An enumerator that can be used to iterate through the collection.</returns>

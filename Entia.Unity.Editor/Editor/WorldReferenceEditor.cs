@@ -1,6 +1,7 @@
 ﻿using Entia.Core;
 using Entia.Messages;
 using Entia.Modules;
+using Entia.Modules.Build;
 using Entia.Modules.Message;
 using Entia.Nodes;
 using System;
@@ -20,7 +21,7 @@ namespace Entia.Unity.Editor
         public WorldReference Target => target as WorldReference;
         public World World => Target?.World;
 
-        readonly Dictionary<Node, TimeSpan> _nodeToElapsed = new Dictionary<Node, TimeSpan>();
+        readonly Dictionary<IRunner, TimeSpan> _elapsed = new Dictionary<IRunner, TimeSpan>();
         Receiver<OnProfile> _onProfile;
 
         public override void OnInspectorGUI()
@@ -51,7 +52,7 @@ namespace Entia.Unity.Editor
         {
             while (_onProfile.TryPop(out var message))
             {
-                _nodeToElapsed[message.Node] = message.Elapsed;
+                _elapsed[message.Runner] = message.Elapsed;
                 Repaint();
             }
         }
@@ -114,7 +115,7 @@ namespace Entia.Unity.Editor
             LayoutUtility.ChunksFoldout(
                 nameof(Modules.Controllers),
                 module.ToArray(),
-                (controller, index) => World.ShowController(controller, _nodeToElapsed, nameof(Modules.Controllers), index.ToString()),
+                (controller, index) => World.ShowController(controller, _elapsed, nameof(Modules.Controllers), index.ToString()),
                 module.GetType());
     }
 }
