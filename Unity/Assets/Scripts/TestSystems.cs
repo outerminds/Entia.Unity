@@ -57,16 +57,18 @@ namespace Systems
         [All(typeof(Entia.Components.Unity<>))]
         public struct Query : IQueryable
         {
-            public Maybe<Read<Components.Inner.Component1>> Component2;
+            public Maybe<Read<Components.Inner.Component7>> Component2;
             public Write<Components.Component1> Component10;
             public Entity Entity;
             public Write<Components.Component1> Component11;
             public Maybe<Read<Components.Inner.Component2>> Component3;
             public Write<Components.Component1> Component12;
-            public Maybe<Any<Write<Components.Inner.Component3>, Read<Components.Inner.Component4>>> Component4;
+            public Any<Write<Components.Inner.Component3>, Read<Components.Inner.Component4>> Component4;
             public Write<Components.Component1> Component13;
             public Maybe<Read<Components.Inner.Component5>> Component5;
-            public Write<Components.Component1> Component14;
+            public Write<Components.Inner.Component7> Component14;
+            public Maybe<Read<Components.Inner.Component3>> Component31;
+            public Maybe<Read<Components.Inner.Component4>> Component41;
         }
 
         public Resource<Resources.Prefabs> Prefabs;
@@ -84,12 +86,12 @@ namespace Systems
             {
                 foreach (var item in Group1)
                 {
-                    ref var c0 = ref item.Component10.Value;
-                    ref var c1 = ref item.Component11.Value;
-                    ref var c2 = ref item.Component12.Value;
-                    ref var c3 = ref item.Component13.Value;
-                    ref var c4 = ref item.Component14.Value;
-                    Debug.Log(c0.X + c1.X + c2.X + c3.X + c4.X);
+                    ref var c0 = ref item.Component1();
+                    ref var c1 = ref item.Component7();
+                    ref readonly var c2 = ref item.Component2(out var s1);
+                    ref var c3 = ref item.Component3(out var s2);
+                    ref readonly var c4 = ref item.Component5(out var s3);
+                    Debug.Log(c0.X + c1.I + c2.G + c3.A + c4.C);
                     Entities.Destroy(item.Entity);
                     break;
                 }

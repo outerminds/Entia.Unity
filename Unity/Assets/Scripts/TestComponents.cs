@@ -16,11 +16,11 @@ namespace Components
 
     namespace Inner
     {
-        public struct Component1 : IComponent { }
-        public struct Component2 : IComponent { }
-        public struct Component3 : IComponent { }
-        public struct Component4 : IComponent { }
-        public struct Component5 : IComponent { }
+        public struct Component7 : IComponent { public float X, A, B, C, D, E, F, G, H, I, J, K; }
+        public struct Component2 : IComponent { public long X, A, B, C, D, E, F, G, H, I, J, K; }
+        public struct Component3 : IComponent { public double X, A, B, C, D, E, F, G, H, I, J, K; }
+        public struct Component4 : IComponent { public uint X, A, B, C, D, E, F, G, H, I, J, K; }
+        public struct Component5 : IComponent { public byte X, A, B, C, D, E, F, G, H, I, J, K; }
     }
 
     public struct Link : IComponent

@@ -450,9 +450,7 @@ $@"{indentation}using System.Linq;
                         {
                             Outer = named,
                             Inner = named.TypeArguments[0],
-                            Accesses = new string[] { "Value" },
-                            Ref = false,
-                            Readonly = false
+                            Accesses = new string[] { "Value" }
                         };
                     }
                     else if (context.Maybe == definition)
@@ -489,10 +487,11 @@ $@"{indentation}using System.Linq;
             string.Join("", named.TypeArguments.Select(argument => argument.Name).Prepend(named.Name)) :
             type.Name;
 
-        static IEnumerable<(string signature, string body)> FormatQueryExtensions(int indent, ITypeSymbol query, HashSet<ITypeSymbol> set, Context context)
+        static IEnumerable<(string @return, string signature, string body)> FormatQueryExtensions(int indent, ITypeSymbol query, HashSet<ITypeSymbol> set, Context context)
         {
             const string item = "item";
             const string value = "value";
+            const string success = "success";
             var indentation = Indentation(indent);
             if (set.Add(query))
             {
@@ -502,6 +501,10 @@ $@"{indentation}using System.Linq;
                     var name = FormatExtensionName(extension.Inner);
                     var outerName = FormatGenericPath(extension.Outer);
                     var innerName = FormatGenericPath(extension.Inner);
+                    var access = string.Join(".", extension.Accesses.Prepend(item));
+                    var accessModifier = extension.Ref ? "ref " : "";
+                    var returnModifier = extension.Ref ? extension.Readonly ? "ref readonly " : "ref " : "";
+
                     if (extension.Try.HasValue)
                     {
                         var @try = extension.Try.Value;
@@ -512,7 +515,7 @@ $@"{indentation}using System.Linq;
                             ($".Value", innerName, $"{value} != null") :
                             ("", outerName, "true");
 
-                        yield return ($@"{indentation}public static bool Try{name}(in this {queryName} {item}, out {returnName} {value})", $@"
+                        yield return ($"{indentation}public static bool ", $"Try{name}(in this {queryName} {item}, out {returnName} {value})", $@"
 {indentation}{{
 {indentation}	if ({maybeHas})
 {indentation}	{{
@@ -523,17 +526,20 @@ $@"{indentation}using System.Linq;
 {indentation}	{value} = default;
 {indentation}	return false;
 {indentation}}}");
+
+                        if (extension.Ref)
+                            yield return ($"{indentation}public static {returnModifier}{innerName} ", $"{name}(in this {queryName} {item}, out bool {success})", $@"
+{indentation}{{
+{indentation}	if ({success} = {maybeHas}) return {accessModifier}{access};
+{indentation}	return {accessModifier}global::Entia.Core.Dummy<{innerName}>.Value;
+{indentation}}}");
                     }
                     else
                     {
-                        var access = string.Join(".", extension.Accesses.Prepend(item));
-                        var accessModifier = extension.Ref ? "ref " : "";
-                        var returnModifier = extension.Ref ? extension.Readonly ? "ref readonly " : "ref " : "";
-
-                        yield return ($"{indentation}public static {returnModifier}{innerName} {name}(in this {queryName} {item})", $" => {accessModifier}{access};");
+                        yield return ($"{indentation}public static {returnModifier}{innerName} ", $"{name}(in this {queryName} {item})", $" => {accessModifier}{access};");
 
                         if (extension.Ref && !extension.Readonly)
-                            yield return ($"{indentation}public static void {name}(in this {queryName} {item}, in {innerName} {value})", $" => {access} = {value};");
+                            yield return ($"{indentation}public static void ", $"{name}(in this {queryName} {item}, in {innerName} {value})", $" => {access} = {value};");
                     }
                 }
             }
@@ -557,7 +563,7 @@ $@"{indentation}using System.Linq;
                     .OfType<INamedTypeSymbol>()
                     .SelectMany(type => FormatQueryExtensions(indent + 1, type.TypeArguments[0], set, context))
                     .DistinctBy(extension => extension.signature)
-                    .Select(extension => $"{extension.signature}{extension.body}"));
+                    .Select(extension => $"{extension.@return}{extension.signature}{extension.body}"));
             var content =
 $@"{indentation}{FormatGenerated(system, context)}
 {indentation}public static class {system.Name}Extensions
