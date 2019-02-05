@@ -57,9 +57,16 @@ namespace Systems
         [All(typeof(Entia.Components.Unity<>))]
         public struct Query : IQueryable
         {
+            public Maybe<Read<Components.Inner.Component1>> Component2;
+            public Write<Components.Component1> Component10;
             public Entity Entity;
-            public Read<Components.Component1> Component1;
-            public Maybe<Read<Components.Inner.Component2>> Component2;
+            public Write<Components.Component1> Component11;
+            public Maybe<Read<Components.Inner.Component2>> Component3;
+            public Write<Components.Component1> Component12;
+            public Maybe<Any<Write<Components.Inner.Component3>, Read<Components.Inner.Component4>>> Component4;
+            public Write<Components.Component1> Component13;
+            public Maybe<Read<Components.Inner.Component5>> Component5;
+            public Write<Components.Component1> Component14;
         }
 
         public Resource<Resources.Prefabs> Prefabs;
@@ -77,6 +84,12 @@ namespace Systems
             {
                 foreach (var item in Group1)
                 {
+                    ref var c0 = ref item.Component10.Value;
+                    ref var c1 = ref item.Component11.Value;
+                    ref var c2 = ref item.Component12.Value;
+                    ref var c3 = ref item.Component13.Value;
+                    ref var c4 = ref item.Component14.Value;
+                    Debug.Log(c0.X + c1.X + c2.X + c3.X + c4.X);
                     Entities.Destroy(item.Entity);
                     break;
                 }

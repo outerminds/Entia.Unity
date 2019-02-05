@@ -16,7 +16,11 @@ namespace Components
 
     namespace Inner
     {
+        public struct Component1 : IComponent { }
         public struct Component2 : IComponent { }
+        public struct Component3 : IComponent { }
+        public struct Component4 : IComponent { }
+        public struct Component5 : IComponent { }
     }
 
     public struct Link : IComponent

@@ -15,7 +15,7 @@ namespace Controllers
                 Nodes.Default,
                 System<Systems.Move>(),
                 // System<Systems.Emitter>(),
-                System<Systems.EmitterA>(),
+                // System<Systems.EmitterA>(),
                 System<Systems.Reactor1>(),
                 System<Systems.Reactor2>(),
                 System<Systems.Reactor3>(),

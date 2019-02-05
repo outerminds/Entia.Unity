@@ -489,7 +489,7 @@ $@"{indentation}using System.Linq;
             string.Join("", named.TypeArguments.Select(argument => argument.Name).Prepend(named.Name)) :
             type.Name;
 
-        static IEnumerable<string> FormatQueryExtensions(int indent, ITypeSymbol query, HashSet<ITypeSymbol> set, Context context)
+        static IEnumerable<(string signature, string body)> FormatQueryExtensions(int indent, ITypeSymbol query, HashSet<ITypeSymbol> set, Context context)
         {
             const string item = "item";
             const string value = "value";
@@ -512,18 +512,17 @@ $@"{indentation}using System.Linq;
                             ($".Value", innerName, $"{value} != null") :
                             ("", outerName, "true");
 
-                        yield return
-$@"{indentation}public static bool Try{name}(in this {queryName} {item}, out {returnName} {value})
+                        yield return ($@"{indentation}public static bool Try{name}(in this {queryName} {item}, out {returnName} {value})", $@"
 {indentation}{{
 {indentation}	if ({maybeHas})
 {indentation}	{{
 {indentation}		{value} = {maybeValue}{accessSuffix};
 {indentation}		return {returnHas};
 {indentation}	}}
-{indentation}	
+{indentation}
 {indentation}	{value} = default;
 {indentation}	return false;
-{indentation}}}";
+{indentation}}}");
                     }
                     else
                     {
@@ -531,10 +530,10 @@ $@"{indentation}public static bool Try{name}(in this {queryName} {item}, out {re
                         var accessModifier = extension.Ref ? "ref " : "";
                         var returnModifier = extension.Ref ? extension.Readonly ? "ref readonly " : "ref " : "";
 
-                        yield return $"{indentation}public static {returnModifier}{innerName} {name}(in this {queryName} {item}) => {accessModifier}{access};";
+                        yield return ($"{indentation}public static {returnModifier}{innerName} {name}(in this {queryName} {item})", $" => {accessModifier}{access};");
 
                         if (extension.Ref && !extension.Readonly)
-                            yield return $"{indentation}public static void {name}(in this {queryName} {item}, in {innerName} {value}) => {access} = {value};";
+                            yield return ($"{indentation}public static void {name}(in this {queryName} {item}, in {innerName} {value})", $" => {access} = {value};");
                     }
                 }
             }
@@ -556,8 +555,9 @@ $@"{indentation}public static bool Try{name}(in this {queryName} {item}, out {re
                         .Where(constructor => constructor.Parameters.Length > 0)
                         .Select(constructor => constructor.Parameters[0].Type))
                     .OfType<INamedTypeSymbol>()
-                    .Distinct()
-                    .SelectMany(type => FormatQueryExtensions(indent + 1, type.TypeArguments[0], set, context)));
+                    .SelectMany(type => FormatQueryExtensions(indent + 1, type.TypeArguments[0], set, context))
+                    .DistinctBy(extension => extension.signature)
+                    .Select(extension => $"{extension.signature}{extension.body}"));
             var content =
 $@"{indentation}{FormatGenerated(system, context)}
 {indentation}public static class {system.Name}Extensions
