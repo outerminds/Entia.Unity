@@ -24,24 +24,24 @@ namespace Entia.Runners
 
         public IEnumerable<Type> Phases() => Children.SelectMany(child => child.Phases());
         public IEnumerable<Phase> Phases(Controller controller) => Children.SelectMany(child => child.Phases(controller));
-        public Option<Runner<T>> Specialize<T>(Controller controller) where T : struct, IPhase
+        public Option<Run<T>> Specialize<T>(Controller controller) where T : struct, IPhase
         {
-            var children = (items: new Runner<T>[Children.Length], count: 0);
-            foreach (var child in Children)
-                if (child.Specialize<T>(controller).TryValue(out var special)) children.Push(special);
+            var children = (items: new Run<T>[Children.Length], count: 0);
+            foreach (var child in Children) if (child.Specialize<T>(controller).TryValue(out var special)) children.Push(special);
 
             switch (children.count)
             {
                 case 0: return Option.None();
                 case 1: return children.items[0];
                 default:
-                    var runners = children.ToArray();
-                    return new Runner<T>((in T phase) =>
+                    var runs = children.ToArray();
+                    void Run(in T phase) =>
                         JobUtility.Parallel(
-                            (phase, runners),
-                            (in (T phase, Runner<T>[] runners) state, int index) => state.runners[index].Run(state.phase))
-                        .Schedule(runners.Length, 1)
-                        .Complete());
+                            (phase, runs),
+                            (in (T phase, Run<T>[] runs) state, int index) => state.runs[index](state.phase))
+                        .Schedule(runs.Length, 1)
+                        .Complete();
+                    return new Run<T>(Run);
             }
         }
     }
@@ -55,7 +55,7 @@ namespace Entia.Runners
 
         public IEnumerable<Type> Phases() => Child.Phases();
         public IEnumerable<Phase> Phases(Controller controller) => Child.Phases(controller);
-        public Option<Runner<T>> Specialize<T>(Controller controller) where T : struct, IPhase
+        public Option<Run<T>> Specialize<T>(Controller controller) where T : struct, IPhase
         {
             if (Child.Specialize<T>(controller).TryValue(out var child))
             {
@@ -63,13 +63,14 @@ namespace Entia.Runners
                 {
                     var (sampler, recorder) = pair;
                     var messages = controller.World.Messages();
-                    return new Runner<T>((in T phase) =>
+                    void Run(in T phase)
                     {
                         sampler.Begin();
-                        child.Run(phase);
+                        child(phase);
                         sampler.End();
                         messages.Emit(new OnProfile { Runner = this, Phase = typeof(T), Elapsed = TimeSpan.FromTicks(recorder.elapsedNanoseconds / 100) });
-                    });
+                    }
+                    return new Run<T>(Run);
                 }
                 return child;
             }

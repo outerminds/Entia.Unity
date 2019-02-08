@@ -45,5 +45,7 @@ namespace Entia.Unity
         public static string Capitalize(this string value) =>
             string.IsNullOrEmpty(value) ? value :
             value[0].ToString().ToUpper() + value.Substring(1);
+
+        public static string Justify(this string value, int length) => value + new string(' ', Math.Max(length - value.Length, 0));
     }
 }

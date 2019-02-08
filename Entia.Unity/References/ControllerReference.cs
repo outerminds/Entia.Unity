@@ -29,11 +29,7 @@ namespace Entia.Unity
         bool _initialized;
         bool _disposed;
 
-        protected virtual Result<Controller> Create(World world)
-        {
-            var node = Application.isEditor || Debug.isDebugBuild ? Node.Profile() : Node;
-            return world.Controllers().Control(node.Resolve());
-        }
+        protected virtual Result<Controller> Create(World world) => world.Controllers().Control(Debug.isDebugBuild ? Node.Profile() : Node);
 
         void Awake()
         {

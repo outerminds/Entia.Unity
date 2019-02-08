@@ -10,17 +10,15 @@ namespace Entia.Schedulers
 {
     public sealed class RunFixed : Scheduler<IRunFixed>
     {
-        public override IEnumerable<Type> Phases => new[] { typeof(Phases.RunFixed) };
-
-        public override IEnumerable<Phase> Schedule(IRunFixed instance, Controller controller) =>
+        public override Type[] Phases => new[] { typeof(Phases.RunFixed) };
+        public override Phase[] Schedule(IRunFixed instance, Controller controller) =>
             new[] { Phase.From<Phases.RunFixed>(instance.RunFixed) };
     }
 
     public sealed class RunLate : Scheduler<IRunLate>
     {
-        public override IEnumerable<Type> Phases => new[] { typeof(Phases.RunLate) };
-
-        public override IEnumerable<Phase> Schedule(IRunLate instance, Controller controller) =>
+        public override Type[] Phases => new[] { typeof(Phases.RunLate) };
+        public override Phase[] Schedule(IRunLate instance, Controller controller) =>
             new[] { Phase.From<Phases.RunLate>(instance.RunLate) };
     }
 }
