@@ -42,7 +42,7 @@ namespace Entia.Unity.Editor
             {
                 case World _: LayoutUtility.Label(label); break;
                 case Entity entity: world.ShowEntity(label, entity, path); break;
-                case Controller controller: world.ShowController(controller, new Dictionary<IRunner, TimeSpan>(), path); break;
+                case Controller controller: world.ShowController(controller, new Dictionary<IRunner, TimeSpan>(), false, path); break;
                 case IGroup group: world.ShowGroup(label, group, path); break;
                 case IEmitter emitter: world.ShowEmitter(label, emitter); break;
                 case IReceiver receiver: world.ShowReceiver(label, receiver); break;
@@ -106,11 +106,11 @@ namespace Entia.Unity.Editor
                     (value, index) => world.ShowComponent(value.GetType().Format(), entity, value, path.Append(index.ToString()).ToArray()),
                     entity.GetType(),
                     path: path,
-                    foldout: format =>
+                    foldout: data =>
                     {
                         using (LayoutUtility.Horizontal())
                         {
-                            var folded = LayoutUtility.Foldout(format, entity.GetType(), path);
+                            var expanded = LayoutUtility.Foldout(data.label, data.type, data.path);
                             if (LayoutUtility.PlusButton())
                             {
                                 var menu = new GenericMenu();
@@ -124,7 +124,7 @@ namespace Entia.Unity.Editor
                             }
 
                             if (LayoutUtility.MinusButton()) world.Entities().Destroy(entity);
-                            return folded;
+                            return expanded;
                         }
                     });
             }
@@ -214,17 +214,20 @@ namespace Entia.Unity.Editor
             LayoutUtility.Label($"{label} [{emitter.Reaction.Count()}] [{receivers}]");
         }
 
-        public static void ShowController(this World world, Controller controller, Dictionary<IRunner, TimeSpan> elapsed, params string[] path)
+        public static void ShowController(this World world, Controller controller, Dictionary<IRunner, TimeSpan> elapsed, bool details, params string[] path)
         {
             void Node(Node node, IRunner profile = null, IRunner state = null, params string[] current)
             {
                 var type = node.Value.GetType();
-                var label = string.IsNullOrWhiteSpace(node.Name) ? type.Format() : node.Name;
-                current = current.Append(label).ToArray();
+                var fullLabel = $"{type.Format()}.{node.Name}";
+                var label = details ? fullLabel : string.IsNullOrWhiteSpace(node.Name) ? type.Format() : node.Name;
+                current = current.Append(fullLabel).ToArray();
 
                 void Descend()
                 {
-                    for (var i = 0; i < node.Children.Length; i++) Node(node.Children[i], profile, state, current.Append(i.ToString()).ToArray());
+                    LayoutUtility.Show(true, type, current);
+                    for (var i = 0; i < node.Children.Length; i++)
+                        Node(node.Children[i], profile, state, current.Append(i.ToString()).ToArray());
                 }
 
                 (bool enabled, bool expanded) Label(Type foldout = null)
@@ -236,39 +239,57 @@ namespace Entia.Unity.Editor
                     using (LayoutUtility.Horizontal())
                     {
                         var format = "({0:0.000} ms)";
-                        var milliseconds = enabled is true && span is TimeSpan time ? string.Format(format, time.TotalMilliseconds) : " ";
-                        var width = format.Length * 8f;
+                        var milliseconds = span is TimeSpan time ? string.Format(format, time.TotalMilliseconds) : " ";
 
                         using (LayoutUtility.Disable(enabled is false))
                         {
-                            if (foldout == null) EditorGUILayout.SelectableLabel(label, GUILayout.Height(EditorGUIUtility.singleLineHeight));
+                            if (foldout == null) LayoutUtility.Label(label);
                             else expanded = LayoutUtility.Foldout(label, foldout, current);
                         }
 
-                        using (LayoutUtility.LabelWidth(width))
                         using (LayoutUtility.NoIndent())
                         {
+                            EditorGUILayout.SelectableLabel(
+                                milliseconds,
+                                new GUIStyle(EditorStyles.label) { alignment = TextAnchor.MiddleRight },
+                                GUILayout.Width(milliseconds.Length * 8f), GUILayout.Height(EditorGUIUtility.singleLineHeight));
+
                             if (enabled.HasValue)
                             {
                                 EditorGUI.BeginChangeCheck();
-                                enabled = EditorGUILayout.Toggle(milliseconds, enabled.Value, GUILayout.Width(width + 16f));
+                                enabled = EditorGUILayout.Toggle(GUIContent.none, enabled.Value, GUILayout.Width(16f));
                                 if (EditorGUI.EndChangeCheck())
                                 {
                                     if (enabled.Value) controller.Enable(state);
                                     else controller.Disable(state);
                                 }
                             }
-                            else LayoutUtility.Label(milliseconds);
                         }
                     }
 
+                    profile = null;
+                    state = null;
                     return (enabled ?? true, expanded);
                 }
 
+                void Default(bool show)
+                {
+                    if (show || details)
+                    {
+                        var (enabled, expanded) = Label(type);
+                        if (expanded)
+                        {
+                            using (LayoutUtility.Disable(!enabled))
+                            using (LayoutUtility.Indent()) Descend();
+                        }
+                    }
+                    else Descend();
+                }
                 switch (node.Value)
                 {
-                    case Profile _ when controller.TryRunner(node, out var runner): profile = runner; Descend(); break;
-                    case State _ when controller.TryRunner(node, out var runner): state = runner; Descend(); break;
+                    case Profile _ when controller.TryRunner(node, out var runner): profile = runner; Default(false); break;
+                    case State _ when controller.TryRunner(node, out var runner): state = runner; Default(false); break;
+                    case Map _: Descend(); break;
                     case Entia.Nodes.System _ when controller.TryRunner(node, out var runner) && runner.Instance is ISystem system:
                         using (LayoutUtility.Box())
                         {
@@ -286,17 +307,8 @@ namespace Entia.Unity.Editor
                             }
                         }
                         break;
-                    case IWrapper _: Descend(); break;
-                    default:
-                        {
-                            var (enabled, expanded) = Label(node.Value.GetType());
-                            if (expanded)
-                            {
-                                using (LayoutUtility.Disable(!enabled))
-                                using (LayoutUtility.Indent()) Descend();
-                            }
-                            break;
-                        }
+                    case IWrapper _: Default(false); break;
+                    default: Default(true); break;
                 }
             }
 
@@ -308,13 +320,11 @@ namespace Entia.Unity.Editor
             void Next(Node currentNode, params string[] currentPath)
             {
                 var type = currentNode.Value.GetType();
-                var prefix = string.IsNullOrWhiteSpace(currentNode.Name) ? type.Format() : currentNode.Name;
-                var suffix = !string.IsNullOrWhiteSpace(currentNode.Name) && details ? $": {type.Format()}" : "";
-                var label = prefix + suffix;
+                var fullLabel = $"{type.Format()}.{currentNode.Name}";
+                var label = details ? fullLabel : string.IsNullOrWhiteSpace(currentNode.Name) ? type.Format() : currentNode.Name;
                 var analysis = world.Analyzers().Analyze(currentNode, node);
                 var building = world.Builders().Build(currentNode, node);
-
-                currentPath = currentPath.Append(prefix).ToArray();
+                currentPath = currentPath.Append(fullLabel).ToArray();
 
                 void Descend()
                 {

@@ -124,11 +124,14 @@ namespace Entia.Unity.Editor
 
         public static bool Toggle(string label, bool value)
         {
-            var content = new GUIContent(label);
-            var style = new GUIStyle(EditorStyles.miniLabel) { alignment = TextAnchor.MiddleCenter };
-            value = EditorGUILayout.Toggle(GUIContent.none, value, EditorStyles.miniButton, GUILayout.Width(style.CalcSize(content).x + 10));
-            var area = GUILayoutUtility.GetLastRect();
-            EditorGUI.LabelField(area, content, style);
+            using (LayoutUtility.NoIndent())
+            {
+                var content = new GUIContent(label);
+                var style = new GUIStyle(EditorStyles.miniLabel) { alignment = TextAnchor.MiddleCenter };
+                value = EditorGUILayout.Toggle(GUIContent.none, value, EditorStyles.miniButton, GUILayout.Width(style.CalcSize(content).x + 10));
+                var area = GUILayoutUtility.GetLastRect();
+                EditorGUI.LabelField(area, content, style);
+            }
             return value;
         }
 
@@ -152,6 +155,8 @@ namespace Entia.Unity.Editor
             EditorGUI.LabelField(area, new GUIContent("", ErrorIcon));
         }
 
+        public static void Show(bool value, Type type, params string[] path) => _show[(type, path)] = value;
+
         public static bool Foldout(string label, Type type, IEnumerable<string> path) => Foldout(label, type, path.ToArray());
         public static bool Foldout(string label, Type type, params string[] path) => Foldout(label, null, type, path);
         public static bool Foldout(string label, GUIStyle style, Type type, params string[] path) => Foldout(new GUIContent(label), style, type, path);
@@ -165,13 +170,13 @@ namespace Entia.Unity.Editor
                 EditorGUILayout.Foldout(show, label, style);
         }
 
-        public static bool ChunksFoldout<T>(string label, T[] items, Action<T, int> each, Type type = null, string[] path = null, GUIStyle style = null, Func<string, bool> foldout = null)
+        public static bool ChunksFoldout<T>(string label, T[] items, Action<T, int> each, Type type = null, string[] path = null, GUIStyle style = null, Func<(string label, Type type, string[] path), bool> foldout = null)
         {
             type = type ?? typeof(T);
             path = path ?? new string[0];
-            foldout = foldout ?? (format => Foldout($"{label} ({items.Length})", style, type, path));
+            foldout = foldout ?? (data => Foldout(data.label, style, data.type, data.path));
 
-            if (foldout($"{label} ({items.Length})"))
+            if (foldout(($"{label} ({items.Length})", type, path)))
             {
                 using (Indent()) Chunks(items, each, type, path);
                 return true;

@@ -17,6 +17,7 @@ namespace Entia.Unity.Editor
     public class WorldReferenceEditor : UnityEditor.Editor
     {
         static bool _all;
+        static bool _details;
 
         public WorldReference Target => target as WorldReference;
         public World World => Target?.World;
@@ -115,7 +116,16 @@ namespace Entia.Unity.Editor
             LayoutUtility.ChunksFoldout(
                 nameof(Modules.Controllers),
                 module.ToArray(),
-                (controller, index) => World.ShowController(controller, _elapsed, nameof(Modules.Controllers), index.ToString()),
-                module.GetType());
+                (controller, index) => World.ShowController(controller, _elapsed, _details, nameof(Modules.Controllers), index.ToString()),
+                module.GetType(),
+                foldout: data =>
+                {
+                    using (LayoutUtility.Horizontal())
+                    {
+                        var expanded = LayoutUtility.Foldout(data.label, data.type, data.path);
+                        _details = LayoutUtility.Toggle("Details", _details);
+                        return expanded;
+                    }
+                });
     }
 }
