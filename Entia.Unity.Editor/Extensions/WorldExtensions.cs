@@ -315,32 +315,33 @@ namespace Entia.Unity.Editor
             Node(controller.Root.node, null, null, path);
         }
 
-        public static void ShowNode(this World world, Node node, bool details, params string[] path)
+        public static void ShowNode(this World world, Node node, Dictionary<Node, Result<(IDependency[] dependencies, IRunner runner)>> cache, bool details, params string[] path)
         {
             void Next(Node currentNode, params string[] currentPath)
             {
                 var type = currentNode.Value.GetType();
                 var fullLabel = $"{type.Format()}.{currentNode.Name}";
                 var label = details ? fullLabel : string.IsNullOrWhiteSpace(currentNode.Name) ? type.Format() : currentNode.Name;
-                var analysis = world.Analyzers().Analyze(currentNode, node);
-                var building = world.Builders().Build(currentNode, node);
+                var result =
+                    cache.TryGetValue(currentNode, out var value) ? value :
+                    cache[currentNode] = Result.And(world.Analyzers().Analyze(currentNode, node), world.Builders().Build(currentNode, node));
                 currentPath = currentPath.Append(fullLabel).ToArray();
 
                 void Descend()
                 {
-                    if (details && analysis.TryValue(out var dependencies) && building.TryValue(out var runner))
+                    if (details && result.TryValue(out var pair))
                     {
                         using (LayoutUtility.Disable())
                         {
                             LayoutUtility.ChunksFoldout(
                                 nameof(Phases),
-                                runner.Phases().Distinct().ToArray(),
+                                pair.runner.Phases().Distinct().ToArray(),
                                 (phase, _) => LayoutUtility.Label(phase.Format()),
                                 typeof(IPhase),
                                 currentPath.Append(nameof(IPhase)).ToArray());
                             LayoutUtility.ChunksFoldout(
                                 nameof(Dependencies),
-                                dependencies,
+                                pair.dependencies,
                                 (dependency, _) => LayoutUtility.Label(dependency.ToString()),
                                 typeof(IDependency),
                                 currentPath.Append(nameof(IDependency)).ToArray());
@@ -408,7 +409,7 @@ namespace Entia.Unity.Editor
                             }
                         }
                         break;
-                    case Parallel _ when analysis.TryMessages(out var messages):
+                    case Parallel _ when result.TryMessages(out var messages):
                         Label();
                         using (LayoutUtility.Indent())
                         {

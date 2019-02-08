@@ -1,4 +1,9 @@
-﻿using Entia.Nodes;
+﻿using System.Collections.Generic;
+using Entia.Core;
+using Entia.Dependencies;
+using Entia.Modules;
+using Entia.Modules.Build;
+using Entia.Nodes;
 using UnityEditor;
 
 namespace Entia.Unity.Editor
@@ -10,11 +15,13 @@ namespace Entia.Unity.Editor
 
         public IWorldReference Reference => _reference ?? (_reference = Target.GetComponent<IWorldReference>());
         public World World => Target?.World ?? Reference?.World ?? _world ?? (_world = Reference?.Create());
-        public Node Node => Target?.Node;
+        public Node Node => _node ?? (_node = Target?.Node);
         public ControllerReference Target => target as ControllerReference;
 
         IWorldReference _reference;
         World _world;
+        Node _node;
+        readonly Dictionary<Node, Result<(IDependency[] dependencies, IRunner runner)>> _cache = new Dictionary<Node, Result<(IDependency[] dependencies, IRunner runner)>>();
 
         public override void OnInspectorGUI()
         {
@@ -27,7 +34,7 @@ namespace Entia.Unity.Editor
                     EditorGUILayout.LabelField(nameof(Node), LayoutUtility.BoldLabel);
                     _details = LayoutUtility.Toggle("Details", _details);
                 }
-                using (LayoutUtility.Indent()) world?.ShowNode(Node, _details);
+                using (LayoutUtility.Indent()) world?.ShowNode(Node, _cache, _details);
             }
         }
     }
