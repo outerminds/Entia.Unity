@@ -109,13 +109,6 @@
       <param name="world">The world.</param>
       <returns>The module.</returns>
     </member>
-    <member name="M:Entia.Modules.WorldExtensions.Templaters(Entia.World)">
-      <summary>
-            Gets or create the <see cref="T:Entia.Modules.Templaters" /> module.
-            </summary>
-      <param name="world">The world.</param>
-      <returns>The module.</returns>
-    </member>
     <member name="T:Entia.Modules.Build.IBuildable">
       <summary>
             Tag interface that all buildables must implement.
@@ -430,11 +423,6 @@
             The selection of component types that are stored in this segment with the minimum and maximum indices of those types.
             </summary>
     </member>
-    <member name="F:Entia.Modules.Component.Segment.Stores">
-      <summary>
-            The component stores.
-            </summary>
-    </member>
     <member name="F:Entia.Modules.Component.Segment.Entities">
       <summary>
             The entities.
@@ -479,6 +467,7 @@
       <param name="index">The component type index.</param>
       <returns>The component store.</returns>
     </member>
+    <!-- Badly formed XML comment ignored for member "M:Entia.Modules.Component.Segment.Ensure" -->
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>
       <returns>An enumerator that can be used to iterate through the collection.</returns>
@@ -970,18 +959,10 @@
       <summary>Returns an enumerator that iterates through the collection.</summary>
       <returns>An enumerator that can be used to iterate through the collection.</returns>
     </member>
-    <member>
-      <summary>Returns an enumerator that iterates through the collection.</summary>
-      <returns>An enumerator that can be used to iterate through the collection.</returns>
-    </member>
     <member name="T:Entia.Modules.IModule">
       <summary>
             Tag interface that all modules must implement.
             </summary>
-    </member>
-    <member>
-      <summary>Returns an enumerator that iterates through the collection.</summary>
-      <returns>An enumerator that can be used to iterate through the collection.</returns>
     </member>
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>
@@ -1140,6 +1121,166 @@
       <summary>
             Gives access to all component operations.
             </summary>
+    </member>
+    <member name="M:Entia.Injectables.AllComponents.Write.#ctor(Entia.Modules.Components)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Entia.Injectables.AllComponents" /> struct.
+            </summary>
+      <param name="components"></param>
+    </member>
+    <member>
+      <summary>
+            Gets a component of type <typeref name="T" /> associated with the entity <paramref name="entity" />.
+            If the component is missing, a <see cref="T:Entia.Messages.OnException" /> message will be emitted.
+            </summary>
+      <typeparam name="T">The concrete component type.</typeparam>
+      <param name="entity">The entity associated with the component.</param>
+      <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
+    </member>
+    <member>
+      <summary>
+            Gets a component of type <typeref name="T" /> associated with the <paramref name="entity" />.
+            If the component is missing, a dummy reference will be returned.
+            </summary>
+      <typeparam name="T">The concrete component type.</typeparam>
+      <param name="success">Is <c>true</c> if the component was found; otherwise, <c>false</c>.</param>
+      <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
+    </member>
+    <member>
+      <summary>
+            Tries to get a component of type <typeparamref name="T" /> associated with the <paramref name="entity" />.
+            </summary>
+      <typeparam name="T">The concrete component type.</typeparam>
+      <param name="component">The component.</param>
+      <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
+    </member>
+    <member>
+      <summary>
+            Tries to get a component of provided <paramref name="type" /> associated with the <paramref name="entity" />.
+            </summary>
+      <param name="type">The concrete component type.</param>
+      <param name="component">The component.</param>
+      <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
+    </member>
+    <member>
+      <summary>
+            Gets all the components associated with the <paramref name="entity" />.
+            </summary>
+      <param name="entity">The entity associated with the components.</param>
+      <returns>The components.</returns>
+    </member>
+    <member>
+      <summary>
+            Gets all entity-component pairs that have a component of type <typeparamref name="T" />.
+            </summary>
+      <typeparam name="T">The concrete component type.</typeparam>
+      <returns>The entity-component pairs.</returns>
+    </member>
+    <member>
+      <summary>
+            Gets all entity-component pairs that have a component of provided <paramref name="type" />.
+            </summary>
+      <param name="type">The concrete component type.</param>
+      <returns>The entity-component pairs.</returns>
+    </member>
+    <member>
+      <summary>
+            Determines whether the <paramref name="entity" /> has a component of type <typeparamref name="T" />.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <param name="entity">The entity.</param>
+      <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
+    </member>
+    <member>
+      <summary>
+            Determines whether the <paramref name="entity" /> has a component of provided <paramref name="type" />.
+            </summary>
+      <param name="type">The component type.</param>
+      <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
+    </member>
+    <member>
+      <summary>Returns an enumerator that iterates through the collection.</summary>
+      <returns>An enumerator that can be used to iterate through the collection.</returns>
+    </member>
+    <member name="M:Entia.Injectables.AllComponents.Read.#ctor(Entia.Modules.Components)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Entia.Injectables.AllComponents" /> struct.
+            </summary>
+      <param name="components"></param>
+    </member>
+    <member>
+      <summary>
+            Gets a component of type <typeref name="T" /> associated with the entity <paramref name="entity" />.
+            If the component is missing, a <see cref="T:Entia.Messages.OnException" /> message will be emitted.
+            </summary>
+      <typeparam name="T">The concrete component type.</typeparam>
+      <param name="entity">The entity associated with the component.</param>
+      <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
+    </member>
+    <member>
+      <summary>
+            Gets a component of type <typeref name="T" /> associated with the <paramref name="entity" />.
+            If the component is missing, a dummy reference will be returned.
+            </summary>
+      <typeparam name="T">The concrete component type.</typeparam>
+      <param name="success">Is <c>true</c> if the component was found; otherwise, <c>false</c>.</param>
+      <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
+    </member>
+    <member>
+      <summary>
+            Tries to get a component of type <typeparamref name="T" /> associated with the <paramref name="entity" />.
+            </summary>
+      <typeparam name="T">The concrete component type.</typeparam>
+      <param name="component">The component.</param>
+      <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
+    </member>
+    <member>
+      <summary>
+            Tries to get a component of provided <paramref name="type" /> associated with the <paramref name="entity" />.
+            </summary>
+      <param name="type">The concrete component type.</param>
+      <param name="component">The component.</param>
+      <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
+    </member>
+    <member>
+      <summary>
+            Gets all the components associated with the <paramref name="entity" />.
+            </summary>
+      <param name="entity">The entity associated with the components.</param>
+      <returns>The components.</returns>
+    </member>
+    <member>
+      <summary>
+            Gets all entity-component pairs that have a component of type <typeparamref name="T" />.
+            </summary>
+      <typeparam name="T">The concrete component type.</typeparam>
+      <returns>The entity-component pairs.</returns>
+    </member>
+    <member>
+      <summary>
+            Gets all entity-component pairs that have a component of provided <paramref name="type" />.
+            </summary>
+      <param name="type">The concrete component type.</param>
+      <returns>The entity-component pairs.</returns>
+    </member>
+    <member>
+      <summary>
+            Determines whether the <paramref name="entity" /> has a component of type <typeparamref name="T" />.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <param name="entity">The entity.</param>
+      <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
+    </member>
+    <member>
+      <summary>
+            Determines whether the <paramref name="entity" /> has a component of provided <paramref name="type" />.
+            </summary>
+      <param name="type">The component type.</param>
+      <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
+    </member>
+    <member>
+      <summary>Returns an enumerator that iterates through the collection.</summary>
+      <returns>An enumerator that can be used to iterate through the collection.</returns>
     </member>
     <member name="M:Entia.Injectables.AllComponents.#ctor(Entia.Modules.Components)">
       <summary>
@@ -1968,129 +2109,9 @@
       <summary>Returns an enumerator that iterates through the collection.</summary>
       <returns>An enumerator that can be used to iterate through the collection.</returns>
     </member>
-    <member name="T:Entia.Injectables.Group`8">
+    <member name="T:Entia.Nodes.INode">
       <summary>
-            Gives access to group operations.
-            </summary>
-    </member>
-    <member>
-      <summary>
-            Gets the current entity count that are in the group.
-            </summary>
-      <value>
-            The count.
-            </value>
-    </member>
-    <member>
-      <summary>
-            Gets the segments that fit the group query.
-            </summary>
-      <value>
-            The segments.
-            </value>
-    </member>
-    <member>
-      <summary>
-            Gets the entities currently in the group.
-            </summary>
-      <value>
-            The entities.
-            </value>
-    </member>
-    <member name="M:Entia.Injectables.Group`8.#ctor(Entia.Modules.Group.Group{Entia.Queryables.All{`0,`1,`2,`3,`4,`5,`6,`7}})">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Injectables.Group`8" /> struct.
-            </summary>
-      <param name="group">The group.</param>
-    </member>
-    <member>
-      <summary>
-            Determines whether the group has the <paramref name="entity" />.
-            </summary>
-      <param name="entity">The entity.</param>
-      <returns>Returns <c>true</c> if the group has the <paramref name="entity" />; otherwise, <c>false</c>.</returns>
-    </member>
-    <member>
-      <summary>
-            Tries to get the <paramref name="item" /> associated with the provided <paramref name="entity" />.
-            </summary>
-      <param name="item">The item.</param>
-      <returns>Returns <c>true</c> if an <paramref name="item" /> was found; otherwise, <c>false</c>.</returns>
-    </member>
-    <member>
-      <summary>
-            Splits the group into splits of the same size.
-            </summary>
-      <param name="count">The amount of splits.</param>
-      <returns>The split enumerable.</returns>
-    </member>
-    <member>
-      <summary>Returns an enumerator that iterates through the collection.</summary>
-      <returns>An enumerator that can be used to iterate through the collection.</returns>
-    </member>
-    <member name="T:Entia.Injectables.Group`9">
-      <summary>
-            Gives access to group operations.
-            </summary>
-    </member>
-    <member>
-      <summary>
-            Gets the current entity count that are in the group.
-            </summary>
-      <value>
-            The count.
-            </value>
-    </member>
-    <member>
-      <summary>
-            Gets the segments that fit the group query.
-            </summary>
-      <value>
-            The segments.
-            </value>
-    </member>
-    <member>
-      <summary>
-            Gets the entities currently in the group.
-            </summary>
-      <value>
-            The entities.
-            </value>
-    </member>
-    <member name="M:Entia.Injectables.Group`9.#ctor(Entia.Modules.Group.Group{Entia.Queryables.All{`0,`1,`2,`3,`4,`5,`6,`7,`8}})">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Injectables.Group`9" /> struct.
-            </summary>
-      <param name="group">The group.</param>
-    </member>
-    <member>
-      <summary>
-            Determines whether the group has the <paramref name="entity" />.
-            </summary>
-      <param name="entity">The entity.</param>
-      <returns>Returns <c>true</c> if the group has the <paramref name="entity" />; otherwise, <c>false</c>.</returns>
-    </member>
-    <member>
-      <summary>
-            Tries to get the <paramref name="item" /> associated with the provided <paramref name="entity" />.
-            </summary>
-      <param name="item">The item.</param>
-      <returns>Returns <c>true</c> if an <paramref name="item" /> was found; otherwise, <c>false</c>.</returns>
-    </member>
-    <member>
-      <summary>
-            Splits the group into splits of the same size.
-            </summary>
-      <param name="count">The amount of splits.</param>
-      <returns>The split enumerable.</returns>
-    </member>
-    <member>
-      <summary>Returns an enumerator that iterates through the collection.</summary>
-      <returns>An enumerator that can be used to iterate through the collection.</returns>
-    </member>
-    <member name="T:Entia.Nodes.Node.IData">
-      <summary>
-            Tag interface that all node data must implement.
+            Tag interface that all nodes must implement.
             </summary>
     </member>
     <member name="T:Entia.Phases.IPhase">
@@ -2119,7 +2140,7 @@
             Implements the operator !=.
             </summary>
     </member>
-    <member name="F:Entia.Entity.Identifier">
+    <member name="P:Entia.Entity.Identifier">
       <summary>
             The world-unique identifier.
             </summary>
@@ -2357,111 +2378,6 @@
     <member name="M:Entia.Queryables.All`7.#ctor(`0@,`1@,`2@,`3@,`4@,`5@,`6@)">
       <summary>
             Initializes a new instance of the <see cref="T:Entia.Queryables.All`7" /> struct.
-            </summary>
-    </member>
-    <member name="T:Entia.Queryables.All`8">
-      <summary>
-            Query that must satisfy all its sub queries.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.All`8.Value1">
-      <summary>
-            The value1.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.All`8.Value2">
-      <summary>
-            The value2.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.All`8.Value3">
-      <summary>
-            The value3.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.All`8.Value4">
-      <summary>
-            The value4.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.All`8.Value5">
-      <summary>
-            The value5.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.All`8.Value6">
-      <summary>
-            The value6.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.All`8.Value7">
-      <summary>
-            The value7.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.All`8.Value8">
-      <summary>
-            The value8.
-            </summary>
-    </member>
-    <member name="M:Entia.Queryables.All`8.#ctor(`0@,`1@,`2@,`3@,`4@,`5@,`6@,`7@)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Queryables.All`8" /> struct.
-            </summary>
-    </member>
-    <member name="T:Entia.Queryables.All`9">
-      <summary>
-            Query that must satisfy all its sub queries.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.All`9.Value1">
-      <summary>
-            The value1.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.All`9.Value2">
-      <summary>
-            The value2.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.All`9.Value3">
-      <summary>
-            The value3.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.All`9.Value4">
-      <summary>
-            The value4.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.All`9.Value5">
-      <summary>
-            The value5.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.All`9.Value6">
-      <summary>
-            The value6.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.All`9.Value7">
-      <summary>
-            The value7.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.All`9.Value8">
-      <summary>
-            The value8.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.All`9.Value9">
-      <summary>
-            The value9.
-            </summary>
-    </member>
-    <member name="M:Entia.Queryables.All`9.#ctor(`0@,`1@,`2@,`3@,`4@,`5@,`6@,`7@,`8@)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Queryables.All`9" /> struct.
             </summary>
     </member>
     <member name="T:Entia.Queryables.Any`2">
@@ -2768,188 +2684,6 @@
     <member name="M:Entia.Queryables.Any`7.#ctor(`6@)">
       <summary>
             Initializes a new instance of the <see cref="T:Entia.Queryables.Any`7" /> struct.
-            </summary>
-    </member>
-    <member name="T:Entia.Queryables.Any`8">
-      <summary>
-            Query that must satisfy at least one of its sub queries.
-            Only the first match will be kept.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.Any`8.Value1">
-      <summary>
-            The value1.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.Any`8.Value2">
-      <summary>
-            The value2.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.Any`8.Value3">
-      <summary>
-            The value3.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.Any`8.Value4">
-      <summary>
-            The value4.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.Any`8.Value5">
-      <summary>
-            The value5.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.Any`8.Value6">
-      <summary>
-            The value6.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.Any`8.Value7">
-      <summary>
-            The value7.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.Any`8.Value8">
-      <summary>
-            The value8.
-            </summary>
-    </member>
-    <member name="M:Entia.Queryables.Any`8.#ctor(`0@)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Queryables.Any`8" /> struct.
-            </summary>
-    </member>
-    <member name="M:Entia.Queryables.Any`8.#ctor(`1@)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Queryables.Any`8" /> struct.
-            </summary>
-    </member>
-    <member name="M:Entia.Queryables.Any`8.#ctor(`2@)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Queryables.Any`8" /> struct.
-            </summary>
-    </member>
-    <member name="M:Entia.Queryables.Any`8.#ctor(`3@)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Queryables.Any`8" /> struct.
-            </summary>
-    </member>
-    <member name="M:Entia.Queryables.Any`8.#ctor(`4@)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Queryables.Any`8" /> struct.
-            </summary>
-    </member>
-    <member name="M:Entia.Queryables.Any`8.#ctor(`5@)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Queryables.Any`8" /> struct.
-            </summary>
-    </member>
-    <member name="M:Entia.Queryables.Any`8.#ctor(`6@)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Queryables.Any`8" /> struct.
-            </summary>
-    </member>
-    <member name="M:Entia.Queryables.Any`8.#ctor(`7@)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Queryables.Any`8" /> struct.
-            </summary>
-    </member>
-    <member name="T:Entia.Queryables.Any`9">
-      <summary>
-            Query that must satisfy at least one of its sub queries.
-            Only the first match will be kept.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.Any`9.Value1">
-      <summary>
-            The value1.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.Any`9.Value2">
-      <summary>
-            The value2.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.Any`9.Value3">
-      <summary>
-            The value3.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.Any`9.Value4">
-      <summary>
-            The value4.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.Any`9.Value5">
-      <summary>
-            The value5.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.Any`9.Value6">
-      <summary>
-            The value6.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.Any`9.Value7">
-      <summary>
-            The value7.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.Any`9.Value8">
-      <summary>
-            The value8.
-            </summary>
-    </member>
-    <member name="F:Entia.Queryables.Any`9.Value9">
-      <summary>
-            The value9.
-            </summary>
-    </member>
-    <member name="M:Entia.Queryables.Any`9.#ctor(`0@)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Queryables.Any`9" /> struct.
-            </summary>
-    </member>
-    <member name="M:Entia.Queryables.Any`9.#ctor(`1@)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Queryables.Any`9" /> struct.
-            </summary>
-    </member>
-    <member name="M:Entia.Queryables.Any`9.#ctor(`2@)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Queryables.Any`9" /> struct.
-            </summary>
-    </member>
-    <member name="M:Entia.Queryables.Any`9.#ctor(`3@)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Queryables.Any`9" /> struct.
-            </summary>
-    </member>
-    <member name="M:Entia.Queryables.Any`9.#ctor(`4@)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Queryables.Any`9" /> struct.
-            </summary>
-    </member>
-    <member name="M:Entia.Queryables.Any`9.#ctor(`5@)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Queryables.Any`9" /> struct.
-            </summary>
-    </member>
-    <member name="M:Entia.Queryables.Any`9.#ctor(`6@)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Queryables.Any`9" /> struct.
-            </summary>
-    </member>
-    <member name="M:Entia.Queryables.Any`9.#ctor(`7@)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Queryables.Any`9" /> struct.
-            </summary>
-    </member>
-    <member name="M:Entia.Queryables.Any`9.#ctor(`8@)">
-      <summary>
-            Initializes a new instance of the <see cref="T:Entia.Queryables.Any`9" /> struct.
             </summary>
     </member>
     <member>
