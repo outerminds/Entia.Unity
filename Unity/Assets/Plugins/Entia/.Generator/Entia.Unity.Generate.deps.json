@@ -937,14 +937,14 @@
     "Microsoft.CodeAnalysis.Common/2.10.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-M+AwpCR1YPzTaqSQugn/v7PftRTMp1x6zhpDpfoIocNgruweJTQBlpwcNyQVGvRZHgnrd5P/xcUMhA9MoYS2Pg==",
+      "sha512": "sha512-w57ebW3QIRFPoFFX6GCa6eF2FmuHYaWEJ/sMMHq+PBnHB51dEzLIoAQft1Byqe5nrSo4UUV6v4tad8fkTrKl8w==",
       "path": "microsoft.codeanalysis.common/2.10.0",
       "hashPath": "microsoft.codeanalysis.common.2.10.0.nupkg.sha512"
     },
     "Microsoft.CodeAnalysis.CSharp/2.10.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Yzm1iiTT9T0lnFDR71YYqphq519ANqUOf0eKtJ4E+FHdLCjYvdFiQjfbGA3v4JB2za3/GOGdCHbIm19jlqgsBw==",
+      "sha512": "sha512-bTr6j4V7G4ZPhRDUdowdtbEvXsQA4w1TYfOtXiYdv8TF7STl9ShOKtlSVzAusmeEWsZksJm9D1VSxt6XIyNB0w==",
       "path": "microsoft.codeanalysis.csharp/2.10.0",
       "hashPath": "microsoft.codeanalysis.csharp.2.10.0.nupkg.sha512"
     },
