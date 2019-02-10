@@ -7,6 +7,7 @@
 [logo]:https://github.com/outerminds/Entia/blob/master/Resources/Logo.png
 [releases]:https://github.com/outerminds/Entia.Unity/releases
 [wiki]:https://github.com/outerminds/Entia.Unity/wiki
+[wiki/controller]:https://github.com/outerminds/Entia.Unity/wiki/Controller
 [wiki/component]:https://github.com/outerminds/Entia/wiki/Component
 [wiki/system]:https://github.com/outerminds/Entia/wiki/System
 [wiki/resource]:https://github.com/outerminds/Entia/wiki/Resource
@@ -15,7 +16,7 @@
 
 **Entia.Unity** is a full integration of the [**Entia**][entia] framework for the Unity game engine. It consists of a code generator, inspectors, templates, tools and other conveniences that make the usage of the framework simple and accessible to Unity developers.
 
-_[**Entia**][entia] is a free, open-source, data-oriented, highly performant, parallelizable and extensible [**E**ntity-**C**omponent-**S**ystem (**ECS**)][ecs] framework writtten in C# especially for game development. It takes advantage of the latest C#7+ features to represent state exclusively with contiguous structs. No indirection, no boxing, no garbage collection and no cache misses. See [**Entia**][entia]._
+_[**Entia**][entia] is a free, open-source, data-oriented, highly performant, parallelizable and extensible [**E**ntity-**C**omponent-**S**ystem (**ECS**)][ecs] framework written in C# especially for game development. It takes advantage of the latest C#7+ features to represent state exclusively with contiguous structs. No indirection, no boxing, no garbage collection and no cache misses. See [**Entia**][entia]._
 
 #### [:inbox_tray: Download][releases]
 #### Entia.Unity requires version 2018.3+ of the [Unity][unity] game engine.
@@ -37,10 +38,10 @@ ___
 ___
 
 # References
-Most of the integration with the Unity game engine is done through what are called _references_. These are convenient _MonoBehaviour_ wrappers that act as contructors and visualizers for **[Entia][entia]** elements. After initialization, references are only debug views for what is going on the **[Entia][entia]** side and are not strictly required. Other than [ControllerReference][wiki/controller] (which is where you define your execution graph), you will never have to define references yourself since the [code generator](#generator) will do all the boilerplate work.
+Most of the integration with the Unity game engine is done through what are called _references_. These are convenient _MonoBehaviour_ wrappers that act as constructors and visualizers for **[Entia][entia]** elements. After initialization, references are only debug views for what is going on the **[Entia][entia]** side and are not strictly required. Other than [ControllerReference][wiki/controller] (which is where you define your execution graph), you will never have to define references yourself since the [code generator](#generator) will do all the boilerplate work.
 
 # Generator
-A simple code generator comes packaged with **Entia.Unity** to make the integration with the Unity game engine more seemless. It generates corresponding [references](#References) for every [component][wiki/component] and [resource][wiki/resource] that you define such that they can be inspected and adjusted in the editor just like regular _MonoBehaviour_ components. Additionally, it will generate convenient extensions for your [systems][wiki/system] to simplify their usage.
+A lightweight code generator comes packaged with **Entia.Unity** to make the integration with the Unity game engine more seamless. It generates corresponding [references](#References) for every [component][wiki/component] and [resource][wiki/resource] that you define such that they can be inspected and adjusted in the editor just like regular _MonoBehaviour_ components. Additionally, it will generate convenient extensions for your [systems][wiki/system] to simplify their usage.
 
 Most of the time you will not have to worry about the generator, but it is useful to know that it is triggered when a relevant C# script is imported by the Unity editor. It can also be manually triggered using the menu _Entia/Generator/Generate_.
 
