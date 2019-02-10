@@ -9,7 +9,6 @@ namespace Systems
 {
     public struct Move : IRun
     {
-        public AllComponents Components;
         [None(typeof(Components.Inner.Component2))]
         public Group<Read<Components.Component1>> Group;
 
@@ -76,7 +75,6 @@ namespace Systems
         [All(typeof(Entia.Components.Unity<>))]
         public Group<Entity, Read<Components.Component1>, Maybe<Read<Components.Inner.Component2>>> Group2;
         public AllEntities Entities;
-        public AllComponents Components;
 
         public void Run()
         {

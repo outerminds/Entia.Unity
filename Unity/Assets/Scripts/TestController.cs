@@ -11,17 +11,19 @@ namespace Controllers
     public class TestController : ControllerReference
     {
         public override Node Node =>
-            Sequence("TestController",
+            Automatic("TestController",
                 Nodes.Default,
                 System<Systems.Move>(),
                 // System<Systems.Emitter>(),
                 // System<Systems.EmitterA>(),
+                System<Systems.Spawner>(),
+                System<Systems.Queries>(),
+                System<Systems.Reactive>(),
+
                 System<Systems.Reactor1>(),
                 System<Systems.Reactor2>(),
                 System<Systems.Reactor3>(),
-                System<Systems.Spawner>(),
-                System<Systems.Queries>(),
-                System<Systems.Reactive>()
+                System<Systems.Move>()
             );
     }
 }

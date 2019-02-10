@@ -219,7 +219,7 @@ namespace Entia.Unity.Editor
             void Node(Node node, IRunner profile = null, IRunner state = null, params string[] current)
             {
                 var type = node.Value.GetType();
-                var fullLabel = $"{type.Format()}.{node.Name}";
+                var fullLabel = string.IsNullOrWhiteSpace(node.Name) ? type.Format() : $"{type.Format()}.{node.Name}";
                 var label = details ? fullLabel : string.IsNullOrWhiteSpace(node.Name) ? type.Format() : node.Name;
                 current = current.Append(fullLabel).ToArray();
 
@@ -320,7 +320,7 @@ namespace Entia.Unity.Editor
             void Next(Node currentNode, params string[] currentPath)
             {
                 var type = currentNode.Value.GetType();
-                var fullLabel = $"{type.Format()}.{currentNode.Name}";
+                var fullLabel = string.IsNullOrWhiteSpace(currentNode.Name) ? type.Format() : $"{type.Format()}.{currentNode.Name}";
                 var label = details ? fullLabel : string.IsNullOrWhiteSpace(currentNode.Name) ? type.Format() : currentNode.Name;
                 var result =
                     cache.TryGetValue(currentNode, out var value) ? value :
@@ -331,18 +331,28 @@ namespace Entia.Unity.Editor
                 {
                     if (details && result.TryValue(out var pair))
                     {
+                        var phases = pair.runner.Phases()
+                            .Distinct()
+                            .Select(phase => phase.Format())
+                            .OrderBy(_ => _)
+                            .ToArray();
+                        var dependencies = pair.dependencies
+                            .Distinct()
+                            .Select(dependency => dependency.ToString())
+                            .OrderBy(_ => _)
+                            .ToArray();
                         using (LayoutUtility.Disable())
                         {
                             LayoutUtility.ChunksFoldout(
                                 nameof(Phases),
-                                pair.runner.Phases().Distinct().ToArray(),
-                                (phase, _) => LayoutUtility.Label(phase.Format()),
+                                phases,
+                                (phase, _) => LayoutUtility.Label(phase),
                                 typeof(IPhase),
                                 currentPath.Append(nameof(IPhase)).ToArray());
                             LayoutUtility.ChunksFoldout(
                                 nameof(Dependencies),
-                                pair.dependencies,
-                                (dependency, _) => LayoutUtility.Label(dependency.ToString()),
+                                dependencies,
+                                (dependency, _) => LayoutUtility.Label(dependency),
                                 typeof(IDependency),
                                 currentPath.Append(nameof(IDependency)).ToArray());
                         }
