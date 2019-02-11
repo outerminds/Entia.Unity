@@ -18,18 +18,17 @@ namespace Entia.Unity.Editor
         public static void Birth()
         {
             if (TrySettings(out var settings) && Tool(settings) is string tool)
-                Birth(tool, settings.Debug, true);
+                Birth(tool, settings, true);
         }
 
         [MenuItem("Entia/Generator/Kill")]
         public static bool Kill() => TrySettings(out var settings) && Tool(settings) is string tool && Kill(tool, true);
 
         [MenuItem("Entia/Generator/Generate %#g")]
-        public static void Generate() => Generate(true);
+        public static void Generate() => Generate(Settings(), true);
 
-        static void Generate(bool log)
+        static void Generate(GeneratorSettings settings, bool log, params string[] changes)
         {
-            var settings = Settings();
             var tool = Tool(settings);
             if (string.IsNullOrWhiteSpace(tool))
             {
@@ -39,8 +38,8 @@ Make sure a proper path is defined in the '{nameof(GeneratorSettings)}' asset.")
                 return;
             }
 
-            var process = Birth(tool, settings.Debug, settings.Debug || log);
-            var arguments = Arguments(tool, settings);
+            var process = Birth(tool, settings, settings.Debug || log);
+            var arguments = Arguments(tool, settings, false, changes);
             var buffer = new byte[4096];
             var input = string.Join("|", arguments);
             var output = "";
@@ -92,18 +91,10 @@ $@"Generation failed after '{timer.Elapsed}'.
             }
         }
 
-        public static bool TryGenerate(string path)
-        {
-            if (TrySettings(out var settings) && IsScript(path) && settings.Inputs.Any(input => IsSubPath(path, input)) && !IsSubPath(path, settings.Output))
-            {
-                Generate(settings.Debug);
-                return true;
-            }
+        public static bool IsInput(GeneratorSettings settings, string path) =>
+            IsScript(path) && settings.Inputs.Any(input => IsSubPath(path, input)) && !IsSubPath(path, settings.Output);
 
-            return false;
-        }
-
-        static Process Birth(string tool, bool debug, bool log)
+        static Process Birth(string tool, GeneratorSettings settings, bool log)
         {
             if (TryProcess(tool, out var process))
             {
@@ -111,7 +102,7 @@ $@"Generation failed after '{timer.Elapsed}'.
                 return process;
             }
 
-            var input = $"--watch {SerializeProcess(Process.GetCurrentProcess())};{tool}";
+            var input = string.Join(" ", Arguments(tool, settings, true));
             try
             {
                 process = Process.Start(new ProcessStartInfo
@@ -119,8 +110,8 @@ $@"Generation failed after '{timer.Elapsed}'.
                     WorkingDirectory = Application.dataPath,
                     FileName = $"dotnet",
                     Arguments = $"{tool} {input}",
-                    CreateNoWindow = !debug,
-                    WindowStyle = debug ? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden,
+                    CreateNoWindow = !settings.Debug,
+                    WindowStyle = settings.Debug ? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden,
                 });
                 SaveProcess(tool, process);
             }
@@ -152,20 +143,20 @@ This may happen because the .Net Core Runtime is not installed on this machine.
             return false;
         }
 
-        static string[] Arguments(string tool, GeneratorSettings settings) =>
-            new string[]
+        static string[] Arguments(string tool, GeneratorSettings settings, bool watch, params string[] changes)
+        {
+            var arguments = new[]
             {
-                "--inputs",
-                $@"{string.Join(";", settings.Inputs)}",
-                "--output",
-                $@"{settings.Output}",
-                "--suffix",
-                $@"{settings.Suffix}",
-                "--assemblies",
-                $@"{string.Join(";", settings.Assemblies)}",
-                "--log",
-                $@"{settings.Log}"
+                "--inputs", string.Join(";", settings.Inputs),
+                "--output", settings.Output,
+                "--suffix", settings.Suffix,
+                "--assemblies", string.Join(";", settings.Assemblies),
+                "--log", settings.Log
             };
+            if (changes.Length > 0) Core.ArrayUtility.Add(ref arguments, "--changes", string.Join(";", changes));
+            if (watch) Core.ArrayUtility.Add(ref arguments, "--watch", $"{SerializeProcess(Process.GetCurrentProcess())};{tool}");
+            return arguments;
+        }
 
         static bool TryProcess(string tool, out Process process)
         {
@@ -267,8 +258,13 @@ $@"OnPostprocessAllAssets:
 -> Moved: {string.Join(" | ", moved)}");
                 }
 
-                foreach (var path in moved.SelectMany(pair => new[] { pair.from, pair.to }).Concat(importedAssets, deletedAssets))
-                    if (TryGenerate(path)) break;
+                var changes = moved
+                    .SelectMany(pair => new[] { pair.from, pair.to })
+                    .Concat(importedAssets, deletedAssets)
+                    .Where(asset => IsInput(settings, asset))
+                    .Select(asset => asset.Absolute())
+                    .ToArray();
+                if (changes.Length > 0) Generate(settings, settings.Debug, changes);
             }
         }
     }

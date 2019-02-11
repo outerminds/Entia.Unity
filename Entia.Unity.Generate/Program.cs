@@ -1,5 +1,6 @@
 ﻿using Entia.Core;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -13,6 +14,9 @@ namespace Entia.Unity
 {
     static class Program
     {
+        static readonly ConcurrentDictionary<string, DateTime> _writes = new ConcurrentDictionary<string, DateTime>();
+        static readonly object _lock = new object();
+
         static void Main(string[] arguments)
         {
             var logger = new StringBuilder();
@@ -20,13 +24,14 @@ namespace Entia.Unity
 
             Console.WriteLine($"-> Birth: {string.Join(", ", arguments)}");
 
-            if (string.IsNullOrWhiteSpace(options.Watch.pipe)) Run(logger, options, arguments).Wait();
+            if (string.IsNullOrEmpty(options.Watch.pipe))
+                RunAsync(logger, options, arguments).Wait();
             else
             {
                 var cancel = new CancellationTokenSource();
                 try
                 {
-                    Task.Run(() => Run(logger, options), cancel.Token);
+                    Task.Run(() => Run(logger, options, arguments), cancel.Token);
                     while (Process.GetProcessById(options.Watch.process) is Process process && process.StartTime.Ticks == options.Watch.ticks)
                         Thread.Sleep(100);
                 }
@@ -37,51 +42,118 @@ namespace Entia.Unity
             Console.WriteLine($"-> Kill: {string.Join(", ", arguments)}");
         }
 
-        static void Run(StringBuilder logger, Options options)
+        static bool Change(string path)
         {
-            var buffer = new byte[4096];
+            var previous = _writes.TryGetValue(path, out var value) ? value : default;
+            var current = File.GetLastWriteTimeUtc(path);
+            if (current - previous < TimeSpan.FromMilliseconds(100)) return false;
+            _writes[path] = current;
+            return true;
+        }
+
+        static Disposable Watch(StringBuilder logger, Options options, string[] arguments)
+        {
+            var watchers = new FileSystemWatcher[options.Inputs.Length];
+            for (int i = 0; i < options.Inputs.Length; i++)
+            {
+                var directory = options.Inputs[i].Directory();
+                var watcher = watchers[i] = new FileSystemWatcher(directory, "*.cs")
+                {
+                    IncludeSubdirectories = true,
+                    NotifyFilter = NotifyFilters.LastWrite
+                };
+
+                watcher.Changed += (_, data) => Task.Run(() =>
+                {
+                    if (Monitor.TryEnter(_lock))
+                    {
+                        try
+                        {
+                            Console.WriteLine($"-> Detect Change: {data.FullPath}");
+                            if (Change(data.FullPath))
+                            {
+                                Console.WriteLine($"-> Arguments: {string.Join(", ", arguments)}");
+                                Console.WriteLine($"-> Generate...");
+                                logger.Clear();
+                                RunAsync(logger, options, arguments).Wait();
+                            }
+                        }
+                        catch (Exception exception) { Console.WriteLine($"-> {exception}"); }
+                        finally
+                        {
+                            Console.WriteLine($"-> Done");
+                            Console.WriteLine();
+                            Monitor.Exit(_lock);
+                        }
+                    }
+                });
+                watcher.EnableRaisingEvents = true;
+                Console.WriteLine($"-> Watch: {directory}");
+            }
+
+            return new Disposable(() => { foreach (var watcher in watchers) try { watcher.Dispose(); } catch { } });
+        }
+
+        static void Run(StringBuilder logger, Options options, string[] arguments)
+        {
+            var buffer = new byte[8192];
             var response = "";
+            var watcher = Watch(logger, options, arguments);
 
             Console.WriteLine($"-> Server: {options.Watch}");
             using (var server = new NamedPipeServerStream(options.Watch.pipe, PipeDirection.InOut, 1))
             {
                 while (true)
                 {
-                    try
+                    Console.WriteLine($"-> Wait For Connection");
+                    Console.WriteLine();
+                    server.WaitForConnection();
+
+                    lock (_lock)
                     {
-                        Console.WriteLine($"-> Wait For Connection");
-                        server.WaitForConnection();
-                        var count = server.Read(buffer, 0, buffer.Length);
-                        var request = Encoding.UTF32.GetString(buffer, 0, count);
+                        try
+                        {
+                            watcher.Dispose();
 
-                        Console.WriteLine($"-> Request: {request}");
+                            var count = server.Read(buffer, 0, buffer.Length);
+                            var request = Encoding.UTF32.GetString(buffer, 0, count);
+                            Console.WriteLine($"-> Request: {request}");
 
-                        var arguments = request.Split('|');
-                        options = Options.Parse(arguments);
-                        logger.Clear();
-                        Run(logger, options, arguments).Wait();
-                        response = "Success";
-                    }
-                    catch (Exception exception) { response = exception.ToString(); }
-                    finally
-                    {
-                        Console.WriteLine($"-> Response: {response}");
+                            arguments = request.Split('|');
+                            options = Options.Parse(arguments);
 
-                        var count = Encoding.UTF32.GetBytes(response, 0, response.Length, buffer, 0);
-                        server.Write(buffer, 0, count);
+                            if (options.Changes.Length == 0 || options.Changes.Any(Change))
+                            {
+                                logger.Clear();
+                                Console.WriteLine($"-> Generate...");
+                                RunAsync(logger, options, arguments).Wait();
+                            }
 
-                        Console.WriteLine($"-> Wait For Pipe Drain");
-                        server.WaitForPipeDrain();
+                            response = "Success";
+                        }
+                        catch (Exception exception) { response = exception.ToString(); }
+                        finally
+                        {
+                            Console.WriteLine($"-> Response: {response}");
 
-                        Console.WriteLine($"-> Disconnect");
-                        server.Disconnect();
-                        Console.WriteLine();
+                            var count = Encoding.UTF32.GetBytes(response, 0, response.Length, buffer, 0);
+                            server.Write(buffer, 0, count);
+
+                            Console.WriteLine($"-> Wait For Pipe Drain");
+                            server.WaitForPipeDrain();
+
+                            Console.WriteLine($"-> Disconnect");
+                            server.Disconnect();
+                            watcher = Watch(logger, options, arguments);
+                            Console.WriteLine($"-> Done");
+                            Console.WriteLine();
+                        }
                     }
                 }
             }
         }
 
-        static async Task Run(StringBuilder logger, Options options, string[] arguments)
+        static async Task RunAsync(StringBuilder logger, Options options, string[] arguments)
         {
             var watch = Stopwatch.StartNew();
 
@@ -183,6 +255,7 @@ namespace Entia.Unity
             var created = !File.Exists(path);
             Directory.CreateDirectory(path.Directory());
             File.WriteAllText(path, text);
+            _writes[path] = File.GetLastWriteTimeUtc(path);
             return created;
         }
 
@@ -192,6 +265,7 @@ namespace Entia.Unity
             {
                 Directory.CreateDirectory(to.Directory());
                 File.Move(from, to);
+                _writes[to] = File.GetLastWriteTimeUtc(to);
                 return true;
             }
 
