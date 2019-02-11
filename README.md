@@ -8,10 +8,16 @@
 [releases]:https://github.com/outerminds/Entia.Unity/releases
 [wiki]:https://github.com/outerminds/Entia.Unity/wiki
 [wiki/controller]:https://github.com/outerminds/Entia.Unity/wiki/Controller
+[wiki/entity]:https://github.com/outerminds/Entia/wiki/Entity
 [wiki/component]:https://github.com/outerminds/Entia/wiki/Component
 [wiki/system]:https://github.com/outerminds/Entia/wiki/System
 [wiki/resource]:https://github.com/outerminds/Entia/wiki/Resource
-[documentation]:./
+[wiki/node]:https://github.com/outerminds/Entia/wiki/Node
+[wiki/queryable]:https://github.com/outerminds/Entia/wiki/Queryable
+[tutorial/plugins]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/Plugins.PNG
+[tutorial/add-component]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/AddComponents.PNG
+[tutorial/add-controller]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/AddController.PNG
+[tutorial/move-jump]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/MoveJump.gif
 # ![Entia.Unity][logo]
 
 **Entia.Unity** is a full integration of the [**Entia**][entia] framework for the Unity game engine. It consists of a code generator, inspectors, templates, tools and other conveniences that make the usage of the framework simple and accessible to Unity developers.
@@ -24,21 +30,235 @@ ___
 
 ### Content
 - [Installation](#installation)
+- [Tutorial](#tutorial)
 - [References](#references)
 - [Generator](#generator)
 - [Wiki][wiki]
 ___
 
 # Installation
-- [Download][releases] the most recent stable version of Entia.Unity.
+- [Download][releases] the most recent stable version of **Entia.Unity**.
 - Extract the content of the _zip_ file in a _Plugins_ folder in your Unity project (ex: _Project/Assets/Plugins/Entia/_).
+
+![][tutorial/plugins]
 - Ensure that you have a _[.Net Core Runtime][net-core]_ with version 2.0+ (required for the code generator to work).
-- Optionally install the Visual Studio extension _Entia.Analyze.vsix_ to get _Entia_ specific code analysis.
+- Optionally install the Visual Studio extension _Entia.Analyze.vsix_ to get [**Entia**][entia] specific code analysis.
+___
+
+# Tutorial
+- Create an empty Unity scene.
+- Define a couple [components][wiki/component].
+```csharp
+using Entia;
+using Entia.Unity;
+
+namespace Components
+{
+    // Components are simple structs that implement the empty 'IComponent' interface.
+    public struct Velocity : IComponent { public float X, Y; }
+
+    // Components may be empty to act as a tag on an entity.
+    public struct IsFrozen : IComponent { }
+
+    public struct Physics : IComponent
+    {
+        // Since structs can not have default values, the 'Default' attribute will 
+        // cause the generator to generate the default values on the 
+        // 'ComponentReference'.
+        [Default(1f)]
+        public float Mass;
+        [Default(3f)]
+        public float Drag;
+        [Default(-2f)]
+        public float Gravity;
+    }
+
+    public struct Input : IComponent
+    {
+        // The 'Disable' attribute will make the field read-only in the Unity editor.
+        [Disable]
+        public float Direction;
+        [Disable]
+        public bool Jump;
+    }
+
+    public struct Motion : IComponent
+    {
+        [Default(2f)]
+        public float Acceleration;
+        [Default(0.25f)]
+        public float MaximumSpeed;
+        [Default(0.75f)]
+        public float JumpForce;
+    }
+}
+```
+- Create an empty `GameObject` named _'Player'_, add the newly defined [components][wiki/component] to it and tweak their values (you may addionally add a `SpriteRenderer` to the `GameObject` to visualize it).
+  - By focusing Unity, the code generator should run and create a _Generated_ folder with generated versions of your [components][wiki/component].
+  - If no `GeneratorSettings` asset previously existed, the generator will create a default one named _'Settings'_ in the same folder where you installed **Entia.Unity**.
+  - Using the `GeneratorSettings` asset, you can customize the behavior of the generator.
+  - After the generation is complete, you should be able to find your components in the _Add Component_ dropdown of the `GameObject`.
+  - Notice that the [components][wiki/component] that you are adding to the `GameObject` are the generated `ComponentReference` of the _Generated_ folder.
+  - Adding a [component][wiki/component] to a `GameObject` will automatically add an `EntityReference` to it.
+
+![][tutorial/add-component]
+- Define a couple [systems][wiki/system] that will use the [components][wiki/component].
+  - When the generator detects the use of a [queryable][wiki/queryable] type, it will generate convenient extensions to unpack instances of that type.
+  - Note that you may need to focus Unity to trigger the generator.
+```csharp
+using Entia.Injectables;
+using Entia.Queryables;
+using Entia.Systems;
+using UnityEngine;
+
+namespace Systems
+{
+    // An 'IRun' system will be called on every 'Update'.
+    // A system may implement as many system interfaces as needed.
+    // See the 'Entia.Systems' namespace for more system interfaces.
+    public struct UpdateInput : IRun
+    {
+        // Groups allow to efficiently retrieve a subset of entities that 
+        // correspond to a given query represented by the generic types of the group.
+        // This group will hold every entity that has a 'Components.Input' 
+        // component and will give write access to it.
+        public readonly Group<Write<Components.Input>> Group;
+
+        public void Run()
+        {
+            foreach (var item in Group)
+            {
+                // The 'item.Input()' extension method is generated by the generator.
+                ref var input = ref item.Input();
+                input.Direction = Input.GetAxis("Horizontal");
+                input.Jump = Input.GetKeyDown(KeyCode.UpArrow);
+            }
+        }
+    }
+
+    public struct UpdateVelocity : IRun
+    {
+        // Queries can also be defined as a separate type which is convenient 
+        // for large queries.
+        // The 'None' attribute means that all entities that have a 
+        // 'Components.IsFrozen' component will be excluded from the query results.
+        [None(typeof(Components.IsFrozen))]
+        public readonly struct Query : IQueryable
+        {
+            // A queryable can only hold queryable fields. They can not hold 
+            // components directly.
+            public readonly Write<Components.Velocity> Velocity;
+            public readonly Read<Components.Motion> Motion;
+            public readonly Read<Components.Physics> Mass;
+            public readonly Read<Components.Input> Input;
+        }
+
+        public readonly Group<Query> Group;
+
+        // Resources hold world-global data.
+        // 'Entia.Resources.Time' is a library resource that holds 
+        // Unity's 'Time.deltaTime'.
+        public readonly Resource<Entia.Resources.Time>.Read Time;
+
+        public void Run()
+        {
+            ref readonly var time = ref Time.Value;
+            foreach (ref readonly var item in Group)
+            {
+                // Unpack the group item using generated extensions.
+                ref var velocity = ref item.Velocity();
+                ref readonly var motion = ref item.Motion();
+                ref readonly var physics = ref item.Physics();
+                ref readonly var input = ref item.Input();
+
+                var drag = 1f - physics.Drag * time.Delta;
+                velocity.X *= drag;
+                velocity.Y *= drag;
+
+                var move = (input.Direction * motion.Acceleration) / physics.Mass;
+                velocity.X += move * time.Delta;
+
+                if (input.Jump) velocity.Y += motion.JumpForce / physics.Mass;
+                velocity.Y += physics.Gravity * time.Delta;
+
+                // Clamp horizontal velocity.
+                if (velocity.X < -motion.MaximumSpeed)
+                    velocity.X = -motion.MaximumSpeed;
+                if (velocity.X > motion.MaximumSpeed)
+                    velocity.X = motion.MaximumSpeed;
+            }
+        }
+    }
+
+    public struct UpdatePosition : IRun
+    {
+        // 'Unity<Transform>' is a Unity-specific query that gives access 
+        // to core Unity components.
+        // Note that it will not work for custom 'MonoBehaviour' types.
+        public readonly Group<Unity<Transform>, Write<Components.Velocity>> Group;
+
+        public void Run()
+        {
+            foreach (ref readonly var item in Group)
+            {
+                // Unpack the group item using generated extensions.
+                var transform = item.Transform();
+                ref var velocity = ref item.Velocity();
+
+                var position = transform.position;
+                position += new Vector3(velocity.X, velocity.Y);
+
+                // Fake a floor.
+                if (position.y < 0)
+                {
+                    position.y = 0;
+                    velocity.Y = 0;
+                }
+
+                transform.position = position;
+            }
+        }
+    }
+}
+```
+- Define a custom `ControllerReference` and define the execution [node][wiki/node] that will run your [systems][wiki/system].
+```csharp
+using Entia.Core;
+using Entia.Nodes;
+using Entia.Unity;
+using static Entia.Nodes.Node;
+
+namespace Controllers
+{
+    public class Main : ControllerReference
+    {
+        // This 'Node' represents the execution behavior of systems.
+        public override Node Node =>
+            // The 'Sequence' node executes its children in order.
+            Sequence("TestController",
+                // This node holds a few useful Unity-specific library systems.
+                Nodes.Default,
+                // Any number of systems can be added here.
+                System<Systems.UpdateInput>(),
+                System<Systems.UpdateVelocity>(),
+                System<Systems.UpdatePosition>()
+            );
+    }
+}
+```
+- Create an empty `GameObject` named '_World_' and add your newly defined controller to it.
+  - This will automatically add a `WorldReference` on the `GameObject`.
+
+![][tutorial/add-controller]
+
+- Press _Play_ and appreciate your moving and jumping player [entity][wiki/entity].
+
+![][tutorial/move-jump]
 - For more details, please consult the [wiki][wiki].
 ___
 
 # References
-Most of the integration with the Unity game engine is done through what are called _references_. These are convenient _MonoBehaviour_ wrappers that act as constructors and visualizers for **[Entia][entia]** elements. After initialization, references are only debug views for what is going on the **[Entia][entia]** side and are not strictly required. Other than [ControllerReference][wiki/controller] (which is where you define your execution graph), you will never have to define references yourself since the [code generator](#generator) will do all the boilerplate work.
+Most of the integration with the Unity game engine is done through what are called _references_. These are convenient _MonoBehaviour_ wrappers that act as constructors and visualizers for [**Entia**][entia] elements. After initialization, references are only debug views for what is going on the [**Entia**][entia] side and are not strictly required. Other than [ControllerReference][wiki/controller] (which is where you define your execution graph), you will never have to define references yourself since the [code generator](#generator) will do all the boilerplate work.
 
 # Generator
 A lightweight code generator comes packaged with **Entia.Unity** to make the integration with the Unity game engine more seamless. It generates corresponding [references](#References) for every [component][wiki/component] and [resource][wiki/resource] that you define such that they can be inspected and adjusted in the editor just like regular _MonoBehaviour_ components. Additionally, it will generate convenient extensions for your [systems][wiki/system] to simplify their usage.
