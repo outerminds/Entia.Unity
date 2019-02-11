@@ -412,9 +412,32 @@ namespace Entia.Unity.Editor
                             {
                                 using (LayoutUtility.Indent())
                                 {
+                                    var fields = system.Type.GetFields(TypeUtility.Instance);
                                     Descend();
-                                    foreach (var pair in system.Type.GetFields().Select(field => (name: field.Name, type: field.FieldType)))
-                                        LayoutUtility.Label($"{pair.name}: {pair.type.Format()}");
+
+                                    if (details)
+                                    {
+                                        foreach (var field in fields)
+                                        {
+                                            var dependencies = world.Dependers()
+                                                .Dependencies(field)
+                                                .Distinct()
+                                                .Select(dependency => dependency.ToString())
+                                                .OrderBy(_ => _)
+                                                .ToArray();
+                                            LayoutUtility.ChunksFoldout(
+                                                $"{field.Name}: {field.FieldType.Format()}",
+                                                dependencies,
+                                                (dependency, _) => { using(LayoutUtility.Disable()) LayoutUtility.Label(dependency); },
+                                                typeof(IDependency),
+                                                currentPath.Append(field.Name, nameof(IDependency)).ToArray());
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var field in fields) 
+                                            LayoutUtility.Label($"{field.Name}: {field.FieldType.Format()}");
+                                    }
                                 }
                             }
                         }
