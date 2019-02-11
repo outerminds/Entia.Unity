@@ -221,7 +221,7 @@ namespace Systems
     }
 }
 ```
-- Define a custom `ControllerReference` and define the execution [node][wiki/node] that will run your [systems][wiki/system].
+- Define a custom [`ControllerReference`][wiki/controller] and define the execution [node][wiki/node] that will run your [systems][wiki/system].
 ```csharp
 using Entia.Core;
 using Entia.Nodes;
@@ -258,7 +258,7 @@ namespace Controllers
 ___
 
 # References
-Most of the integration with the Unity game engine is done through what are called _references_. These are convenient _MonoBehaviour_ wrappers that act as constructors and visualizers for [**Entia**][entia] elements. After initialization, references are only debug views for what is going on the [**Entia**][entia] side and are not strictly required. Other than [ControllerReference][wiki/controller] (which is where you define your execution graph), you will never have to define references yourself since the [code generator](#generator) will do all the boilerplate work.
+Most of the integration with the Unity game engine is done through what are called _references_. These are convenient _MonoBehaviour_ wrappers that act as constructors and visualizers for [**Entia**][entia] elements. After initialization, references are only debug views for what is going on the [**Entia**][entia] side and are not strictly required. Other than [`ControllerReference`][wiki/controller] (which is where you define your execution graph), you will never have to define references yourself since the [code generator](#generator) will do all the boilerplate work.
 
 # Generator
 A lightweight code generator comes packaged with **Entia.Unity** to make the integration with the Unity game engine more seamless. It generates corresponding [references](#References) for every [component][wiki/component] and [resource][wiki/resource] that you define such that they can be inspected and adjusted in the editor just like regular _MonoBehaviour_ components. Additionally, it will generate convenient extensions for your [systems][wiki/system] to simplify their usage.
