@@ -42,6 +42,13 @@ namespace Entia.Unity
             Console.WriteLine($"-> Kill: {string.Join(", ", arguments)}");
         }
 
+        static bool Change(params string[] paths)
+        {
+            var changed = false;
+            foreach (var path in paths) changed |= Change(path);
+            return changed;
+        }
+
         static bool Change(string path)
         {
             var previous = _writes.TryGetValue(path, out var value) ? value : default;
@@ -53,6 +60,31 @@ namespace Entia.Unity
 
         static Disposable Watch(StringBuilder logger, Options options, string[] arguments)
         {
+            void OnChanged(WatcherChangeTypes type, params string[] paths)
+            {
+                if (Monitor.TryEnter(_lock))
+                {
+                    try
+                    {
+                        Console.WriteLine($"-> Detect {type}: {string.Join(", ", paths)}");
+                        if (Change(paths))
+                        {
+                            Console.WriteLine($"-> Arguments: {string.Join(", ", arguments)}");
+                            Console.WriteLine($"-> Generate...");
+                            logger.Clear();
+                            RunAsync(logger, options, arguments).Wait();
+                        }
+                    }
+                    catch (Exception exception) { Console.WriteLine($"-> {exception}"); }
+                    finally
+                    {
+                        Console.WriteLine($"-> Done");
+                        Console.WriteLine();
+                        Monitor.Exit(_lock);
+                    }
+                }
+            }
+
             var watchers = new FileSystemWatcher[options.Inputs.Length];
             for (int i = 0; i < options.Inputs.Length; i++)
             {
@@ -60,34 +92,12 @@ namespace Entia.Unity
                 var watcher = watchers[i] = new FileSystemWatcher(directory, "*.cs")
                 {
                     IncludeSubdirectories = true,
-                    NotifyFilter = NotifyFilters.LastWrite
+                    EnableRaisingEvents = true,
                 };
-
-                watcher.Changed += (_, data) => Task.Run(() =>
-                {
-                    if (Monitor.TryEnter(_lock))
-                    {
-                        try
-                        {
-                            Console.WriteLine($"-> Detect Change: {data.FullPath}");
-                            if (Change(data.FullPath))
-                            {
-                                Console.WriteLine($"-> Arguments: {string.Join(", ", arguments)}");
-                                Console.WriteLine($"-> Generate...");
-                                logger.Clear();
-                                RunAsync(logger, options, arguments).Wait();
-                            }
-                        }
-                        catch (Exception exception) { Console.WriteLine($"-> {exception}"); }
-                        finally
-                        {
-                            Console.WriteLine($"-> Done");
-                            Console.WriteLine();
-                            Monitor.Exit(_lock);
-                        }
-                    }
-                });
-                watcher.EnableRaisingEvents = true;
+                watcher.Changed += (_, data) => Task.Run(() => OnChanged(data.ChangeType, data.FullPath));
+                watcher.Deleted += (_, data) => Task.Run(() => OnChanged(data.ChangeType, data.FullPath));
+                watcher.Renamed += (_, data) => Task.Run(() => OnChanged(data.ChangeType, data.FullPath, data.OldFullPath));
+                watcher.Created += (_, data) => Task.Run(() => OnChanged(data.ChangeType, data.FullPath));
                 Console.WriteLine($"-> Watch: {directory}");
             }
 
@@ -122,7 +132,7 @@ namespace Entia.Unity
                             arguments = request.Split('|');
                             options = Options.Parse(arguments);
 
-                            if (options.Changes.Length == 0 || options.Changes.Any(Change))
+                            if (options.Changes.Length == 0 || Change(options.Changes))
                             {
                                 logger.Clear();
                                 Console.WriteLine($"-> Generate...");

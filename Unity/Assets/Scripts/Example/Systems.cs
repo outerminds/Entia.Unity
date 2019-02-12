@@ -12,7 +12,7 @@ namespace Systems
     {
         // Groups allow to efficiently retrieve a subset of entities that correspond
         // to a given query represented by the generic types of the group.
-        // This group will hold every entity that has a 'Components.Input' 
+        // This group will hold every entity that has a 'Components.Input'
         // component and will give write access to it.
         public readonly Group<Write<Components.Input>> Group;
 
@@ -30,14 +30,14 @@ namespace Systems
 
     public struct UpdateVelocity : IRun
     {
-        // Queries can also be defined as a separate type which is convenient 
+        // Queries can also be defined as a separate type which is convenient
         // for large queries.
-        // The 'None' attribute means that all entities that have a 
+        // The 'None' attribute means that all entities that have a
         // 'Components.IsFrozen' component will be excluded from the query results.
         [None(typeof(Components.IsFrozen))]
         public readonly struct Query : IQueryable
         {
-            // A queryable can only hold queryable fields. They can not hold 
+            // A queryable can only hold queryable fields. They can not hold
             // components directly.
             public readonly Write<Components.Velocity> Velocity;
             public readonly Read<Components.Motion> Motion;
@@ -48,7 +48,7 @@ namespace Systems
         public readonly Group<Query> Group;
 
         // Resources hold world-global data.
-        // 'Entia.Resources.Time' is a library resource that holds 
+        // 'Entia.Resources.Time' is a library resource that holds
         // Unity's 'Time.deltaTime'.
         public readonly Resource<Entia.Resources.Time>.Read Time;
 
@@ -84,7 +84,7 @@ namespace Systems
 
     public struct UpdatePosition : IRun
     {
-        // 'Unity<Transform>' is a Unity-specific query that gives access 
+        // 'Unity<Transform>' is a Unity-specific query that gives access
         // to core Unity components.
         // Note that it will not work for custom 'MonoBehaviour' types.
         public readonly Group<Unity<Transform>, Write<Components.Velocity>> Group;

@@ -27,7 +27,7 @@ namespace Entia.Unity.Editor
         [MenuItem("Entia/Generator/Generate %#g")]
         public static void Generate() => Generate(Settings(), true);
 
-        static void Generate(GeneratorSettings settings, bool log, params string[] changes)
+        public static void Generate(GeneratorSettings settings, bool log, params string[] changes)
         {
             var tool = Tool(settings);
             if (string.IsNullOrWhiteSpace(tool))
@@ -59,8 +59,8 @@ Make sure a proper path is defined in the '{nameof(GeneratorSettings)}' asset.")
                             {
                                 UnityEngine.Debug.LogError(
 $@"Failed to connect to generator process.
-This may happen because the .Net Core Runtime is not installed on this machine. 
--> Go to 'https://dotnet.microsoft.com/download' 
+This may happen because the .Net Core Runtime is not installed on this machine.
+-> Go to 'https://dotnet.microsoft.com/download'
 -> Install the .Net Core Runtime version 2.1+.
 -> Restart Unity.");
                                 throw;
@@ -94,7 +94,9 @@ $@"Generation failed after '{timer.Elapsed}'.
         public static bool IsInput(GeneratorSettings settings, string path) =>
             IsScript(path) && settings.Inputs.Any(input => IsSubPath(path, input)) && !IsSubPath(path, settings.Output);
 
-        static Process Birth(string tool, GeneratorSettings settings, bool log)
+        public static string Tool(GeneratorSettings settings) => settings.Tool.Files("*.dll").FirstOrDefault();
+
+        public static Process Birth(string tool, GeneratorSettings settings, bool log)
         {
             if (TryProcess(tool, out var process))
             {
@@ -118,9 +120,9 @@ $@"Generation failed after '{timer.Elapsed}'.
             catch
             {
                 UnityEngine.Debug.LogError(
-$@"Failed to birth generator process. 
-This may happen because the .Net Core Runtime is not installed on this machine. 
--> Go to 'https://dotnet.microsoft.com/download' 
+$@"Failed to birth generator process.
+This may happen because the .Net Core Runtime is not installed on this machine.
+-> Go to 'https://dotnet.microsoft.com/download'
 -> Install the .Net Core Runtime version 2.1+.
 -> Restart Unity.");
                 throw;
@@ -130,7 +132,7 @@ This may happen because the .Net Core Runtime is not installed on this machine.
             return process;
         }
 
-        static bool Kill(string tool, bool log)
+        public static bool Kill(string tool, bool log)
         {
             if (TryProcess(tool, out var process))
             {
@@ -139,7 +141,23 @@ This may happen because the .Net Core Runtime is not installed on this machine.
                 return true;
             }
 
-            if (log) UnityEngine.Debug.Log($"Generator processes was not found.");
+            if (log) UnityEngine.Debug.Log($"Generator process was not found.");
+            return false;
+        }
+
+        public static bool TryProcess(string tool, out Process process)
+        {
+            if (TryLoadProcess(tool, out var identifier, out var time))
+            {
+                try
+                {
+                    process = Process.GetProcessById(identifier);
+                    return !process.HasExited && process.StartTime.Ticks == time;
+                }
+                catch { }
+            }
+
+            process = default;
             return false;
         }
 
@@ -156,22 +174,6 @@ This may happen because the .Net Core Runtime is not installed on this machine.
             if (changes.Length > 0) Core.ArrayUtility.Add(ref arguments, "--changes", string.Join(";", changes));
             if (watch) Core.ArrayUtility.Add(ref arguments, "--watch", $"{SerializeProcess(Process.GetCurrentProcess())};{tool}");
             return arguments;
-        }
-
-        static bool TryProcess(string tool, out Process process)
-        {
-            if (TryLoadProcess(tool, out var identifier, out var time))
-            {
-                try
-                {
-                    process = Process.GetProcessById(identifier);
-                    return !process.HasExited && process.StartTime.Ticks == time;
-                }
-                catch { }
-            }
-
-            process = default;
-            return false;
         }
 
         static string SerializeProcess(Process process) => $"{process.Id};{process.StartTime.Ticks}";
@@ -195,8 +197,6 @@ This may happen because the .Net Core Runtime is not installed on this machine.
 
         static string ProcessKey(string tool) => $"Entia_Generator:{tool}";
 
-        static string Tool(GeneratorSettings settings) => settings.Tool.Files("*.dll").FirstOrDefault();
-
         static bool TrySettings(out GeneratorSettings settings) => (settings = GeneratorSettings.Instance) != null;
 
         static GeneratorSettings Settings()
@@ -218,7 +218,7 @@ A default instance was created at path '{path}'.");
             catch (Exception exception)
             {
                 UnityEngine.Debug.LogError(
-$@"Could not find or create a '{nameof(GeneratorSettings)}' asset in project. 
+$@"Could not find or create a '{nameof(GeneratorSettings)}' asset in project.
 A default instance was used instead. It can be created from menu 'Assets/Create/Entia/Generator/Settings'.");
                 UnityEngine.Debug.LogException(exception);
             }
