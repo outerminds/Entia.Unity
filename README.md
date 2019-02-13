@@ -15,6 +15,8 @@
 [wiki/node]:https://github.com/outerminds/Entia/wiki/Node
 [wiki/queryable]:https://github.com/outerminds/Entia/wiki/Queryable
 [tutorial/plugins]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/Plugins.PNG
+[tutorial/generate]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/Generate.png
+[tutorial/generator-settings]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/GeneratorSettings.png
 [tutorial/add-component]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/AddComponents.PNG
 [tutorial/add-controller]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/AddController.PNG
 [tutorial/move-jump]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/MoveJump.gif
@@ -47,7 +49,15 @@ ___
 
 # Tutorial
 - Create an empty Unity scene.
-- Define a couple [components][wiki/component].
+- In the _'Entia'_ menu, select _'Generator'_ and then _'Generate'_.
+  - This will create a `GeneratorSettings` asset in your _'Entia'_ folder and will launch the generator.
+  - The default values of the `GeneratorSettings` asset should satisfy most use-cases.
+  - As long as the `Automatic` option is on in the `GeneratorSettings`, this is the only time that you will have to manually launch the generator or worry about it.
+
+![][tutorial/generate]
+
+![][tutorial/generator-settings]
+- Define a couple [components][wiki/component] in the _'Assets/Scripts'_ folder.
 ```csharp
 using Entia;
 using Entia.Unity;
@@ -94,15 +104,12 @@ namespace Components
 }
 ```
 - Create an empty `GameObject` named _'Player'_, add the newly defined [components][wiki/component] to it and tweak their values (you may addionally add a `SpriteRenderer` to the `GameObject` to visualize it).
-  - By focusing Unity, the code generator should run and create a _Generated_ folder with generated versions of your [components][wiki/component].
-  - If no `GeneratorSettings` asset previously existed, the generator will create a default one named _'Settings'_ in the same folder where you installed **Entia.Unity**.
-  - Using the `GeneratorSettings` asset, you can customize the behavior of the generator.
-  - After the generation is complete, you should be able to find your components in the _Add Component_ dropdown of the `GameObject`.
-  - Notice that the [components][wiki/component] that you are adding to the `GameObject` are the generated `ComponentReference` of the _Generated_ folder.
-  - Adding a [component][wiki/component] to a `GameObject` will automatically add an `EntityReference` to it.
+  - The generator should've generated `ComponentReference` wrappers for your [components][wiki/component] in a _'Generated'_ folder.
+  - You should be able to find them in the _'Add Component'_ dropdown of the `GameObject`.
+  - Adding a [component][wiki/component] to a `GameObject` will automatically add the required `EntityReference` to it.
 
 ![][tutorial/add-component]
-- Define a couple [systems][wiki/system] that will use the [components][wiki/component].
+- Define a couple [systems][wiki/system] that will use the [components][wiki/component] in the _'Assets/Scripts'_ folder.
   - When the generator detects the use of a [queryable][wiki/queryable] type, it will generate convenient extensions to unpack instances of that type.
   - Note that you may need to focus Unity to trigger the generator.
 ```csharp
@@ -247,7 +254,7 @@ namespace Controllers
 }
 ```
 - Create an empty `GameObject` named '_World_' and add your newly defined controller to it.
-  - This will automatically add a `WorldReference` on the `GameObject`.
+  - This will automatically add the required `WorldReference` on the `GameObject`.
 
 ![][tutorial/add-controller]
 
