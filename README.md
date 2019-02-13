@@ -44,13 +44,13 @@ ___
 
 ![][tutorial/plugins]
 - Ensure that you have a _[.Net Core Runtime][net-core]_ with version 2.0+ (required for the code generator to work).
-- Optionally install Unity templates by going to the _'Entia'_ menu, then _'Install'_ and '_Templates'_.
+- Optionally install Unity templates by clicking on the _'Entia/Install/Templates'_ menu.
 - Optionally install the Visual Studio extension _'Entia.Analyze.vsix'_ to get [**Entia**][entia] specific code analysis.
 ___
 
 # Tutorial
 - Create an empty Unity scene.
-- In the _'Entia'_ menu, select _'Generator'_ and then _'Generate'_.
+- Click on the _'Entia/Generator/Generate'_ menu.
   - This will create a `GeneratorSettings` asset in your _'Entia'_ folder and will launch the generator.
   - The default values of the `GeneratorSettings` asset should satisfy most use-cases.
   - As long as the `Automatic` option is on in the `GeneratorSettings`, this is the only time that you will have to manually launch the generator or worry about it.
@@ -271,7 +271,7 @@ Most of the integration with the Unity game engine is done through what are call
 # Generator
 A lightweight code generator comes packaged with **Entia.Unity** to make the integration with the Unity game engine seamless. It generates corresponding [references](#References) for every [component][wiki/component] and [resource][wiki/resource] that you define such that they can be inspected and adjusted in the editor just like regular `MonoBehaviour` components. Additionally, it will generate convenient extensions for your [systems][wiki/system] to simplify their usage.
 
-Most of the time you will not have to worry about the generator, but it is useful to know that it is triggered when a relevant C# script is saved or imported by the Unity editor. It can also be manually triggered using the menu _'Entia/Generator/Generate'_.
+Most of the time you will not have to worry about the generator, but it is useful to know that it is triggered when a relevant C# script is saved or imported by the Unity editor. It can also be manually triggered using the menu _'Entia/Generator/Generate'_ or in the `GeneratorSettings` asset.
 
 The generator uses [Roslyn][roslyn] to run before the Unity compiler does such that it does not depend on the compiled assembly. This prevents many typical and unpleasant generator bugs (example: _you delete a type and the Unity compiler can't run because some generated code depends on it and since the generator depends on a successful compilation, it can't run either, forcing you to manually modify generated code_).
 
