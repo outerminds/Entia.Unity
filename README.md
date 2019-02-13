@@ -24,7 +24,7 @@
 
 **Entia.Unity** is a full integration of the [**Entia**][entia] framework for the Unity game engine. It consists of a code generator, inspectors, templates, tools and other conveniences that make the usage of the framework simple and accessible to Unity developers.
 
-_[**Entia**][entia] is a free, open-source, data-oriented, highly performant, parallelizable and extensible [**E**ntity-**C**omponent-**S**ystem (**ECS**)][ecs] framework written in C# especially for game development. It takes advantage of the latest C#7+ features to represent state exclusively with contiguous structs. No indirection, no boxing, no garbage collection and no cache misses. See [**Entia**][entia]._
+_[**Entia**][entia] is a free, open-source, data-oriented, highly performant, parallelizable and extensible [**E**ntity-**C**omponent-**S**ystem][ecs] (_ECS_) framework written in C# especially for game development. It takes advantage of the latest C#7+ features to represent state exclusively with contiguous structs. No indirection, no boxing, no garbage collection and no cache misses. See [**Entia**][entia]._
 
 #### [:inbox_tray: Download][releases]
 #### Entia.Unity requires version 2018.3+ of the [Unity][unity] game engine.
@@ -44,7 +44,8 @@ ___
 
 ![][tutorial/plugins]
 - Ensure that you have a _[.Net Core Runtime][net-core]_ with version 2.0+ (required for the code generator to work).
-- Optionally install the Visual Studio extension _Entia.Analyze.vsix_ to get [**Entia**][entia] specific code analysis.
+- Optionally install Unity templates by going to the _'Entia'_ menu, then _'Install'_ and '_Templates'_.
+- Optionally install the Visual Studio extension _'Entia.Analyze.vsix'_ to get [**Entia**][entia] specific code analysis.
 ___
 
 # Tutorial
@@ -265,17 +266,17 @@ namespace Controllers
 ___
 
 # References
-Most of the integration with the Unity game engine is done through what are called _references_. These are convenient _MonoBehaviour_ wrappers that act as constructors and visualizers for [**Entia**][entia] elements. After initialization, references are only debug views for what is going on the [**Entia**][entia] side and are not strictly required. Other than [`ControllerReference`][wiki/controller] (which is where you define your execution graph), you will never have to define references yourself since the code generator will do all the boilerplate work.
+Most of the integration with the Unity game engine is done through what are called _references_. These are convenient `MonoBehaviour` wrappers that act as constructors and visualizers for [**Entia**][entia] elements. After initialization, references are only debug views for what is going on the [**Entia**][entia] side and are not strictly required. Other than [`ControllerReference`][wiki/controller] (which is where you define your execution graph), you will never have to define references yourself since the code generator will do all the boilerplate work.
 
 # Generator
-A lightweight code generator comes packaged with **Entia.Unity** to make the integration with the Unity game engine more seamless. It generates corresponding [references](#References) for every [component][wiki/component] and [resource][wiki/resource] that you define such that they can be inspected and adjusted in the editor just like regular _MonoBehaviour_ components. Additionally, it will generate convenient extensions for your [systems][wiki/system] to simplify their usage.
+A lightweight code generator comes packaged with **Entia.Unity** to make the integration with the Unity game engine seamless. It generates corresponding [references](#References) for every [component][wiki/component] and [resource][wiki/resource] that you define such that they can be inspected and adjusted in the editor just like regular `MonoBehaviour` components. Additionally, it will generate convenient extensions for your [systems][wiki/system] to simplify their usage.
 
-Most of the time you will not have to worry about the generator, but it is useful to know that it is triggered when a relevant C# script is imported by the Unity editor. It can also be manually triggered using the menu _Entia/Generator/Generate_.
+Most of the time you will not have to worry about the generator, but it is useful to know that it is triggered when a relevant C# script is saved or imported by the Unity editor. It can also be manually triggered using the menu _'Entia/Generator/Generate'_.
 
 The generator uses [Roslyn][roslyn] to run before the Unity compiler does such that it does not depend on the compiled assembly. This prevents many typical and unpleasant generator bugs (example: _you delete a type and the Unity compiler can't run because some generated code depends on it and since the generator depends on a successful compilation, it can't run either, forcing you to manually modify generated code_).
 
-- The generator is smart enough to detect most renaming scenarios and renames the _.meta_ files associated with the generated _MonoBehaviour_ wrappers such that your links will not be lost.
+- The generator is smart enough to detect most renaming scenarios and renames the _.meta_ files associated with the generated `MonoBehaviour` wrappers such that your links will not be lost.
   - Renaming a type through refactor is always detected.
   - Renaming a file is detected.
   - Renaming or changing the `namespace` of a type is detected as long as the file is not renamed at the same time.
-- The generator exists only in the Unity editor and will never encumber your builds._
+- The generator exists only in the Unity editor and will never encumber your builds.
