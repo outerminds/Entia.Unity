@@ -34,11 +34,10 @@ namespace Entia.Builders
             .Map(child =>
             {
                 var map = new TypeMap<IPhase, (CustomSampler, Recorder)>();
+                var index = _names[node.Name] = _names.TryGetValue(node.Name, out var value) ? ++value : 0;
                 foreach (var phase in child.Phases().Distinct())
                 {
-                    var name = $"{phase.Format()}.{node.Name}";
-                    var index = _names[name] = _names.TryGetValue(name, out var value) ? ++value : 0;
-                    var sampler = CustomSampler.Create($"{name}[{index}]");
+                    var sampler = CustomSampler.Create($"{node.Name}.{phase.Format()}[{index}]");
                     var recorder = sampler.GetRecorder();
                     map[phase] = (sampler, recorder);
                 }
