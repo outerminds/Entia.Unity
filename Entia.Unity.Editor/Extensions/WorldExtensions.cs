@@ -92,9 +92,6 @@ namespace Entia.Unity.Editor
             else LayoutUtility.Label(label);
         }
 
-        public static void ShowField(this World world, string label, FieldInfo field, object instance, params string[] path) =>
-            LayoutUtility.Field(field, instance, value => world.ShowValue(label, value, path));
-
         public static void ShowEntity(this World world, string label, Entity entity, params string[] path)
         {
             path = path.Append(entity.ToString()).ToArray();
@@ -300,9 +297,19 @@ namespace Entia.Unity.Editor
                                 using (LayoutUtility.Disable(!enabled))
                                 using (LayoutUtility.Indent())
                                 {
-                                    fields.Iterate((field, index) => world.ShowField(
-                                        $"{field.Name}: {field.FieldType.Format()}", field, system,
-                                        current.Append(field.Name, field.FieldType.FullName, index.ToString()).ToArray()));
+                                    for (int i = 0; i < fields.Length; i++)
+                                    {
+                                        var field = fields[i];
+                                        var format = $"{field.Name}: {field.FieldType.Format()}";
+                                        LayoutUtility.Field(
+                                            field,
+                                            system,
+                                            value => world.ShowValue(
+                                                $"{field.Name}: {field.FieldType.Format()}",
+                                                value,
+                                                current.Append(field.Name, field.FieldType.FullName, i.ToString()).ToArray()),
+                                            () => LayoutUtility.IsDisabled(field) || (!field.IsPublic && field.IsInitOnly));
+                                    }
                                 }
                             }
                         }
@@ -428,14 +435,14 @@ namespace Entia.Unity.Editor
                                             LayoutUtility.ChunksFoldout(
                                                 $"{field.Name}: {field.FieldType.Format()}",
                                                 dependencies,
-                                                (dependency, _) => { using(LayoutUtility.Disable()) LayoutUtility.Label(dependency); },
+                                                (dependency, _) => { using (LayoutUtility.Disable()) LayoutUtility.Label(dependency); },
                                                 typeof(IDependency),
                                                 currentPath.Append(field.Name, nameof(IDependency)).ToArray());
                                         }
                                     }
                                     else
                                     {
-                                        foreach (var field in fields) 
+                                        foreach (var field in fields)
                                             LayoutUtility.Label($"{field.Name}: {field.FieldType.Format()}");
                                     }
                                 }

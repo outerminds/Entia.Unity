@@ -9,7 +9,7 @@ namespace Entia.Unity
             Sequence("Unity",
                 System<Systems.LogException>(),
                 System<Systems.SynchronizeGameObject>(),
-                System<Systems.Time>()
+                System<Systems.UpdateTime>()
             );
     }
 }

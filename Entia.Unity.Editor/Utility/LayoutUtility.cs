@@ -207,9 +207,12 @@ namespace Entia.Unity.Editor
         public static void Field(FieldInfo field, object instance, params string[] path) =>
             Field(field, instance, value => Object(field.Name, value, field.FieldType, path.Append(field.Name).ToArray()));
 
-        public static void Field(FieldInfo field, object instance, Func<object, object> show)
+        public static void Field(FieldInfo field, object instance, Func<object, object> show) =>
+            Field(field, instance, show, () => field.IsInitOnly || IsDisabled(field));
+
+        public static void Field(FieldInfo field, object instance, Func<object, object> show, Func<bool> disable)
         {
-            using (Disable(field.IsInitOnly || field.GetCustomAttributes<DisableAttribute>().Any() || field.DeclaringType.GetCustomAttributes<DisableAttribute>().Any()))
+            using (Disable(disable()))
             {
                 if (Result.Try(() => field.GetValue(instance)).TryValue(out var value))
                 {
@@ -220,6 +223,8 @@ namespace Entia.Unity.Editor
                 else Label($"{field.Name}: {field.FieldType.Format()}");
             }
         }
+
+        public static bool IsDisabled(MemberInfo member) => member.GetCustomAttributes<DisableAttribute>(true).Any() || member.DeclaringType.GetCustomAttributes<DisableAttribute>().Any();
 
         public static object Object(string label, object value, Type type, params string[] path)
         {

@@ -4,7 +4,7 @@ using Entia.Systems;
 
 namespace Entia.Unity.Systems
 {
-    public struct Time : IRun, IDependable<Dependers.Unity>
+    public struct UpdateTime : IRun, IDependable<Dependers.Unity>
     {
         public Resource<Resources.Time> Resource;
 
