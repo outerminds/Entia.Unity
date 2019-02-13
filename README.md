@@ -1,5 +1,4 @@
 [entia]:https://github.com/outerminds/Entia
-[unity]:https://unity3d.com/
 [roslyn]:https://en.wikipedia.org/wiki/.NET_Compiler_Platform
 [ecs]:https://en.wikipedia.org/wiki/Entity%E2%80%93component%E2%80%93system
 [net-standard]:https://docs.microsoft.com/en-us/dotnet/standard/net-standard
@@ -27,7 +26,7 @@
 _[**Entia**][entia] is a free, open-source, data-oriented, highly performant, parallelizable and extensible [**E**ntity-**C**omponent-**S**ystem][ecs] (_ECS_) framework written in C# especially for game development. It takes advantage of the latest C#7+ features to represent state exclusively with contiguous structs. No indirection, no boxing, no garbage collection and no cache misses. See [**Entia**][entia]._
 
 #### [:inbox_tray: Download][releases]
-#### Entia.Unity requires version 2018.3+ of the [Unity][unity] game engine.
+#### Entia.Unity requires version 2018.3+ of the Unity game engine.
 ___
 
 ### Content
