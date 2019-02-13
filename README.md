@@ -260,7 +260,7 @@ namespace Controllers
 - Press _Play_ and appreciate your moving and jumping player [entity][wiki/entity].
 
 ![][tutorial/move-jump]
-- For more details, please consult the [wiki][wiki].
+- For more details, please see [**Entia**][entia] or consult the [wiki][wiki].
 ___
 
 # References
