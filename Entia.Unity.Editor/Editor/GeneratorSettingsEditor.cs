@@ -12,12 +12,19 @@ namespace Entia.Unity.Editor
         {
             base.OnInspectorGUI();
 
-            var tool = Generator.Tool(Target);
+            var valid = Generator.TryTool(Target, false, out var tool);
             var alive = Generator.TryProcess(tool, out var process);
 
             EditorGUILayout.Separator();
 
-            if (alive)
+            if (!valid)
+            {
+                var pattern = serializedObject.FindProperty("_tool").stringValue;
+                EditorGUILayout.HelpBox(
+                    $"Could not find a valid executable that matches '{pattern}'.",
+                    MessageType.Error);
+            }
+            else if (alive)
             {
                 EditorGUILayout.HelpBox(
 $@"Generator process:
@@ -29,12 +36,12 @@ $@"Generator process:
             }
             else EditorGUILayout.HelpBox("Generator process was not found.", MessageType.Warning);
 
-            using (LayoutUtility.Disable(alive))
+            using (LayoutUtility.Disable(!valid || alive))
                 if (GUILayout.Button("Birth")) Generator.Birth(tool, Target, true);
 
-            using (LayoutUtility.Disable(!alive))
+            using (LayoutUtility.Disable(!valid || !alive))
             {
-                if (GUILayout.Button("Generate")) Generator.Generate(Target, true);
+                if (GUILayout.Button("Generate")) Generator.Generate(tool, Target, true);
                 if (GUILayout.Button("Kill")) Generator.Kill(tool, true);
             }
         }

@@ -38,7 +38,7 @@ namespace Entia.Unity.Editor
         public string Suffix => _suffix;
 
         [SerializeField]
-        string _tool = "|Entia.Unity.Generate.dll|";
+        string _tool = Path.Combine("{Entia.Generator}", "Entia.Unity.Generate.dll");
         [SerializeField]
         bool _automatic = true;
         [SerializeField]
@@ -46,7 +46,7 @@ namespace Entia.Unity.Editor
         [SerializeField]
         float _timeout = 5f;
         [SerializeField]
-        string[] _inputs = { Path.Combine("{Assets}", "Scripts") };
+        string[] _inputs = { Path.Combine("{Assets}", "Scripts"), Path.Combine("{Assets}", "Plugins") };
         [SerializeField]
         string _output = Path.Combine("{Assets}", "Generated");
         [SerializeField]

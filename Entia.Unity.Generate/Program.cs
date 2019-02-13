@@ -32,7 +32,9 @@ namespace Entia.Unity
                 try
                 {
                     Task.Run(() => Run(logger, options, arguments), cancel.Token);
-                    while (Process.GetProcessById(options.Watch.process) is Process process && process.StartTime.Ticks == options.Watch.ticks)
+                    while (Process.GetProcessById(options.Watch.process) is Process process &&
+                        !process.HasExited &&
+                        process.StartTime.Ticks == options.Watch.ticks)
                         Thread.Sleep(100);
                 }
                 catch { }
@@ -60,14 +62,14 @@ namespace Entia.Unity
 
         static Disposable Watch(StringBuilder logger, Options options, string[] arguments)
         {
-            void OnChanged(WatcherChangeTypes type, params string[] paths)
+            void OnChanged(WatcherChangeTypes type, bool force = false, params string[] paths)
             {
                 if (Monitor.TryEnter(_lock))
                 {
                     try
                     {
                         Console.WriteLine($"-> Detect {type}: {string.Join(", ", paths)}");
-                        if (Change(paths))
+                        if (Change(paths) || force)
                         {
                             Console.WriteLine($"-> Arguments: {string.Join(", ", arguments)}");
                             Console.WriteLine($"-> Generate...");
@@ -94,10 +96,10 @@ namespace Entia.Unity
                     IncludeSubdirectories = true,
                     EnableRaisingEvents = true,
                 };
-                watcher.Changed += (_, data) => Task.Run(() => OnChanged(data.ChangeType, data.FullPath));
-                watcher.Deleted += (_, data) => Task.Run(() => OnChanged(data.ChangeType, data.FullPath));
-                watcher.Renamed += (_, data) => Task.Run(() => OnChanged(data.ChangeType, data.FullPath, data.OldFullPath));
-                watcher.Created += (_, data) => Task.Run(() => OnChanged(data.ChangeType, data.FullPath));
+                watcher.Changed += (_, data) => Task.Run(() => OnChanged(data.ChangeType, false, data.FullPath));
+                watcher.Deleted += (_, data) => Task.Run(() => OnChanged(data.ChangeType, true, data.FullPath));
+                watcher.Renamed += (_, data) => Task.Run(() => OnChanged(data.ChangeType, true, data.FullPath, data.OldFullPath));
+                watcher.Created += (_, data) => Task.Run(() => OnChanged(data.ChangeType, true, data.FullPath));
                 Console.WriteLine($"-> Watch: {directory}");
             }
 

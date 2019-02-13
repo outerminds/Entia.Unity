@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: -1149342265, guid: bd6574cac34fec143851a26fff8716bb, type: 3}
   m_Name: Settings
   m_EditorClassIdentifier: 
-  _tool: '|Entia.Unity.Generate.dll|'
+  _tool: '{Entia.Generator}\Entia.Unity.Generate.dll'
   _automatic: 1
   _debug: 1
   _timeout: 5
   _inputs:
   - '{Assets}\Scripts'
+  - '{Assets}\Plugins'
   _output: '{Assets}\Generated'
   _assemblies:
   - '{Editor.Mono}'

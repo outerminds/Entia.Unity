@@ -12,32 +12,38 @@ using UnityEngine;
 
 namespace Entia.Unity.Editor
 {
+    [InitializeOnLoad]
     public class Generator : AssetPostprocessor
     {
+        static Generator()
+        {
+            if (TrySettings(out var settings) && settings.Automatic && TryTool(settings, settings.Debug, out var tool))
+                Birth(tool, settings, settings.Debug);
+        }
+
         [MenuItem("Entia/Generator/Birth")]
         public static void Birth()
         {
-            if (TrySettings(out var settings) && Tool(settings) is string tool)
-                Birth(tool, settings, true);
+            var settings = Settings();
+            if (TryTool(settings, true, out var tool)) Birth(tool, settings, true);
         }
 
         [MenuItem("Entia/Generator/Kill")]
-        public static bool Kill() => TrySettings(out var settings) && Tool(settings) is string tool && Kill(tool, true);
+        public static void Kill()
+        {
+            var settings = Settings();
+            if (TryTool(settings, true, out var tool)) Kill(tool, true);
+        }
 
         [MenuItem("Entia/Generator/Generate %#g")]
-        public static void Generate() => Generate(Settings(), true);
-
-        public static void Generate(GeneratorSettings settings, bool log, params string[] changes)
+        public static void Generate()
         {
-            var tool = Tool(settings);
-            if (string.IsNullOrWhiteSpace(tool))
-            {
-                UnityEngine.Debug.LogError(
-$@"Could not find a valid executable at path '{settings.Tool}'.
-Make sure a proper path is defined in the '{nameof(GeneratorSettings)}' asset.");
-                return;
-            }
+            var settings = Settings();
+            if (TryTool(settings, true, out var tool)) Generate(tool, settings, true);
+        }
 
+        public static void Generate(string tool, GeneratorSettings settings, bool log, params string[] changes)
+        {
             var process = Birth(tool, settings, settings.Debug || log);
             var arguments = Arguments(tool, settings, false, changes);
             var buffer = new byte[4096];
@@ -94,7 +100,19 @@ $@"Generation failed after '{timer.Elapsed}'.
         public static bool IsInput(GeneratorSettings settings, string path) =>
             IsScript(path) && settings.Inputs.Any(input => IsSubPath(path, input)) && !IsSubPath(path, settings.Output);
 
-        public static string Tool(GeneratorSettings settings) => settings.Tool.Files("*.dll").FirstOrDefault();
+        public static bool TryTool(GeneratorSettings settings, bool log, out string tool)
+        {
+            tool = settings.Tool.Files("*.dll").FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(tool))
+            {
+                if (log) UnityEngine.Debug.LogError(
+$@"Could not find a valid executable at path '{settings.Tool}'.
+Make sure a proper path is defined in the '{nameof(GeneratorSettings)}' asset.");
+                return false;
+            }
+
+            return true;
+        }
 
         public static Process Birth(string tool, GeneratorSettings settings, bool log)
         {
@@ -245,7 +263,7 @@ A default instance was used instead. It can be created from menu 'Assets/Create/
 
         static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssets)
         {
-            if (TrySettings(out var settings) && settings.Automatic)
+            if (TrySettings(out var settings) && settings.Automatic && TryTool(settings, false, out var tool))
             {
                 var (moved, renamed) = movedAssets.Zip(movedFromAssets, (to, from) => (to, from)).Split(pair => Path.GetFileName(pair.to) == Path.GetFileName(pair.from));
                 if (settings.Debug)
@@ -264,7 +282,7 @@ $@"OnPostprocessAllAssets:
                     .Where(asset => IsInput(settings, asset))
                     .Select(asset => asset.Absolute())
                     .ToArray();
-                if (changes.Length > 0) Generate(settings, settings.Debug, changes);
+                if (changes.Length > 0) Generate(tool, settings, settings.Debug, changes);
             }
         }
     }
