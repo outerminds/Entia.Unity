@@ -65,8 +65,9 @@ namespace Entia.Unity
             void OnChanged(WatcherChangeTypes type, Func<bool> wait = null, bool force = false, params string[] paths)
             {
                 wait = wait ?? (() => false);
-                var now = DateTime.UtcNow;
-                while (wait() && DateTime.UtcNow - now < TimeSpan.FromSeconds(1)) { }
+                var timer = Stopwatch.StartNew();
+                // NOTE: wait for a few milliseconds to allow 'IO' operations to complete
+                while (wait() && timer.Elapsed < TimeSpan.FromMilliseconds(250)) { }
 
                 if (Monitor.TryEnter(_lock))
                 {
@@ -100,9 +101,9 @@ namespace Entia.Unity
                     IncludeSubdirectories = true,
                     EnableRaisingEvents = true,
                 };
-                watcher.Changed += (_, data) => Task.Run(() => OnChanged(data.ChangeType, null, false, data.FullPath));
+                watcher.Changed += (_, data) => Task.Run(() => OnChanged(data.ChangeType, () => true, false, data.FullPath));
                 watcher.Deleted += (_, data) => Task.Run(() => OnChanged(data.ChangeType, () => File.Exists(data.FullPath), true, data.FullPath));
-                watcher.Renamed += (_, data) => Task.Run(() => OnChanged(data.ChangeType, null, true, data.FullPath, data.OldFullPath));
+                watcher.Renamed += (_, data) => Task.Run(() => OnChanged(data.ChangeType, () => true, true, data.FullPath, data.OldFullPath));
                 watcher.Created += (_, data) => Task.Run(() => OnChanged(data.ChangeType, () => !File.Exists(data.FullPath), true, data.FullPath));
                 Console.WriteLine($"-> Watch: {directory}");
             }
