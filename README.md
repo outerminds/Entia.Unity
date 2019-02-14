@@ -14,6 +14,8 @@
 [wiki/node]:https://github.com/outerminds/Entia/wiki/Node
 [wiki/queryable]:https://github.com/outerminds/Entia/wiki/Queryable
 [tutorial/plugins]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/Plugins.PNG
+[tutorial/unity-profiler]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/UnityProfiler.png
+[tutorial/world-profiler]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/WorldProfiler.png
 [tutorial/generate]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/Generate.png
 [tutorial/generator-settings]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/GeneratorSettings.png
 [tutorial/add-component]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/AddComponents.PNG
@@ -32,29 +34,29 @@ ___
 ### Content
 - [Installation](#installation)
 - [Tutorial](#tutorial)
-- [References](#references)
+- [Integration](#integration)
 - [Generator](#generator)
 - [Wiki][wiki]
 ___
 
 # Installation
 - [Download][releases] the most recent stable version of **Entia.Unity**.
-- Extract the content of the _zip_ file in a _'Plugins'_ folder in your Unity project (ex: _'Project/Assets/Plugins/Entia/'_).
+- Extract the _'Entia.Unity.zip'_ package in a _'Plugins'_ folder in your Unity project (ex: _'Project/Assets/Plugins/Entia/'_).
 - Ensure that you have a _[.Net Core Runtime][net-core]_ with version 2.0+ (required for the code generator to work).
-- Optionally install the Unity templates by clicking on the _'Entia/Install/Templates'_ menu.
-- Optionally install the Visual Studio extension _'Entia.Analyze.vsix'_ to get [**Entia**][entia] specific code analysis.
+- Optionally install the Unity templates by clicking on the _'Entia/Install/Templates'_ menu (requires the Unity editor to be running in administrator mode).
+- Optionally install the packaged Visual Studio 2017 extension _'Entia.Analyze.vsix'_ to get [**Entia**][entia] specific code analysis.
 ___
 
 # Tutorial
 - Create an empty Unity scene.
 - Click on the _'Entia/Generator/Generate'_ menu.
-  - This will create a `GeneratorSettings` asset in your _'Entia'_ folder and will launch the generator.
+  - This will create a `GeneratorSettings` asset named _'Settings.asset'_ in your _'Entia'_ folder and will launch the generator.
   - The default values of the `GeneratorSettings` asset should satisfy most use-cases.
   - As long as the `Automatic` option is on in the `GeneratorSettings`, this is the only time that you will have to manually launch the generator or worry about it.
 
-![][tutorial/generate]
+  ![][tutorial/generate]
 
-![][tutorial/generator-settings]
+  ![][tutorial/generator-settings]
 - Define a couple [components][wiki/component] in the _'Assets/Scripts'_ folder.
 ```csharp
 using Entia;
@@ -106,7 +108,7 @@ namespace Components
   - You should be able to find them in the _'Add Component'_ dropdown of the `GameObject`.
   - Adding a [component][wiki/component] to a `GameObject` will automatically add the required `EntityReference` to it.
 
-![][tutorial/add-component]
+  ![][tutorial/add-component]
 - Define a couple [systems][wiki/system] that will use the [components][wiki/component] in the _'Assets/Scripts'_ folder.
   - When the generator detects the use of a [queryable][wiki/queryable] type, it will generate convenient extensions to unpack instances of that type.
   - Note that you may need to focus Unity to trigger the generator.
@@ -240,7 +242,7 @@ namespace Controllers
         // This 'Node' represents the execution behavior of systems.
         public override Node Node =>
             // The 'Sequence' node executes its children in order.
-            Sequence("TestController",
+            Sequence(nameof(Main),
                 // This node holds a few useful Unity-specific library systems.
                 Nodes.Default,
                 // Any number of systems can be added here.
@@ -254,19 +256,28 @@ namespace Controllers
 - Create an empty `GameObject` named '_World_' and add your newly defined controller to it.
   - This will automatically add the required `WorldReference` on the `GameObject`.
 
-![][tutorial/add-controller]
+  ![][tutorial/add-controller]
 
 - Press _Play_ and appreciate your moving and jumping player [entity][wiki/entity].
 
-![][tutorial/move-jump]
+  ![][tutorial/move-jump]
 - For more details, please see [**Entia**][entia] or consult the [wiki][wiki].
 ___
 
-# References
-Most of the integration with the Unity game engine is done through what are called _references_. These are convenient `MonoBehaviour` wrappers that act as constructors and visualizers for [**Entia**][entia] elements. After initialization, references are only debug views for what is going on the [**Entia**][entia] side and are not strictly required. Other than [`ControllerReference`][wiki/controller] (which is where you define your execution graph), you will never have to define references yourself since the code generator will do all the boilerplate work.
+# Integration
+- References
+  - Most of the integration with the Unity game engine is done through what are called _references_. These are convenient `MonoBehaviour` wrappers that act as constructors and visualizers for [**Entia**][entia] elements. After initialization, references are only debug views for what is going on the [**Entia**][entia] side and are not strictly required. Other than [`ControllerReference`][wiki/controller] (which is where you define your execution graph), you will never have to define references yourself since the code generator will do all the boilerplate work.
+
+- Profiler
+  - Unity's profiler works with [**Entia**][entia] out of the box.
+
+    ![][tutorial/unity-profiler]
+  - Summary information can also be found in the `WorldReference` editor.
+
+    ![][tutorial/world-profiler]
 
 # Generator
-A lightweight code generator comes packaged with **Entia.Unity** to make the integration with the Unity game engine seamless. It generates corresponding [references](#References) for every [component][wiki/component] and [resource][wiki/resource] that you define such that they can be inspected and adjusted in the editor just like regular `MonoBehaviour` components. Additionally, it will generate convenient extensions for your [systems][wiki/system] to simplify their usage.
+A lightweight code generator comes packaged with **Entia.Unity** to make the integration with the Unity game engine seamless. It generates corresponding references for every [component][wiki/component] and [resource][wiki/resource] that you define such that they can be inspected and adjusted in the editor just like regular `MonoBehaviour` components. Additionally, it will generate convenient extensions for your [systems][wiki/system] to simplify their usage.
 
 Most of the time you will not have to worry about the generator, but it is useful to know that it is triggered when a relevant C# script is saved or imported by the Unity editor. It can also be manually triggered using the menu _'Entia/Generator/Generate'_ or in the `GeneratorSettings` asset.
 
