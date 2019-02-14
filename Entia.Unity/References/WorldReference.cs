@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Entia.Core;
+using Entia.Modules;
+using Entia.Nodes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,17 +12,18 @@ namespace Entia.Unity
     public interface IWorldReference
     {
         World World { get; }
+        IWorldModifier[] Modifiers { get; }
         World Create();
     }
 
     [DisallowMultipleComponent]
     public sealed class WorldReference : MonoBehaviour, IWorldReference
     {
-        static readonly Lazy<WorldFactory> _default = new Lazy<WorldFactory>(ScriptableObject.CreateInstance<WorldFactory>);
-
         public World World { get; private set; }
-        public WorldFactory Factory;
+        public IWorldModifier[] Modifiers => _modifiers;
 
+        [SerializeField]
+        WorldModifier[] _modifiers = { };
         Scene _scene;
         bool _initialized;
         bool _disposed;
@@ -27,7 +31,18 @@ namespace Entia.Unity
         void Awake() => Initialize();
         void OnDestroy() => Dispose();
 
-        public World Create() => Factory?.Create() ?? _default.Value.Create();
+        public World Create()
+        {
+            var world = new World();
+            world.Builders().Set<Profile>(new Builders.Profile());
+            world.Builders().Set<Parallel>(new Builders.Parallel());
+            world.Analyzers().Set(new Analyzers.Parallel());
+            // world.Templaters().Set(new Templaters.GameObject());
+            // world.Templaters().Set(new Templaters.Component());
+            // world.Templaters().Set(new Templaters.Transform());
+            foreach (var modifier in _modifiers) modifier?.Modify(world);
+            return world;
+        }
 
         void Initialize()
         {
