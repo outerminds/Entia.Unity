@@ -128,7 +128,7 @@ namespace Entia.Unity
                             watcher.Dispose();
 
                             var count = server.Read(buffer, 0, buffer.Length);
-                            var request = Encoding.UTF32.GetString(buffer, 0, count);
+                            var request = Encoding.UTF32.GetString(buffer, 0, count).Replace(@"""", "");
                             Console.WriteLine($"-> Request: {request}");
 
                             arguments = request.Split('|');

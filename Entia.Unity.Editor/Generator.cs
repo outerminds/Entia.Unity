@@ -46,7 +46,7 @@ namespace Entia.Unity.Editor
         {
             var process = Birth(tool, settings, settings.Debug || log);
             var arguments = Arguments(tool, settings, false, changes);
-            var buffer = new byte[4096];
+            var buffer = new byte[8192];
             var input = string.Join("|", arguments);
             var output = "";
             var timer = Stopwatch.StartNew();
@@ -83,7 +83,7 @@ This may happen because the .Net Core Runtime is not installed on this machine.
 
                 if (log) UnityEngine.Debug.Log(
 $@"Generation succeeded after '{timer.Elapsed}'.
--> Input: {string.Join(" ", arguments.Select(argument => $@"""{argument}"""))}
+-> Input: {string.Join(" ", arguments)}
 -> Output: {output}");
 
                 EditorUtility.Delayed(AssetDatabase.Refresh, 1);
@@ -92,7 +92,7 @@ $@"Generation succeeded after '{timer.Elapsed}'.
             {
                 UnityEngine.Debug.LogError(
 $@"Generation failed after '{timer.Elapsed}'.
--> Input: {string.Join(" ", arguments.Select(argument => $@"""{argument}"""))}
+-> Input: {string.Join(" ", arguments)}
 -> Output: {exception}");
             }
         }
@@ -128,8 +128,8 @@ Make sure a proper path is defined in the '{nameof(GeneratorSettings)}' asset.")
                 process = Process.Start(new ProcessStartInfo
                 {
                     WorkingDirectory = Application.dataPath,
-                    FileName = $"dotnet",
-                    Arguments = $"{tool} {input}",
+                    FileName = "dotnet",
+                    Arguments = $"{tool.Quote()} {input}",
                     CreateNoWindow = !settings.Debug,
                     WindowStyle = settings.Debug ? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden,
                 });
@@ -179,19 +179,30 @@ This may happen because the .Net Core Runtime is not installed on this machine.
             return false;
         }
 
-        static string[] Arguments(string tool, GeneratorSettings settings, bool watch, params string[] changes)
+        static IEnumerable<string> Arguments(string tool, GeneratorSettings settings, bool watch, params string[] changes)
         {
-            var arguments = new[]
+            yield return "--inputs";
+            yield return string.Join(";", settings.Inputs.Select(input => input.Quote()));
+            yield return "--output";
+            yield return settings.Output.Quote();
+            yield return "--suffix";
+            yield return settings.Suffix.Quote();
+            yield return "--assemblies";
+            yield return string.Join(";", settings.Assemblies.Select(assembly => assembly.Quote()));
+            yield return "--log";
+            yield return settings.Log.Quote();
+
+            if (changes.Length > 0)
             {
-                "--inputs", string.Join(";", settings.Inputs),
-                "--output", settings.Output,
-                "--suffix", settings.Suffix,
-                "--assemblies", string.Join(";", settings.Assemblies),
-                "--log", settings.Log
-            };
-            if (changes.Length > 0) Core.ArrayUtility.Add(ref arguments, "--changes", string.Join(";", changes));
-            if (watch) Core.ArrayUtility.Add(ref arguments, "--watch", $"{SerializeProcess(Process.GetCurrentProcess())};{tool}");
-            return arguments;
+                yield return "--changes";
+                yield return string.Join(";", changes.Select(change => change.Quote()));
+            }
+
+            if (watch)
+            {
+                yield return "--watch";
+                yield return $@"{SerializeProcess(Process.GetCurrentProcess())};{tool.Quote()}";
+            }
         }
 
         static string SerializeProcess(Process process) => $"{process.Id};{process.StartTime.Ticks}";
@@ -230,13 +241,13 @@ This may happen because the .Net Core Runtime is not installed on this machine.
                 AssetDatabase.CreateAsset(settings, path);
                 AssetDatabase.Refresh();
                 UnityEngine.Debug.LogWarning(
-$@"Could not find a '{nameof(GeneratorSettings)}' asset in project.
+    $@"Could not find a '{nameof(GeneratorSettings)}' asset in project.
 A default instance was created at path '{path}'.");
             }
             catch (Exception exception)
             {
                 UnityEngine.Debug.LogError(
-$@"Could not find or create a '{nameof(GeneratorSettings)}' asset in project.
+    $@"Could not find or create a '{nameof(GeneratorSettings)}' asset in project.
 A default instance was used instead. It can be created from menu 'Assets/Create/Entia/Generator/Settings'.");
                 UnityEngine.Debug.LogException(exception);
             }
@@ -269,7 +280,7 @@ A default instance was used instead. It can be created from menu 'Assets/Create/
                 if (settings.Debug)
                 {
                     UnityEngine.Debug.Log(
-$@"OnPostprocessAllAssets:
+    $@"OnPostprocessAllAssets:
 -> Imported: {string.Join(" | ", importedAssets)}
 -> Deleted: {string.Join(" | ", deletedAssets)}
 -> Renamed: {string.Join(" | ", renamed)}

@@ -22,6 +22,15 @@ namespace Entia.Unity
         }
 
         public static string Absolute(this string path) => string.IsNullOrWhiteSpace(path) ? "" : Path.GetFullPath(path);
+
+        public static string Quote(this string path)
+        {
+            const string quote = @"""";
+            if (string.IsNullOrWhiteSpace(path)) return path;
+            if (!path.StartsWith(quote)) path = quote + path;
+            if (!path.EndsWith(quote)) path = path + quote;
+            return path;
+        }
         public static string Relative(this string path) => path.Relative(System.IO.Directory.GetCurrentDirectory());
         public static string Relative(this string path, string to) =>
             string.IsNullOrWhiteSpace(path) || string.IsNullOrWhiteSpace(to) ? "" :
