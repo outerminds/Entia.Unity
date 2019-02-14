@@ -17,30 +17,33 @@ namespace Entia.Unity.Editor
     {
         static Generator()
         {
-            if (TrySettings(out var settings) && settings.Automatic && TryTool(settings, settings.Debug, out var tool))
+            if (TryFindSettings(out var settings) && settings.Automatic && TryTool(settings, settings.Debug, out var tool))
                 Birth(tool, settings, settings.Debug);
         }
 
         [MenuItem("Entia/Generator/Birth")]
-        public static void Birth()
+        static void Birth()
         {
-            var settings = Settings();
+            var settings = FindOrCreateSettings();
             if (TryTool(settings, true, out var tool)) Birth(tool, settings, true);
         }
 
         [MenuItem("Entia/Generator/Kill")]
-        public static void Kill()
+        static void Kill()
         {
-            var settings = Settings();
+            var settings = FindOrCreateSettings();
             if (TryTool(settings, true, out var tool)) Kill(tool, true);
         }
 
         [MenuItem("Entia/Generator/Generate %#g")]
-        public static void Generate()
+        static void Generate()
         {
-            var settings = Settings();
+            var settings = FindOrCreateSettings();
             if (TryTool(settings, true, out var tool)) Generate(tool, settings, true);
         }
+
+        [MenuItem("Entia/Generator/Settings")]
+        static void Settings() => Selection.activeObject = FindOrCreateSettings();
 
         public static void Generate(string tool, GeneratorSettings settings, bool log, params string[] changes)
         {
@@ -226,11 +229,11 @@ This may happen because the .Net Core Runtime is not installed on this machine.
 
         static string ProcessKey(string tool) => $"Entia_Generator:{tool}";
 
-        static bool TrySettings(out GeneratorSettings settings) => (settings = GeneratorSettings.Instance) != null;
+        static bool TryFindSettings(out GeneratorSettings settings) => (settings = GeneratorSettings.Instance) != null;
 
-        static GeneratorSettings Settings()
+        static GeneratorSettings FindOrCreateSettings()
         {
-            if (TrySettings(out var settings)) return settings;
+            if (TryFindSettings(out var settings)) return settings;
             settings = ScriptableObject.CreateInstance<GeneratorSettings>();
 
             try
@@ -274,7 +277,7 @@ A default instance was used instead. It can be created from menu 'Assets/Create/
 
         static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssets)
         {
-            if (TrySettings(out var settings) && settings.Automatic && TryTool(settings, false, out var tool))
+            if (TryFindSettings(out var settings) && settings.Automatic && TryTool(settings, false, out var tool))
             {
                 var (moved, renamed) = movedAssets.Zip(movedFromAssets, (to, from) => (to, from)).Split(pair => Path.GetFileName(pair.to) == Path.GetFileName(pair.from));
                 if (settings.Debug)
