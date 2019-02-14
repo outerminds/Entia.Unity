@@ -66,7 +66,7 @@ namespace Entia.Unity.Editor
                                 UnityEngine.Debug.LogError(
 $@"Failed to connect to generator process.
 This may happen because the .Net Core Runtime is not installed on this machine.
--> Go to 'https://dotnet.microsoft.com/download'
+-> Go to 'https://dotnet.microsoft.com/download'.
 -> Install the .Net Core Runtime version 2.1+.
 -> Restart Unity.");
                                 throw;
@@ -140,7 +140,7 @@ Make sure a proper path is defined in the '{nameof(GeneratorSettings)}' asset.")
                 UnityEngine.Debug.LogError(
 $@"Failed to birth generator process.
 This may happen because the .Net Core Runtime is not installed on this machine.
--> Go to 'https://dotnet.microsoft.com/download'
+-> Go to 'https://dotnet.microsoft.com/download'.
 -> Install the .Net Core Runtime version 2.1+.
 -> Restart Unity.");
                 throw;
