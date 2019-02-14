@@ -146,7 +146,7 @@ This may happen because the .Net Core Runtime is not installed on this machine.
                 throw;
             }
 
-            if (log) UnityEngine.Debug.Log($"Gave birth to generator in process '{process.Id}' with input '{input}'.");
+            if (log) UnityEngine.Debug.Log($"Gave birth to generator at path '{tool}' in process '{process.Id}' with input '{input}'.");
             return process;
         }
 
