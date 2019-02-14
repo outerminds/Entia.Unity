@@ -382,11 +382,6 @@
             The component index.
             </summary>
     </member>
-    <member name="F:Entia.Modules.Component.Metadata.IsPlain">
-      <summary>
-            Is <c>true</c> if the component type has recusively no references to managed types; otherwise, <c>false</c>.
-            </summary>
-    </member>
     <member name="M:Entia.Modules.Component.Metadata.#ctor(System.Type,System.Int32)">
       <summary>
             Initializes a new instance of the <see cref="T:Entia.Modules.Component.Metadata" /> struct.

@@ -7,14 +7,17 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
 namespace Entia.Unity.Editor
 {
     [InitializeOnLoad]
-    public class Generator : AssetPostprocessor
+    public sealed class Generator : AssetPostprocessor
     {
+        sealed class ConnectionException : Exception { }
+
         static Generator()
         {
             if (TryFindSettings(out var settings) && settings.Automatic && TryTool(settings, settings.Debug, out var tool))
@@ -48,56 +51,60 @@ namespace Entia.Unity.Editor
         public static void Generate(string tool, GeneratorSettings settings, bool log, params string[] changes)
         {
             var process = Birth(tool, settings, settings.Debug || log);
-            var arguments = Arguments(tool, settings, false, changes);
+            var arguments = Arguments(tool, settings, false, changes).ToArray();
             var buffer = new byte[8192];
             var input = string.Join("|", arguments);
             var output = "";
             var timer = Stopwatch.StartNew();
-
-            try
-            {
-                using (var client = new NamedPipeClientStream(".", tool, PipeDirection.InOut, PipeOptions.WriteThrough))
+            var task = Task.Run(
+                () =>
                 {
-                    while (!client.IsConnected && timer.Elapsed.TotalSeconds < settings.Timeout)
+                    using (var client = new NamedPipeClientStream(".", tool, PipeDirection.InOut, PipeOptions.WriteThrough))
                     {
-                        try { client.Connect(); }
-                        catch
+                        do
                         {
-                            Thread.Sleep(100);
-                            if (process.HasExited)
+                            try { client.Connect(); }
+                            catch
                             {
-                                UnityEngine.Debug.LogError(
+                                Thread.Sleep(100);
+                                if (process.HasExited) throw new ConnectionException();
+                            }
+                        }
+                        while (!client.IsConnected);
+
+                        var count = Encoding.UTF32.GetBytes(input, 0, input.Length, buffer, 0);
+                        client.Write(buffer, 0, count);
+
+                        count = client.Read(buffer, 0, buffer.Length);
+                        output = Encoding.UTF32.GetString(buffer, 0, count);
+                    }
+                })
+                .Timeout(TimeSpan.FromSeconds(settings.Timeout))
+                .Do(() =>
+                {
+                    if (log) UnityEngine.Debug.Log(
+$@"Generation succeeded after '{timer.Elapsed}'.
+-> Input: {string.Join(" ", arguments)}
+-> Output: {output}");
+                })
+                .Except<TimeoutException>(exception => UnityEngine.Debug.LogError(
+$@"Generation timed out after '{timer.Elapsed}'.
+This may be happening because the 'Timeout' value of '{settings.Timeout}' is too low.
+-> Input: {string.Join(" ", arguments)}
+-> Output: {exception}"))
+                .Except<ConnectionException>(exception => UnityEngine.Debug.LogError(
 $@"Failed to connect to generator process.
 This may happen because the .Net Core Runtime is not installed on this machine.
 -> Go to 'https://dotnet.microsoft.com/download'.
 -> Install the .Net Core Runtime version 2.1+.
--> Restart Unity.");
-                                throw;
-                            }
-                        }
-                    }
-
-                    var count = Encoding.UTF32.GetBytes(input, 0, input.Length, buffer, 0);
-                    client.Write(buffer, 0, count);
-
-                    count = client.Read(buffer, 0, buffer.Length);
-                    output = Encoding.UTF32.GetString(buffer, 0, count);
-                }
-
-                if (log) UnityEngine.Debug.Log(
-$@"Generation succeeded after '{timer.Elapsed}'.
--> Input: {string.Join(" ", arguments)}
--> Output: {output}");
-
-                EditorUtility.Delayed(AssetDatabase.Refresh, 1);
-            }
-            catch (Exception exception)
-            {
-                UnityEngine.Debug.LogError(
+-> Restart Unity."))
+                .Except(exception => UnityEngine.Debug.LogError(
 $@"Generation failed after '{timer.Elapsed}'.
 -> Input: {string.Join(" ", arguments)}
--> Output: {exception}");
-            }
+-> Output: {exception}"));
+
+            task.Wait();
+            if (task.IsCompleted) EditorUtility.Delayed(AssetDatabase.Refresh, 1);
         }
 
         public static bool IsInput(GeneratorSettings settings, string path) =>

@@ -44,7 +44,7 @@ namespace Entia.Unity.Editor
         [SerializeField]
         bool _debug = false;
         [SerializeField]
-        float _timeout = 5f;
+        float _timeout = 10f;
         [SerializeField]
         string[] _inputs = { Path.Combine("{Assets}", "Scripts"), Path.Combine("{Assets}", "Plugins") };
         [SerializeField]
