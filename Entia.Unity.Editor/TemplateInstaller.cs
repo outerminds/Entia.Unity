@@ -128,7 +128,9 @@ namespace Controllers
 	}
 }");
 
-            if (log) Debug.Log($"Templates installed to '{directory}'.");
+            if (log) Debug.Log(
+$@"Templates installed to '{directory}'.
+The Unity editor may need to be restarted for changes to take effect.");
         }
     }
 }
