@@ -32,7 +32,7 @@ namespace Entia.Unity.Editor
         /// </summary>
         public string Tool => PathUtility.Replace(_tool);
         /// <summary>
-        /// If 'true', the generator will be triggered when an input file is imported.
+        /// If 'true', the generator will be spawned and triggered when an input file is imported.
         /// </summary>
         public bool Automatic => _automatic;
         /// <summary>
@@ -72,7 +72,7 @@ namespace Entia.Unity.Editor
 
         [SerializeField, Tooltip("The path to the generator executable.")]
         string _tool = Path.Combine("{Entia.Generator}", "Entia.Unity.Generate.dll");
-        [SerializeField, Tooltip("If 'true', the generator will be triggered when an input file is imported.")]
+        [SerializeField, Tooltip("If 'true', the generator will be spawned and triggered when an input file is imported.")]
         bool _automatic = true;
         [SerializeField, Tooltip("If 'true', the generator will be triggered when an input file is modified.")]
         bool _watch = true;
