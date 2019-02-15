@@ -62,6 +62,8 @@ namespace Entia.Unity
 
         static Disposable Watch(StringBuilder logger, Options options, string[] arguments)
         {
+            if (!options.Watch.files) return Disposable.Empty;
+
             void OnChanged(WatcherChangeTypes type, Func<bool> wait = null, bool force = false, params string[] paths)
             {
                 wait = wait ?? (() => false);
@@ -95,8 +97,8 @@ namespace Entia.Unity
             var watchers = new FileSystemWatcher[options.Inputs.Length];
             for (int i = 0; i < options.Inputs.Length; i++)
             {
-                var directory = options.Inputs[i].Directory();
-                var watcher = watchers[i] = new FileSystemWatcher(directory, "*.cs")
+                var input = options.Inputs[i];
+                var watcher = watchers[i] = new FileSystemWatcher(input, "*.cs")
                 {
                     IncludeSubdirectories = true,
                     EnableRaisingEvents = true,
@@ -105,7 +107,7 @@ namespace Entia.Unity
                 watcher.Deleted += (_, data) => Task.Run(() => OnChanged(data.ChangeType, () => File.Exists(data.FullPath), true, data.FullPath));
                 watcher.Renamed += (_, data) => Task.Run(() => OnChanged(data.ChangeType, () => true, true, data.FullPath, data.OldFullPath));
                 watcher.Created += (_, data) => Task.Run(() => OnChanged(data.ChangeType, () => !File.Exists(data.FullPath), true, data.FullPath));
-                Console.WriteLine($"-> Watch: {directory}");
+                Console.WriteLine($"-> Watch: {input}");
             }
 
             return new Disposable(() => { foreach (var watcher in watchers) try { watcher.Dispose(); } catch { } });

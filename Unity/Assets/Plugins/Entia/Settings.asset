@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tool: '{Entia.Generator}\Entia.Unity.Generate.dll'
   _automatic: 1
+  _watch: 1
   _debug: 1
   _timeout: 10
   _inputs:

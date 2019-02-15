@@ -61,6 +61,9 @@ namespace Entia.Unity
         public readonly INamedTypeSymbol Default;
         public readonly INamedTypeSymbol Preserve;
         public readonly INamedTypeSymbol SerializeField;
+        public readonly INamedTypeSymbol Require;
+        public readonly INamedTypeSymbol RequireComponent;
+        public readonly INamedTypeSymbol Component;
         public readonly INamedTypeSymbol FormerlySerializedAsAttribute;
 
         public Context(string suffix, string root, CSharpCompilation compilation)
@@ -106,6 +109,9 @@ namespace Entia.Unity
             Generator = Global.Type<GeneratorAttribute>();
             Default = Global.Type<DefaultAttribute>();
             Preserve = Global.Type<PreserveAttribute>();
+            Require = Global.Type<RequireAttribute>();
+            RequireComponent = Global.Type(false, "UnityEngine", "RequireComponent");
+            Component = Global.Type(false, "UnityEngine", "Component");
             SerializeField = Global.Type(false, "UnityEngine", "SerializeField");
             FormerlySerializedAsAttribute = Global.Type(false, "UnityEngine", "Serialization", "FormerlySerializedAsAttribute");
         }
@@ -350,15 +356,16 @@ $@"{indentation}{(@new ? "new " : "")}public {type} {field.Name}
             var fullName = FormatGenericPath(data);
             var proxies = $"{name}Proxies";
             var referenceName = FormatPath(reference);
+            var fields = data.InstanceFields().ToArray();
 
-            var converted = data.InstanceFields()
+            var converted = fields
                 .Where(field => !field.IsReadOnly && field.DeclaredAccessibility == Accessibility.Public)
                 .Select(field => (field, conversion: FormatConvertedType(field.Type, replacements, conversions, declarations, context)))
                 .ToArray();
             var properties = string.Join(
                 Environment.NewLine,
                 converted.Select(pair => FormatProperty(indent + 1, pair.field, FormatGenericPath(pair.field.Type), pair.conversion.from, pair.conversion.to, reference)));
-            var fields = string.Join(
+            var members = string.Join(
                 Environment.NewLine,
                 converted.Select(pair => FormatField(indent + 1, pair.field, pair.conversion.type, reference, context)));
             var initializers = string.Join(
@@ -373,6 +380,29 @@ $@"{indentation}{(@new ? "new " : "")}public {type} {field.Name}
             var extension = string.Join(
                 Environment.NewLine + Environment.NewLine,
                 declarations.Select(pair => string.Join(Environment.NewLine, pair.Value.extension.Select(line => $"{indentation}	{line}"))));
+
+            var requireFields = fields
+                .Where(field =>
+                    field.Type.Implements(context.Component) &&
+                    field.GetAttributes().Any(attribute => attribute.AttributeClass.Implements(context.Require)))
+                .ToArray();
+            var requireAttributes = requireFields
+                .Select(field => field.Type)
+                .Distinct()
+                .ToArray();
+            var resetFields = string.Join(
+                Environment.NewLine,
+                requireFields.Select(field => $"{indentation}		this.{field.Name} = this.GetComponent<{FormatPath(field.Type)}>();"));
+            var reset = requireAttributes.Length == 0 ? "" :
+$@"
+{indentation}	void Reset()
+{indentation}	{{
+{resetFields}
+{indentation}	}}";
+            string.Join(
+                Environment.NewLine,
+                requireFields.Select(field => $"{indentation}		this.{field.Name} = this.GetComponent<{FormatPath(field.Type)}>();"));
+
             var proxy = string.IsNullOrWhiteSpace(declaration) && string.IsNullOrWhiteSpace(extension) ? "" :
 $@"{indentation}using {proxies};
 
@@ -387,12 +417,11 @@ $@"{indentation}using {proxies};
             return
 $@"{indentation}using System.Linq;
 {proxy}
-{indentation}{FormatGenerated(data, context)}
-{indentation}{FormatAddComponentMenu(data, context)}
+{indentation}{FormatGenerated(data, context)}{FormatAddComponentMenu(data, context)}{FormatRequireComponent(context, requireAttributes)}
 {indentation}public sealed partial class {name} : {referenceName}<{fullName}>
 {indentation}{{
 {properties}
-{fields}
+{members}
 {indentation}	public override {fullName} {property}
 {indentation}	{{
 {indentation}		get => new {fullName}
@@ -404,6 +433,7 @@ $@"{indentation}using System.Linq;
 {setters}
 {indentation}		}}
 {indentation}	}}
+{reset}
 {indentation}}}";
         }
 
@@ -417,6 +447,10 @@ $@"{indentation}using System.Linq;
 
         static string FormatAddComponentMenu(INamedTypeSymbol symbol, Context context) =>
             $@"[{FormatPath(context.AddComponentMenu)}(""{string.Join("", symbol.Path().SkipLast().Select(segment => segment + "/"))}{string.Join(".", symbol.Path())}"")]";
+
+        static string FormatRequireComponent(Context context, params ITypeSymbol[] symbols) =>
+            symbols.Length == 0 ? "" :
+            $"[{string.Join(", ", symbols.Select(symbol => $"{FormatPath(context.RequireComponent)}(typeof({FormatPath(symbol)}))"))}]";
 
         static IEnumerable<Extension> QueryExtensions(ITypeSymbol query, Context context)
         {

@@ -4,8 +4,7 @@ namespace Entia.Resources.Generated
 {
 	using System.Linq;
 
-	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Entia.Resources.Time), Link = "", Path = new string[] { "Entia", "Resources", "Time" })]
-	[global::UnityEngine.AddComponentMenu("Entia/Resources/Entia.Resources.Time")]
+	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Entia.Resources.Time), Link = "", Path = new string[] { "Entia", "Resources", "Time" })][global::UnityEngine.AddComponentMenu("Entia/Resources/Entia.Resources.Time")]
 	public sealed partial class Time : global::Entia.Unity.ResourceReference<global::Entia.Resources.Time>
 	{
 		public ref global::System.Single Delta => ref this._Delta;
@@ -27,5 +26,6 @@ namespace Entia.Resources.Generated
 				this.Current = value.Current;
 			}
 		}
+
 	}
 }

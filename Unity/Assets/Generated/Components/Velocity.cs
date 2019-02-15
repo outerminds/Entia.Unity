@@ -4,8 +4,7 @@ namespace Components.Generated
 {
 	using System.Linq;
 
-	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Velocity), Link = "Assets/Scripts/Example/Components.cs", Path = new string[] { "Components", "Velocity" })]
-	[global::UnityEngine.AddComponentMenu("Components/Components.Velocity")]
+	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Velocity), Link = "Assets/Scripts/Example/Components.cs", Path = new string[] { "Components", "Velocity" })][global::UnityEngine.AddComponentMenu("Components/Components.Velocity")]
 	public sealed partial class Velocity : global::Entia.Unity.ComponentReference<global::Components.Velocity>
 	{
 		public ref global::System.Single X => ref this._X;
@@ -27,5 +26,6 @@ namespace Components.Generated
 				this.Y = value.Y;
 			}
 		}
+
 	}
 }

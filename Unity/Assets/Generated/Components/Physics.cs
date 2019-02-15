@@ -4,8 +4,7 @@ namespace Components.Generated
 {
 	using System.Linq;
 
-	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Physics), Link = "Assets/Scripts/Example/Components.cs", Path = new string[] { "Components", "Physics" })]
-	[global::UnityEngine.AddComponentMenu("Components/Components.Physics")]
+	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Physics), Link = "Assets/Scripts/Example/Components.cs", Path = new string[] { "Components", "Physics" })][global::UnityEngine.AddComponentMenu("Components/Components.Physics")]
 	public sealed partial class Physics : global::Entia.Unity.ComponentReference<global::Components.Physics>
 	{
 		public ref global::System.Single Mass => ref this._Mass;
@@ -32,5 +31,6 @@ namespace Components.Generated
 				this.Gravity = value.Gravity;
 			}
 		}
+
 	}
 }

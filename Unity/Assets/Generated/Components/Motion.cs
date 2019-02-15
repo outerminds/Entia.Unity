@@ -4,8 +4,7 @@ namespace Components.Generated
 {
 	using System.Linq;
 
-	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Motion), Link = "Assets/Scripts/Example/Components.cs", Path = new string[] { "Components", "Motion" })]
-	[global::UnityEngine.AddComponentMenu("Components/Components.Motion")]
+	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Motion), Link = "Assets/Scripts/Example/Components.cs", Path = new string[] { "Components", "Motion" })][global::UnityEngine.AddComponentMenu("Components/Components.Motion")]
 	public sealed partial class Motion : global::Entia.Unity.ComponentReference<global::Components.Motion>
 	{
 		public ref global::System.Single Acceleration => ref this._Acceleration;
@@ -32,5 +31,6 @@ namespace Components.Generated
 				this.JumpForce = value.JumpForce;
 			}
 		}
+
 	}
 }

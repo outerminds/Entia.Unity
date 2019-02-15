@@ -51,7 +51,7 @@ namespace Entia.Unity.Editor
         public static void Generate(string tool, GeneratorSettings settings, bool log, params string[] changes)
         {
             var process = Birth(tool, settings, settings.Debug || log);
-            var arguments = Arguments(tool, settings, false, changes).ToArray();
+            var arguments = Arguments(tool, settings, true, changes).ToArray();
             var buffer = new byte[8192];
             var input = string.Join("|", arguments);
             var output = "";
@@ -211,7 +211,7 @@ This may happen because the .Net Core Runtime is not installed on this machine.
             if (watch)
             {
                 yield return "--watch";
-                yield return $@"{SerializeProcess(Process.GetCurrentProcess())};{tool.Quote()}";
+                yield return $@"{SerializeProcess(Process.GetCurrentProcess())};{settings.Watch};{tool.Quote()}";
             }
         }
 
