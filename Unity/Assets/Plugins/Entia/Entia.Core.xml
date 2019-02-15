@@ -1,164 +1,216 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <doc>
-    <assembly>
-        <name>Entia.Core</name>
-    </assembly>
-    <members>
-        <member name="T:Entia.Core.Documentation.ThreadSafeAttribute">
-            <summary>
+  <assembly>
+    <name>Entia.Core</name>
+  </assembly>
+  <members>
+    <member name="T:Entia.Core.Documentation.ThreadSafeAttribute">
+      <summary>
             Indicates that the target of the attribute is thread-safe.
-            <para/>
-            -> In the case of a type, it indicates that all its <c>public</c> members (static and instance) are thread-safe.
-            <para/>
-            -> In the case of a property or event, it indicates that all its <c>public</c> accessors are thread-safe.
+            <para />
+            -&gt; In the case of a type, it indicates that all its <c>public</c> members (static and instance) are thread-safe.
+            <para />
+            -&gt; In the case of a property or event, it indicates that all its <c>public</c> accessors are thread-safe.
             </summary>
-        </member>
-        <member name="M:Entia.Core.BitMask.GetEnumerator">
-            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
-        </member>
-        <member name="P:Entia.Core.Buffer`1.Enumerator.Current">
-            <inheritdoc cref="P:System.Collections.Generic.IEnumerator`1.Current"/>
-        </member>
-        <member name="M:Entia.Core.Buffer`1.Enumerator.MoveNext">
-            <inheritdoc cref="M:System.Collections.IEnumerator.MoveNext"/>
-        </member>
-        <member name="M:Entia.Core.Buffer`1.Enumerator.Reset">
-            <inheritdoc cref="M:System.Collections.IEnumerator.Reset"/>
-        </member>
-        <member name="M:Entia.Core.Buffer`1.Enumerator.Dispose">
-            <inheritdoc cref="M:System.IDisposable.Dispose"/>
-        </member>
-        <member name="M:Entia.Core.Buffer`1.GetEnumerator">
-            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
-        </member>
-        <member name="P:Entia.Core.Heap`1.Enumerator.Current">
-            <inheritdoc cref="P:System.Collections.Generic.IEnumerator`1.Current"/>
-        </member>
-        <member name="M:Entia.Core.Heap`1.Enumerator.MoveNext">
-            <inheritdoc cref="M:System.Collections.IEnumerator.MoveNext"/>
-        </member>
-        <member name="M:Entia.Core.Heap`1.Enumerator.Reset">
-            <inheritdoc cref="M:System.Collections.IEnumerator.Reset"/>
-        </member>
-        <member name="M:Entia.Core.Heap`1.Enumerator.Dispose">
-            <inheritdoc cref="M:System.IDisposable.Dispose"/>
-        </member>
-        <member name="M:Entia.Core.Heap`1.GetEnumerator">
-            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
-        </member>
-        <member name="P:Entia.Core.Slice`1.Read.Enumerator.Current">
-            <inheritdoc cref="P:System.Collections.Generic.IEnumerator`1.Current"/>
-        </member>
-        <member name="M:Entia.Core.Slice`1.Read.Enumerator.MoveNext">
-            <inheritdoc cref="M:System.Collections.IEnumerator.MoveNext"/>
-        </member>
-        <member name="M:Entia.Core.Slice`1.Read.Enumerator.Dispose">
-            <inheritdoc cref="M:System.IDisposable.Dispose"/>
-        </member>
-        <member name="M:Entia.Core.Slice`1.Read.Enumerator.Reset">
-            <inheritdoc cref="M:System.Collections.IEnumerator.Reset"/>
-        </member>
-        <member name="M:Entia.Core.Slice`1.Read.GetEnumerator">
-            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
-        </member>
-        <member name="P:Entia.Core.Slice`1.Enumerator.Current">
-            <inheritdoc cref="P:System.Collections.Generic.IEnumerator`1.Current"/>
-        </member>
-        <member name="M:Entia.Core.Slice`1.Enumerator.MoveNext">
-            <inheritdoc cref="M:System.Collections.IEnumerator.MoveNext"/>
-        </member>
-        <member name="M:Entia.Core.Slice`1.Enumerator.Dispose">
-            <inheritdoc cref="M:System.IDisposable.Dispose"/>
-        </member>
-        <member name="M:Entia.Core.Slice`1.Enumerator.Reset">
-            <inheritdoc cref="M:System.Collections.IEnumerator.Reset"/>
-        </member>
-        <member name="M:Entia.Core.Slice`1.GetEnumerator">
-            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
-        </member>
-        <member name="P:Entia.Core.SwissList`1.Enumerator.Current">
-            <inheritdoc cref="P:System.Collections.Generic.IEnumerator`1.Current"/>
-        </member>
-        <member name="M:Entia.Core.SwissList`1.Enumerator.MoveNext">
-            <inheritdoc cref="M:System.Collections.IEnumerator.MoveNext"/>
-        </member>
-        <member name="M:Entia.Core.SwissList`1.Enumerator.Reset">
-            <inheritdoc cref="M:System.Collections.IEnumerator.Reset"/>
-        </member>
-        <member name="M:Entia.Core.SwissList`1.Enumerator.Dispose">
-            <inheritdoc cref="M:System.IDisposable.Dispose"/>
-        </member>
-        <member name="M:Entia.Core.SwissList`1.GetEnumerator">
-            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
-        </member>
-        <member name="P:Entia.Core.SwitchList`1.Enumerator.Current">
-            <inheritdoc cref="P:System.Collections.Generic.IEnumerator`1.Current"/>
-        </member>
-        <member name="M:Entia.Core.SwitchList`1.Enumerator.Reset">
-            <inheritdoc cref="M:System.Collections.IEnumerator.Reset"/>
-        </member>
-        <member name="M:Entia.Core.SwitchList`1.Enumerator.Dispose">
-            <inheritdoc cref="!:IDisposable.Dispose"/>
-        </member>
-        <member name="M:Entia.Core.SwitchList`1.GetEnumerator">
-            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
-        </member>
-        <member name="P:Entia.Core.TypeMap`2.Enumerator.Current">
-            <inheritdoc cref="P:System.Collections.Generic.IEnumerator`1.Current"/>
-        </member>
-        <member name="M:Entia.Core.TypeMap`2.Enumerator.MoveNext">
-            <inheritdoc cref="M:System.Collections.IEnumerator.MoveNext"/>
-        </member>
-        <member name="M:Entia.Core.TypeMap`2.Enumerator.Reset">
-            <inheritdoc cref="M:System.Collections.IEnumerator.Reset"/>
-        </member>
-        <member name="M:Entia.Core.TypeMap`2.Enumerator.Dispose">
-            <inheritdoc cref="M:System.IDisposable.Dispose"/>
-        </member>
-        <member name="P:Entia.Core.TypeMap`2.KeyEnumerator.Current">
-            <inheritdoc cref="P:System.Collections.Generic.IEnumerator`1.Current"/>
-        </member>
-        <member name="M:Entia.Core.TypeMap`2.KeyEnumerator.MoveNext">
-            <inheritdoc cref="M:System.Collections.IEnumerator.MoveNext"/>
-        </member>
-        <member name="M:Entia.Core.TypeMap`2.KeyEnumerator.Reset">
-            <inheritdoc cref="M:System.Collections.IEnumerator.Reset"/>
-        </member>
-        <member name="M:Entia.Core.TypeMap`2.KeyEnumerator.Dispose">
-            <inheritdoc cref="M:System.IDisposable.Dispose"/>
-        </member>
-        <member name="M:Entia.Core.TypeMap`2.KeyEnumerable.GetEnumerator">
-            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
-        </member>
-        <member name="P:Entia.Core.TypeMap`2.ValueEnumerator.Current">
-            <inheritdoc cref="P:System.Collections.Generic.IEnumerator`1.Current"/>
-        </member>
-        <member name="M:Entia.Core.TypeMap`2.ValueEnumerator.MoveNext">
-            <inheritdoc cref="M:System.Collections.IEnumerator.MoveNext"/>
-        </member>
-        <member name="M:Entia.Core.TypeMap`2.ValueEnumerator.Reset">
-            <inheritdoc cref="M:System.Collections.IEnumerator.Reset"/>
-        </member>
-        <member name="M:Entia.Core.TypeMap`2.ValueEnumerator.Dispose">
-            <inheritdoc cref="M:System.IDisposable.Dispose"/>
-        </member>
-        <member name="M:Entia.Core.TypeMap`2.ValueEnumerable.GetEnumerator">
-            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
-        </member>
-        <member name="M:Entia.Core.TypeMap`2.GetEnumerator">
-            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
-        </member>
-        <member name="M:Entia.Core.Concurrent`1.ReadDisposable.Dispose">
-            <inheritdoc cref="M:System.IDisposable.Dispose"/>
-        </member>
-        <member name="M:Entia.Core.Concurrent`1.WriteDisposable.Dispose">
-            <inheritdoc cref="M:System.IDisposable.Dispose"/>
-        </member>
-        <member name="M:Entia.Core.Disposable.Dispose">
-            <inheritdoc cref="M:System.IDisposable.Dispose"/>
-        </member>
-        <member name="M:Entia.Core.Disposable`1.Dispose">
-            <inheritdoc cref="M:System.IDisposable.Dispose"/>
-        </member>
-    </members>
+    </member>
+    <member>
+      <summary>Returns an enumerator that iterates through the collection.</summary>
+      <returns>An enumerator that can be used to iterate through the collection.</returns>
+    </member>
+    <member>
+      <summary>Gets the element in the collection at the current position of the enumerator.</summary>
+      <returns>The element in the collection at the current position of the enumerator.</returns>
+    </member>
+    <member>
+      <summary>Advances the enumerator to the next element of the collection.</summary>
+      <returns>
+        <see langword="true" /> if the enumerator was successfully advanced to the next element; <see langword="false" /> if the enumerator has passed the end of the collection.</returns>
+      <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+    </member>
+    <member>
+      <summary>Sets the enumerator to its initial position, which is before the first element in the collection.</summary>
+      <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+    </member>
+    <member>
+      <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    </member>
+    <member>
+      <summary>Returns an enumerator that iterates through the collection.</summary>
+      <returns>An enumerator that can be used to iterate through the collection.</returns>
+    </member>
+    <member>
+      <summary>Gets the element in the collection at the current position of the enumerator.</summary>
+      <returns>The element in the collection at the current position of the enumerator.</returns>
+    </member>
+    <member>
+      <summary>Advances the enumerator to the next element of the collection.</summary>
+      <returns>
+        <see langword="true" /> if the enumerator was successfully advanced to the next element; <see langword="false" /> if the enumerator has passed the end of the collection.</returns>
+      <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+    </member>
+    <member>
+      <summary>Sets the enumerator to its initial position, which is before the first element in the collection.</summary>
+      <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+    </member>
+    <member>
+      <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    </member>
+    <member>
+      <summary>Returns an enumerator that iterates through the collection.</summary>
+      <returns>An enumerator that can be used to iterate through the collection.</returns>
+    </member>
+    <member>
+      <summary>Gets the element in the collection at the current position of the enumerator.</summary>
+      <returns>The element in the collection at the current position of the enumerator.</returns>
+    </member>
+    <member>
+      <summary>Advances the enumerator to the next element of the collection.</summary>
+      <returns>
+        <see langword="true" /> if the enumerator was successfully advanced to the next element; <see langword="false" /> if the enumerator has passed the end of the collection.</returns>
+      <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+    </member>
+    <member>
+      <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    </member>
+    <member>
+      <summary>Sets the enumerator to its initial position, which is before the first element in the collection.</summary>
+      <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+    </member>
+    <member>
+      <summary>Returns an enumerator that iterates through the collection.</summary>
+      <returns>An enumerator that can be used to iterate through the collection.</returns>
+    </member>
+    <member>
+      <summary>Gets the element in the collection at the current position of the enumerator.</summary>
+      <returns>The element in the collection at the current position of the enumerator.</returns>
+    </member>
+    <member>
+      <summary>Advances the enumerator to the next element of the collection.</summary>
+      <returns>
+        <see langword="true" /> if the enumerator was successfully advanced to the next element; <see langword="false" /> if the enumerator has passed the end of the collection.</returns>
+      <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+    </member>
+    <member>
+      <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    </member>
+    <member>
+      <summary>Sets the enumerator to its initial position, which is before the first element in the collection.</summary>
+      <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+    </member>
+    <member>
+      <summary>Returns an enumerator that iterates through the collection.</summary>
+      <returns>An enumerator that can be used to iterate through the collection.</returns>
+    </member>
+    <member>
+      <summary>Gets the element in the collection at the current position of the enumerator.</summary>
+      <returns>The element in the collection at the current position of the enumerator.</returns>
+    </member>
+    <member>
+      <summary>Advances the enumerator to the next element of the collection.</summary>
+      <returns>
+        <see langword="true" /> if the enumerator was successfully advanced to the next element; <see langword="false" /> if the enumerator has passed the end of the collection.</returns>
+      <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+    </member>
+    <member>
+      <summary>Sets the enumerator to its initial position, which is before the first element in the collection.</summary>
+      <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+    </member>
+    <member>
+      <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    </member>
+    <member>
+      <summary>Returns an enumerator that iterates through the collection.</summary>
+      <returns>An enumerator that can be used to iterate through the collection.</returns>
+    </member>
+    <member>
+      <summary>Gets the element in the collection at the current position of the enumerator.</summary>
+      <returns>The element in the collection at the current position of the enumerator.</returns>
+    </member>
+    <member>
+      <summary>Sets the enumerator to its initial position, which is before the first element in the collection.</summary>
+      <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+    </member>
+    <member name="M:Entia.Core.SwitchList`1.Enumerator.Dispose">
+      <inheritdoc cref="!:IDisposable.Dispose" />
+    </member>
+    <member>
+      <summary>Returns an enumerator that iterates through the collection.</summary>
+      <returns>An enumerator that can be used to iterate through the collection.</returns>
+    </member>
+    <member>
+      <summary>Gets the element in the collection at the current position of the enumerator.</summary>
+      <returns>The element in the collection at the current position of the enumerator.</returns>
+    </member>
+    <member>
+      <summary>Advances the enumerator to the next element of the collection.</summary>
+      <returns>
+        <see langword="true" /> if the enumerator was successfully advanced to the next element; <see langword="false" /> if the enumerator has passed the end of the collection.</returns>
+      <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+    </member>
+    <member>
+      <summary>Sets the enumerator to its initial position, which is before the first element in the collection.</summary>
+      <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+    </member>
+    <member>
+      <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    </member>
+    <member>
+      <summary>Gets the element in the collection at the current position of the enumerator.</summary>
+      <returns>The element in the collection at the current position of the enumerator.</returns>
+    </member>
+    <member>
+      <summary>Advances the enumerator to the next element of the collection.</summary>
+      <returns>
+        <see langword="true" /> if the enumerator was successfully advanced to the next element; <see langword="false" /> if the enumerator has passed the end of the collection.</returns>
+      <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+    </member>
+    <member>
+      <summary>Sets the enumerator to its initial position, which is before the first element in the collection.</summary>
+      <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+    </member>
+    <member>
+      <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    </member>
+    <member>
+      <summary>Returns an enumerator that iterates through the collection.</summary>
+      <returns>An enumerator that can be used to iterate through the collection.</returns>
+    </member>
+    <member>
+      <summary>Gets the element in the collection at the current position of the enumerator.</summary>
+      <returns>The element in the collection at the current position of the enumerator.</returns>
+    </member>
+    <member>
+      <summary>Advances the enumerator to the next element of the collection.</summary>
+      <returns>
+        <see langword="true" /> if the enumerator was successfully advanced to the next element; <see langword="false" /> if the enumerator has passed the end of the collection.</returns>
+      <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+    </member>
+    <member>
+      <summary>Sets the enumerator to its initial position, which is before the first element in the collection.</summary>
+      <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+    </member>
+    <member>
+      <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    </member>
+    <member>
+      <summary>Returns an enumerator that iterates through the collection.</summary>
+      <returns>An enumerator that can be used to iterate through the collection.</returns>
+    </member>
+    <member>
+      <summary>Returns an enumerator that iterates through the collection.</summary>
+      <returns>An enumerator that can be used to iterate through the collection.</returns>
+    </member>
+    <member>
+      <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    </member>
+    <member>
+      <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    </member>
+    <member>
+      <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    </member>
+    <member>
+      <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    </member>
+  </members>
 </doc>
