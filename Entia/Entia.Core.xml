@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Entia.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Entia.Core.Documentation.ThreadSafeAttribute">
+            <summary>
+            Indicates that the target of the attribute is thread-safe.
+            <para/>
+            -> In the case of a type, it indicates that all its <c>public</c> members (static and instance) are thread-safe.
+            <para/>
+            -> In the case of a property or event, it indicates that all its <c>public</c> accessors are thread-safe.
+            </summary>
+        </member>
+        <member name="M:Entia.Core.BitMask.GetEnumerator">
+            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
+        </member>
+        <member name="P:Entia.Core.Buffer`1.Enumerator.Current">
+            <inheritdoc cref="P:System.Collections.Generic.IEnumerator`1.Current"/>
+        </member>
+        <member name="M:Entia.Core.Buffer`1.Enumerator.MoveNext">
+            <inheritdoc cref="M:System.Collections.IEnumerator.MoveNext"/>
+        </member>
+        <member name="M:Entia.Core.Buffer`1.Enumerator.Reset">
+            <inheritdoc cref="M:System.Collections.IEnumerator.Reset"/>
+        </member>
+        <member name="M:Entia.Core.Buffer`1.Enumerator.Dispose">
+            <inheritdoc cref="M:System.IDisposable.Dispose"/>
+        </member>
+        <member name="M:Entia.Core.Buffer`1.GetEnumerator">
+            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
+        </member>
+        <member name="P:Entia.Core.Heap`1.Enumerator.Current">
+            <inheritdoc cref="P:System.Collections.Generic.IEnumerator`1.Current"/>
+        </member>
+        <member name="M:Entia.Core.Heap`1.Enumerator.MoveNext">
+            <inheritdoc cref="M:System.Collections.IEnumerator.MoveNext"/>
+        </member>
+        <member name="M:Entia.Core.Heap`1.Enumerator.Reset">
+            <inheritdoc cref="M:System.Collections.IEnumerator.Reset"/>
+        </member>
+        <member name="M:Entia.Core.Heap`1.Enumerator.Dispose">
+            <inheritdoc cref="M:System.IDisposable.Dispose"/>
+        </member>
+        <member name="M:Entia.Core.Heap`1.GetEnumerator">
+            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
+        </member>
+        <member name="P:Entia.Core.Slice`1.Read.Enumerator.Current">
+            <inheritdoc cref="P:System.Collections.Generic.IEnumerator`1.Current"/>
+        </member>
+        <member name="M:Entia.Core.Slice`1.Read.Enumerator.MoveNext">
+            <inheritdoc cref="M:System.Collections.IEnumerator.MoveNext"/>
+        </member>
+        <member name="M:Entia.Core.Slice`1.Read.Enumerator.Dispose">
+            <inheritdoc cref="M:System.IDisposable.Dispose"/>
+        </member>
+        <member name="M:Entia.Core.Slice`1.Read.Enumerator.Reset">
+            <inheritdoc cref="M:System.Collections.IEnumerator.Reset"/>
+        </member>
+        <member name="M:Entia.Core.Slice`1.Read.GetEnumerator">
+            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
+        </member>
+        <member name="P:Entia.Core.Slice`1.Enumerator.Current">
+            <inheritdoc cref="P:System.Collections.Generic.IEnumerator`1.Current"/>
+        </member>
+        <member name="M:Entia.Core.Slice`1.Enumerator.MoveNext">
+            <inheritdoc cref="M:System.Collections.IEnumerator.MoveNext"/>
+        </member>
+        <member name="M:Entia.Core.Slice`1.Enumerator.Dispose">
+            <inheritdoc cref="M:System.IDisposable.Dispose"/>
+        </member>
+        <member name="M:Entia.Core.Slice`1.Enumerator.Reset">
+            <inheritdoc cref="M:System.Collections.IEnumerator.Reset"/>
+        </member>
+        <member name="M:Entia.Core.Slice`1.GetEnumerator">
+            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
+        </member>
+        <member name="P:Entia.Core.SwissList`1.Enumerator.Current">
+            <inheritdoc cref="P:System.Collections.Generic.IEnumerator`1.Current"/>
+        </member>
+        <member name="M:Entia.Core.SwissList`1.Enumerator.MoveNext">
+            <inheritdoc cref="M:System.Collections.IEnumerator.MoveNext"/>
+        </member>
+        <member name="M:Entia.Core.SwissList`1.Enumerator.Reset">
+            <inheritdoc cref="M:System.Collections.IEnumerator.Reset"/>
+        </member>
+        <member name="M:Entia.Core.SwissList`1.Enumerator.Dispose">
+            <inheritdoc cref="M:System.IDisposable.Dispose"/>
+        </member>
+        <member name="M:Entia.Core.SwissList`1.GetEnumerator">
+            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
+        </member>
+        <member name="P:Entia.Core.SwitchList`1.Enumerator.Current">
+            <inheritdoc cref="P:System.Collections.Generic.IEnumerator`1.Current"/>
+        </member>
+        <member name="M:Entia.Core.SwitchList`1.Enumerator.Reset">
+            <inheritdoc cref="M:System.Collections.IEnumerator.Reset"/>
+        </member>
+        <member name="M:Entia.Core.SwitchList`1.Enumerator.Dispose">
+            <inheritdoc cref="!:IDisposable.Dispose"/>
+        </member>
+        <member name="M:Entia.Core.SwitchList`1.GetEnumerator">
+            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
+        </member>
+        <member name="P:Entia.Core.TypeMap`2.Enumerator.Current">
+            <inheritdoc cref="P:System.Collections.Generic.IEnumerator`1.Current"/>
+        </member>
+        <member name="M:Entia.Core.TypeMap`2.Enumerator.MoveNext">
+            <inheritdoc cref="M:System.Collections.IEnumerator.MoveNext"/>
+        </member>
+        <member name="M:Entia.Core.TypeMap`2.Enumerator.Reset">
+            <inheritdoc cref="M:System.Collections.IEnumerator.Reset"/>
+        </member>
+        <member name="M:Entia.Core.TypeMap`2.Enumerator.Dispose">
+            <inheritdoc cref="M:System.IDisposable.Dispose"/>
+        </member>
+        <member name="P:Entia.Core.TypeMap`2.KeyEnumerator.Current">
+            <inheritdoc cref="P:System.Collections.Generic.IEnumerator`1.Current"/>
+        </member>
+        <member name="M:Entia.Core.TypeMap`2.KeyEnumerator.MoveNext">
+            <inheritdoc cref="M:System.Collections.IEnumerator.MoveNext"/>
+        </member>
+        <member name="M:Entia.Core.TypeMap`2.KeyEnumerator.Reset">
+            <inheritdoc cref="M:System.Collections.IEnumerator.Reset"/>
+        </member>
+        <member name="M:Entia.Core.TypeMap`2.KeyEnumerator.Dispose">
+            <inheritdoc cref="M:System.IDisposable.Dispose"/>
+        </member>
+        <member name="M:Entia.Core.TypeMap`2.KeyEnumerable.GetEnumerator">
+            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
+        </member>
+        <member name="P:Entia.Core.TypeMap`2.ValueEnumerator.Current">
+            <inheritdoc cref="P:System.Collections.Generic.IEnumerator`1.Current"/>
+        </member>
+        <member name="M:Entia.Core.TypeMap`2.ValueEnumerator.MoveNext">
+            <inheritdoc cref="M:System.Collections.IEnumerator.MoveNext"/>
+        </member>
+        <member name="M:Entia.Core.TypeMap`2.ValueEnumerator.Reset">
+            <inheritdoc cref="M:System.Collections.IEnumerator.Reset"/>
+        </member>
+        <member name="M:Entia.Core.TypeMap`2.ValueEnumerator.Dispose">
+            <inheritdoc cref="M:System.IDisposable.Dispose"/>
+        </member>
+        <member name="M:Entia.Core.TypeMap`2.ValueEnumerable.GetEnumerator">
+            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
+        </member>
+        <member name="M:Entia.Core.TypeMap`2.GetEnumerator">
+            <inheritdoc cref="M:System.Collections.Generic.IEnumerable`1.GetEnumerator"/>
+        </member>
+        <member name="M:Entia.Core.Concurrent`1.ReadDisposable.Dispose">
+            <inheritdoc cref="M:System.IDisposable.Dispose"/>
+        </member>
+        <member name="M:Entia.Core.Concurrent`1.WriteDisposable.Dispose">
+            <inheritdoc cref="M:System.IDisposable.Dispose"/>
+        </member>
+        <member name="M:Entia.Core.Disposable.Dispose">
+            <inheritdoc cref="M:System.IDisposable.Dispose"/>
+        </member>
+        <member name="M:Entia.Core.Disposable`1.Dispose">
+            <inheritdoc cref="M:System.IDisposable.Dispose"/>
+        </member>
+    </members>
+</doc>

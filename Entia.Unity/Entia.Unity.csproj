@@ -2,9 +2,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.3</LangVersion>
+    <!-- <GenerateDocumentationFile>true</GenerateDocumentationFile> -->
   </PropertyGroup>
 
   <Target Name="Copy" AfterTargets="Publish">
+    <Exec Command="dotnet &quot;$(SolutionDir)Tools\Documentor\Documentor.dll&quot; &quot;$(PublishDir)$(ProjectName).xml&quot;" />
     <Exec Command="xcopy /y /q &quot;$(PublishDir)*&quot; &quot;$(SolutionDir)Unity\Assets\Plugins\Entia\&quot;" />
   </Target>
 

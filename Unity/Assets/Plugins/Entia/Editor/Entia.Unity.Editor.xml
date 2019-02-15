@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Entia.Unity.Editor</name>
+  </assembly>
+  <members>
+    <member name="P:Entia.Unity.Editor.GeneratorSettings.Tool">
+      <summary>
+            The path to the generator executable.
+            </summary>
+    </member>
+    <member name="P:Entia.Unity.Editor.GeneratorSettings.Automatic">
+      <summary>
+            If 'true', the generator will be spawned and triggered when an input file is imported.
+            </summary>
+    </member>
+    <member name="P:Entia.Unity.Editor.GeneratorSettings.Watch">
+      <summary>
+            If 'true', the generator will be triggered when an input file is modified.
+            </summary>
+    </member>
+    <member name="P:Entia.Unity.Editor.GeneratorSettings.Debug">
+      <summary>
+            If 'true', the generator will spawn a visible console window and all logs will be printed to the console.
+            </summary>
+    </member>
+    <member name="P:Entia.Unity.Editor.GeneratorSettings.Timeout">
+      <summary>
+            Delay in seconds after which the generation will be aborted.
+            </summary>
+    </member>
+    <member name="P:Entia.Unity.Editor.GeneratorSettings.Inputs">
+      <summary>
+            Files or directories that will be included in the generation.
+            These paths are recursive.
+            </summary>
+    </member>
+    <member name="P:Entia.Unity.Editor.GeneratorSettings.Output">
+      <summary>
+            Directory where the generated files will be copied to.
+            </summary>
+    </member>
+    <member name="P:Entia.Unity.Editor.GeneratorSettings.Assemblies">
+      <summary>
+            Files or directories that will be included as assembly references in the generation.
+            These paths are non-recursive.
+            </summary>
+    </member>
+    <member name="P:Entia.Unity.Editor.GeneratorSettings.Suffix">
+      <summary>
+            Namespace suffix that will be added to hold the generated types.
+            </summary>
+    </member>
+    <member name="P:Entia.Unity.Editor.GeneratorSettings.Log">
+      <summary>
+            Log file path relative to the output path.
+            </summary>
+    </member>
+  </members>
+</doc>
