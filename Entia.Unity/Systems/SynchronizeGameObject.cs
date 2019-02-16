@@ -9,7 +9,7 @@ namespace Entia.Unity.Systems
 {
     public struct SynchronizeGameObject : IInitialize, IReact<OnAdd<Unity<GameObject>>>, IReact<OnRemove<Unity<GameObject>>>
     {
-        public Components<Unity<GameObject>> GameObjects;
+        public readonly Components<Unity<GameObject>> GameObjects;
 
         Dictionary<Entity, GameObject> _gameObjects;
 

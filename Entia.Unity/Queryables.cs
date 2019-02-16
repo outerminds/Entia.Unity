@@ -17,9 +17,9 @@ namespace Entia.Queryables
         {
             public override bool TryQuery(Segment segment, World world, out Query<Unity<T>> query)
             {
-                if (world.Queriers().TryQuery<Write<Components.Unity<T>>>(segment, out var write))
+                if (world.Queriers().TryQuery<Read<Components.Unity<T>>>(segment, out var read))
                 {
-                    query = new Query<Unity<T>>(index => new Unity<T>(write.Get(index)), write.Types);
+                    query = new Query<Unity<T>>(index => new Unity<T>(read.Get(index)), read.Types);
                     return true;
                 }
 
@@ -31,8 +31,8 @@ namespace Entia.Queryables
         [Querier]
         static readonly Querier _querier = new Querier();
 
-        public ref readonly T Value => ref _value.Value.Value;
-        readonly Write<Components.Unity<T>> _value;
-        public Unity(Write<Components.Unity<T>> value) { _value = value; }
+        public T Value => _value.Value.Value;
+        readonly Read<Components.Unity<T>> _value;
+        public Unity(in Read<Components.Unity<T>> value) { _value = value; }
     }
 }

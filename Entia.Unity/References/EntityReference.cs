@@ -1,7 +1,6 @@
 ﻿using Entia.Core;
 using Entia.Modules;
 using Entia.Components;
-using Entia.Mappers;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -89,16 +88,20 @@ namespace Entia.Unity
             {
                 var components = World.Components();
 
-                if (Application.isEditor) components.Set(Entity, new Components.Debug { Name = gameObject.name });
+                if (UnityEngine.Debug.isDebugBuild) components.Set(Entity, new Components.Debug { Name = gameObject.name });
                 components.Set(Entity, new Components.Unity<GameObject> { Value = gameObject });
 
                 GetComponents(_components);
-                foreach (var current in _components)
+                foreach (var component in _components)
                 {
-                    switch (current)
+                    switch (component)
                     {
-                        case IComponentReference component: component.Initialize(Entity, World); break;
-                        default: current.Map<SetComponent, Unit>(new SetComponent(Entity, components)); break;
+                        case IEntityReference _: break;
+                        case IComponentReference reference: reference.Initialize(Entity, World); break;
+                        default:
+                            if (ComponentDelegate.TryGet(component.GetType(), out var modifier))
+                                modifier.Set(component, Entity, World);
+                            break;
                     }
                 }
                 _components.Clear();
@@ -112,18 +115,22 @@ namespace Entia.Unity
                 var components = World.Components();
 
                 GetComponents(_components);
-                foreach (var current in _components)
+                foreach (var component in _components)
                 {
-                    switch (current)
+                    switch (component)
                     {
-                        case IComponentReference component: component.Dispose(); break;
-                        default: current.Map<RemoveComponent, Unit>(new RemoveComponent(Entity, components)); break;
+                        case IEntityReference _: break;
+                        case IComponentReference reference: reference.Dispose(); break;
+                        default:
+                            if (ComponentDelegate.TryGet(component.GetType(), out var modifier))
+                                modifier.Remove(Entity, World);
+                            break;
                     }
                 }
                 _components.Clear();
 
                 components.Remove<Components.Unity<GameObject>>(Entity);
-                if (Application.isEditor) components.Remove<Components.Debug>(Entity);
+                if (UnityEngine.Debug.isDebugBuild) components.Remove<Components.Debug>(Entity);
             }
         }
 

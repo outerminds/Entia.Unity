@@ -6,7 +6,7 @@ namespace Entia.Unity.Systems
 {
     public struct UpdateTime : IRun, IDependable<Dependers.Unity>
     {
-        public Resource<Resources.Time> Resource;
+        public readonly Resource<Resources.Time> Resource;
 
         void IRun.Run()
         {

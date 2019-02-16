@@ -1,6 +1,5 @@
 ﻿using Entia.Core;
 using Entia.Queryables;
-using Entia.Mappers;
 using System;
 using System.Linq;
 using UnityEditor;
@@ -15,8 +14,11 @@ namespace Entia.Unity.Editor
         {
             if (property.objectReferenceValue is EntityReference reference)
             {
-                var types = reference.GetComponents<IComponentReference>().Select(component => component.Type)
-                    .Concat(reference.GetComponents<Component>().SelectMany(component => new[] { component.GetType(), component.Map<ToComponent, IComponent>(new ToComponent()).GetType() }))
+                var types = reference.GetComponents<Component>()
+                    .SelectMany(component =>
+                        component is IComponentReference casted ? new[] { casted.Type } :
+                        ComponentDelegate.TryGet(component.GetType(), out var modifier) ? new[] { component.GetType(), modifier.Type } :
+                        new[] { component.GetType() })
                     .ToArray();
                 var attributes = fieldInfo.GetCustomAttributes(false);
                 var missing = attributes
