@@ -9,6 +9,7 @@ namespace Entia.Unity
     {
         World World { get; }
         IResource Resource { get; set; }
+        IResource Raw { get; set; }
         Type Type { get; }
 
         void Initialize(World world);
@@ -21,13 +22,29 @@ namespace Entia.Unity
     public abstract class ResourceReference<T> : ResourceReference, IResourceReference where T : struct, IResource
     {
         public World World { get; private set; }
-        public abstract T Resource { get; set; }
+        public T Resource
+        {
+            get
+            {
+                if (_initialized && !_disposed) return World.Resources().Get<T>();
+                else return Raw;
+            }
+            set
+            {
+                if (_initialized && !_disposed) World.Resources().Set(value);
+                else Raw = value;
+            }
+        }
+        public abstract T Raw { get; set; }
 
         IResource IResourceReference.Resource { get => Resource; set => Resource = value is T casted ? casted : default; }
+        IResource IResourceReference.Raw { get => Raw; set => Raw = value is T component ? component : default; }
         Type IResourceReference.Type => typeof(T);
 
         bool _initialized;
         bool _disposed;
+
+        protected virtual void Reset() { }
 
         void Awake()
         {

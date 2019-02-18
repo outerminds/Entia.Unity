@@ -9,7 +9,7 @@ namespace Components.Generated
 	{
 
 
-		public override global::Components.IsFrozen Component
+		public override global::Components.IsFrozen Raw
 		{
 			get => new global::Components.IsFrozen
 			{

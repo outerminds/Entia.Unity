@@ -333,17 +333,17 @@ $@"{indentation}{attributes}
             var @new = reference.Members(true).Any(member => member.Name == field.Name);
 
             if (string.IsNullOrWhiteSpace(from) && string.IsNullOrWhiteSpace(to))
-                return $"{indentation}{(@new ? "new " : "")}public ref {type} {field.Name} => ref this.{name};";
+                return $"{indentation}{(@new ? "new " : "")}ref {type} {field.Name} => ref this.{name};";
             else
                 return
-$@"{indentation}{(@new ? "new " : "")}public {type} {field.Name}
+$@"{indentation}{(@new ? "new " : "")}{type} {field.Name}
 {indentation}{{
 {indentation}	get => this.{name}{string.Format(to, "")};
-{indentation}	set => this.{name} = value{string.Format(from, "this.World")};
+{indentation}	set => this.{name} = value{string.Format(from, "base.World")};
 {indentation}}}";
         }
 
-        static string FormatData(int indent, INamedTypeSymbol data, INamedTypeSymbol reference, string property, Context context)
+        static string FormatData(int indent, INamedTypeSymbol data, INamedTypeSymbol reference, Context context)
         {
             var replacements = new Dictionary<ITypeSymbol, (ITypeSymbol type, string from, string to)>
             {
@@ -394,9 +394,9 @@ $@"{indentation}{(@new ? "new " : "")}public {type} {field.Name}
                 Environment.NewLine,
                 requireFields.Select(field => $"{indentation}		this.{field.Name} = this.GetComponent<{FormatPath(field.Type)}>();"));
             var reset = requireAttributes.Length == 0 ? "" :
-$@"
-{indentation}	void Reset()
+$@"{indentation}	protected override void Reset()
 {indentation}	{{
+{indentation}		base.Reset();
 {resetFields}
 {indentation}	}}";
             string.Join(
@@ -422,7 +422,7 @@ $@"{indentation}using System.Linq;
 {indentation}{{
 {properties}
 {members}
-{indentation}	public override {fullName} {property}
+{indentation}	public override {fullName} Raw
 {indentation}	{{
 {indentation}		get => new {fullName}
 {indentation}		{{
@@ -620,7 +620,7 @@ $@"using {nameof(Entia)}.{nameof(Unity)}.{nameof(Generation)};
 
 namespace {@namespace}
 {{
-{FormatData(1, component, context.ComponentReference, "Component", context)}
+{FormatData(1, component, context.ComponentReference, context)}
 }}";
         }
 
@@ -632,7 +632,7 @@ $@"using {nameof(Entia)}.{nameof(Unity)}.{nameof(Generation)};
 
 namespace {@namespace}
 {{
-{FormatData(1, resource, context.ResourceReference, "Resource", context)}
+{FormatData(1, resource, context.ResourceReference, context)}
 }}";
         }
 

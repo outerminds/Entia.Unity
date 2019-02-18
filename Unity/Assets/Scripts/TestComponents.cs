@@ -12,6 +12,11 @@ namespace Components
     {
         [FormerlySerializedAs("Poulah")]
         public float X;
+        public Entity Entity;
+        public Entity World;
+        public int Component;
+        [Require]
+        public Collider2D Collider;
     }
 
     namespace Inner

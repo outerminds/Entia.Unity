@@ -7,13 +7,13 @@ namespace Components.Generated
 	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Input), Link = "Assets/Scripts/Example/Components.cs", Path = new string[] { "Components", "Input" })][global::UnityEngine.AddComponentMenu("Components/Components.Input")]
 	public sealed partial class Input : global::Entia.Unity.ComponentReference<global::Components.Input>
 	{
-		public ref global::System.Single Direction => ref this._Direction;
-		public ref global::System.Boolean Jump => ref this._Jump;
+		ref global::System.Single Direction => ref this._Direction;
+		ref global::System.Boolean Jump => ref this._Jump;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Direction))] [global::Entia.Unity.DisableAttribute()]
 		global::System.Single _Direction;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Jump))] [global::Entia.Unity.DisableAttribute()]
 		global::System.Boolean _Jump;
-		public override global::Components.Input Component
+		public override global::Components.Input Raw
 		{
 			get => new global::Components.Input
 			{

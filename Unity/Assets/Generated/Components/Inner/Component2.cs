@@ -7,18 +7,18 @@ namespace Components.Inner.Generated
 	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Inner.Component2), Link = "Assets/Scripts/TestComponents.cs", Path = new string[] { "Components", "Inner", "Component2" })][global::UnityEngine.AddComponentMenu("Components/Inner/Components.Inner.Component2")]
 	public sealed partial class Component2 : global::Entia.Unity.ComponentReference<global::Components.Inner.Component2>
 	{
-		public ref global::System.Int64 X => ref this._X;
-		public ref global::System.Int64 A => ref this._A;
-		public ref global::System.Int64 B => ref this._B;
-		public ref global::System.Int64 C => ref this._C;
-		public ref global::System.Int64 D => ref this._D;
-		public ref global::System.Int64 E => ref this._E;
-		public ref global::System.Int64 F => ref this._F;
-		public ref global::System.Int64 G => ref this._G;
-		public ref global::System.Int64 H => ref this._H;
-		public ref global::System.Int64 I => ref this._I;
-		public ref global::System.Int64 J => ref this._J;
-		public ref global::System.Int64 K => ref this._K;
+		ref global::System.Int64 X => ref this._X;
+		ref global::System.Int64 A => ref this._A;
+		ref global::System.Int64 B => ref this._B;
+		ref global::System.Int64 C => ref this._C;
+		ref global::System.Int64 D => ref this._D;
+		ref global::System.Int64 E => ref this._E;
+		ref global::System.Int64 F => ref this._F;
+		ref global::System.Int64 G => ref this._G;
+		ref global::System.Int64 H => ref this._H;
+		ref global::System.Int64 I => ref this._I;
+		ref global::System.Int64 J => ref this._J;
+		ref global::System.Int64 K => ref this._K;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(X))]
 		global::System.Int64 _X;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(A))]
@@ -43,7 +43,7 @@ namespace Components.Inner.Generated
 		global::System.Int64 _J;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(K))]
 		global::System.Int64 _K;
-		public override global::Components.Inner.Component2 Component
+		public override global::Components.Inner.Component2 Raw
 		{
 			get => new global::Components.Inner.Component2
 			{

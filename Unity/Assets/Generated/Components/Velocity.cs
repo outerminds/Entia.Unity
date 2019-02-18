@@ -7,13 +7,13 @@ namespace Components.Generated
 	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Velocity), Link = "Assets/Scripts/Example/Components.cs", Path = new string[] { "Components", "Velocity" })][global::UnityEngine.AddComponentMenu("Components/Components.Velocity")]
 	public sealed partial class Velocity : global::Entia.Unity.ComponentReference<global::Components.Velocity>
 	{
-		public ref global::System.Single X => ref this._X;
-		public ref global::System.Single Y => ref this._Y;
+		ref global::System.Single X => ref this._X;
+		ref global::System.Single Y => ref this._Y;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(X))]
 		global::System.Single _X;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Y))]
 		global::System.Single _Y;
-		public override global::Components.Velocity Component
+		public override global::Components.Velocity Raw
 		{
 			get => new global::Components.Velocity
 			{

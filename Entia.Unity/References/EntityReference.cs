@@ -43,6 +43,9 @@ namespace Entia.Unity
         States _initialized;
         States _disposed;
 
+        void OnEnable() => World?.Components().Remove<IsDisabled>(Entity);
+        void OnDisable() => World?.Components().Set<IsDisabled>(Entity, default);
+
         void Awake()
         {
             if (WorldRegistry.TryGet(gameObject.scene, out var reference) && reference.World is World world)
@@ -89,8 +92,10 @@ namespace Entia.Unity
                 var components = World.Components();
 
                 if (UnityEngine.Debug.isDebugBuild) components.Set(Entity, new Components.Debug { Name = gameObject.name });
-                components.Set(Entity, new Components.Unity<GameObject> { Value = gameObject });
+                if (gameObject.activeInHierarchy) OnEnable();
+                else OnDisable();
 
+                components.Set(Entity, new Components.Unity<GameObject> { Value = gameObject });
                 GetComponents(_components);
                 foreach (var component in _components)
                 {

@@ -7,18 +7,18 @@ namespace Components.Inner.Generated
 	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Inner.Component3), Link = "Assets/Scripts/TestComponents.cs", Path = new string[] { "Components", "Inner", "Component3" })][global::UnityEngine.AddComponentMenu("Components/Inner/Components.Inner.Component3")]
 	public sealed partial class Component3 : global::Entia.Unity.ComponentReference<global::Components.Inner.Component3>
 	{
-		public ref global::System.Double X => ref this._X;
-		public ref global::System.Double A => ref this._A;
-		public ref global::System.Double B => ref this._B;
-		public ref global::System.Double C => ref this._C;
-		public ref global::System.Double D => ref this._D;
-		public ref global::System.Double E => ref this._E;
-		public ref global::System.Double F => ref this._F;
-		public ref global::System.Double G => ref this._G;
-		public ref global::System.Double H => ref this._H;
-		public ref global::System.Double I => ref this._I;
-		public ref global::System.Double J => ref this._J;
-		public ref global::System.Double K => ref this._K;
+		ref global::System.Double X => ref this._X;
+		ref global::System.Double A => ref this._A;
+		ref global::System.Double B => ref this._B;
+		ref global::System.Double C => ref this._C;
+		ref global::System.Double D => ref this._D;
+		ref global::System.Double E => ref this._E;
+		ref global::System.Double F => ref this._F;
+		ref global::System.Double G => ref this._G;
+		ref global::System.Double H => ref this._H;
+		ref global::System.Double I => ref this._I;
+		ref global::System.Double J => ref this._J;
+		ref global::System.Double K => ref this._K;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(X))]
 		global::System.Double _X;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(A))]
@@ -43,7 +43,7 @@ namespace Components.Inner.Generated
 		global::System.Double _J;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(K))]
 		global::System.Double _K;
-		public override global::Components.Inner.Component3 Component
+		public override global::Components.Inner.Component3 Raw
 		{
 			get => new global::Components.Inner.Component3
 			{

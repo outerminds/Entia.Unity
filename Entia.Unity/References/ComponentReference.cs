@@ -11,6 +11,7 @@ namespace Entia.Unity
         World World { get; }
         Entity Entity { get; }
         IComponent Component { get; set; }
+        IComponent Raw { get; set; }
         Type Type { get; }
         Metadata Metadata { get; }
 
@@ -26,14 +27,30 @@ namespace Entia.Unity
     {
         public World World { get; private set; }
         public Entity Entity { get; private set; }
-        public abstract T Component { get; set; }
+        public T Component
+        {
+            get
+            {
+                if (_initialized && !_disposed && World.Components().TryGet<T>(Entity, out var component)) return component;
+                else return Raw;
+            }
+            set
+            {
+                if (_initialized && !_disposed && World.Components().Has<T>(Entity)) World.Components().Set(Entity, value);
+                else Raw = value;
+            }
+        }
+        public abstract T Raw { get; set; }
 
+        IComponent IComponentReference.Component { get => Component; set => Component = value is T component ? component : default; }
+        IComponent IComponentReference.Raw { get => Raw; set => Raw = value is T component ? component : default; }
         Type IComponentReference.Type => typeof(T);
         Metadata IComponentReference.Metadata => ComponentUtility.Concrete<T>.Data;
-        IComponent IComponentReference.Component { get => Component; set => Component = value is T component ? component : default; }
 
         bool _initialized;
         bool _disposed;
+
+        protected virtual void Reset() { }
 
         void Awake()
         {

@@ -7,25 +7,25 @@ namespace Components.Generated
 	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Link), Link = "Assets/Scripts/TestComponents.cs", Path = new string[] { "Components", "Link" })][global::UnityEngine.AddComponentMenu("Components/Components.Link")]
 	public sealed partial class Link : global::Entia.Unity.ComponentReference<global::Components.Link>
 	{
-		public global::Entia.Entity HasComponent
+		global::Entia.Entity HasComponent
 		{
 			get => this._HasComponent.ToEntia();
-			set => this._HasComponent = value.FromEntia(this.World);
+			set => this._HasComponent = value.FromEntia(base.World);
 		}
-		public global::Entia.Entity NoComponent
+		global::Entia.Entity NoComponent
 		{
 			get => this._NoComponent.ToEntia();
-			set => this._NoComponent = value.FromEntia(this.World);
+			set => this._NoComponent = value.FromEntia(base.World);
 		}
-		public global::Entia.Entity HasUnity
+		global::Entia.Entity HasUnity
 		{
 			get => this._HasUnity.ToEntia();
-			set => this._HasUnity = value.FromEntia(this.World);
+			set => this._HasUnity = value.FromEntia(base.World);
 		}
-		public global::Entia.Entity NoUnity
+		global::Entia.Entity NoUnity
 		{
 			get => this._NoUnity.ToEntia();
-			set => this._NoUnity = value.FromEntia(this.World);
+			set => this._NoUnity = value.FromEntia(base.World);
 		}
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(HasComponent))] [global::Entia.Queryables.AllAttribute(new global::System.Type[] { typeof(Entia.IComponent) })]
 		global::Entia.Unity.EntityReference _HasComponent;
@@ -35,7 +35,7 @@ namespace Components.Generated
 		global::Entia.Unity.EntityReference _HasUnity;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(NoUnity))] [global::Entia.Queryables.NoneAttribute(new global::System.Type[] { typeof(Entia.Components.Unity<>) })]
 		global::Entia.Unity.EntityReference _NoUnity;
-		public override global::Components.Link Component
+		public override global::Components.Link Raw
 		{
 			get => new global::Components.Link
 			{

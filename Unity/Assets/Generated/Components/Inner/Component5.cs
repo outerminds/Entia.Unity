@@ -7,18 +7,18 @@ namespace Components.Inner.Generated
 	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Inner.Component5), Link = "Assets/Scripts/TestComponents.cs", Path = new string[] { "Components", "Inner", "Component5" })][global::UnityEngine.AddComponentMenu("Components/Inner/Components.Inner.Component5")]
 	public sealed partial class Component5 : global::Entia.Unity.ComponentReference<global::Components.Inner.Component5>
 	{
-		public ref global::System.Byte X => ref this._X;
-		public ref global::System.Byte A => ref this._A;
-		public ref global::System.Byte B => ref this._B;
-		public ref global::System.Byte C => ref this._C;
-		public ref global::System.Byte D => ref this._D;
-		public ref global::System.Byte E => ref this._E;
-		public ref global::System.Byte F => ref this._F;
-		public ref global::System.Byte G => ref this._G;
-		public ref global::System.Byte H => ref this._H;
-		public ref global::System.Byte I => ref this._I;
-		public ref global::System.Byte J => ref this._J;
-		public ref global::System.Byte K => ref this._K;
+		ref global::System.Byte X => ref this._X;
+		ref global::System.Byte A => ref this._A;
+		ref global::System.Byte B => ref this._B;
+		ref global::System.Byte C => ref this._C;
+		ref global::System.Byte D => ref this._D;
+		ref global::System.Byte E => ref this._E;
+		ref global::System.Byte F => ref this._F;
+		ref global::System.Byte G => ref this._G;
+		ref global::System.Byte H => ref this._H;
+		ref global::System.Byte I => ref this._I;
+		ref global::System.Byte J => ref this._J;
+		ref global::System.Byte K => ref this._K;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(X))]
 		global::System.Byte _X;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(A))]
@@ -43,7 +43,7 @@ namespace Components.Inner.Generated
 		global::System.Byte _J;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(K))]
 		global::System.Byte _K;
-		public override global::Components.Inner.Component5 Component
+		public override global::Components.Inner.Component5 Raw
 		{
 			get => new global::Components.Inner.Component5
 			{
