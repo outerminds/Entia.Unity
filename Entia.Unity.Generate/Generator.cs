@@ -58,7 +58,6 @@ namespace Entia.Unity
         public readonly INamedTypeSymbol AddComponentMenu;
         public readonly INamedTypeSymbol Generated;
         public readonly INamedTypeSymbol Generator;
-        public readonly INamedTypeSymbol Default;
         public readonly INamedTypeSymbol Preserve;
         public readonly INamedTypeSymbol SerializeField;
         public readonly INamedTypeSymbol Require;
@@ -90,7 +89,7 @@ namespace Entia.Unity
             IPhase = Global.Type<IPhase>();
 
             Groups = Global.Types(typeof(Injectables.Group<>)).OrderBy(type => type.TypeParameters.Length).ToArray();
-            Unity = Global.Type(true, nameof(Entia), nameof(Queryables), "Unity");
+            Unity = Global.Type(true, nameof(Entia), nameof(Queryables), nameof(Unity));
             Write = Global.Type(typeof(Write<>));
             Read = Global.Type(typeof(Read<>));
             Maybe = Global.Type(typeof(Maybe<>));
@@ -107,7 +106,6 @@ namespace Entia.Unity
             AddComponentMenu = Global.Type(false, "UnityEngine", "AddComponentMenu");
             Generated = Global.Type<GeneratedAttribute>();
             Generator = Global.Type<GeneratorAttribute>();
-            Default = Global.Type<DefaultAttribute>();
             Preserve = Global.Type<PreserveAttribute>();
             Require = Global.Type<RequireAttribute>();
             RequireComponent = Global.Type(false, "UnityEngine", "RequireComponent");
@@ -313,17 +311,10 @@ namespace Entia.Unity
             var attributes = string.Join(" ", field.GetAttributes()
                 .Select(FormatAttribute)
                 .Prepend($"[{FormatPath(context.SerializeField)}, {FormatPath(context.FormerlySerializedAsAttribute)}(nameof({field.Name}))]"));
-            var constant = field.GetAttributes()
-                .Where(attribute => attribute.AttributeClass.Implements(context.Default))
-                .SelectMany(attribute => attribute.ConstructorArguments)
-                .Where(argument => argument.Type.Implements(field.Type))
-                .Select(FormatConstant)
-                .FirstOrDefault();
-            var @default = string.IsNullOrWhiteSpace(constant) ? "" : $" = {constant}";
             var @new = reference.Members(true).Any(member => member.Name == name);
             return
 $@"{indentation}{attributes}
-{indentation}{(@new ? "new " : "")}{type} {name}{@default};";
+{indentation}{(@new ? "new " : "")}{type} {name};";
         }
 
         static string FormatProperty(int indent, IFieldSymbol field, string type, string from, string to, INamedTypeSymbol reference)
@@ -383,13 +374,10 @@ $@"{indentation}{(@new ? "new " : "")}{type} {field.Name}
 
             var requireFields = fields
                 .Where(field =>
-                    field.Type.Implements(context.Component) &&
+                    field.Type.IsReferenceType && !field.Type.IsAbstract &&
                     field.GetAttributes().Any(attribute => attribute.AttributeClass.Implements(context.Require)))
                 .ToArray();
-            var requireAttributes = requireFields
-                .Select(field => field.Type)
-                .Distinct()
-                .ToArray();
+            var requireAttributes = requireFields.Select(field => field.Type).Distinct().ToArray();
             var resetFields = string.Join(
                 Environment.NewLine,
                 requireFields.Select(field => $"{indentation}		this.{field.Name} = this.GetComponent<{FormatPath(field.Type)}>();"));
@@ -716,11 +704,11 @@ namespace {@namespace}
         public static async Task<Result> Generate(string suffix, string root, string[] inputFiles, string[] currentFiles, string[] assemblies)
         {
             var referencesTask = Task.Run(() => new[]
-            {
-                typeof(Entity).Assembly.Location,
-                typeof(PreserveAttribute).Assembly.Location,
-                typeof(DefaultAttribute).Assembly.Location,
-            }
+                {
+                    typeof(Entity).Assembly.Location,
+                    typeof(PreserveAttribute).Assembly.Location,
+                    typeof(RequireAttribute).Assembly.Location,
+                }
                 .Concat(assemblies)
                 .Where(assembly => !string.IsNullOrEmpty(assembly))
                 .DistinctBy(location => Path.GetFileNameWithoutExtension(location))

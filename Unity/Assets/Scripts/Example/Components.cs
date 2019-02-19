@@ -1,4 +1,5 @@
 using Entia;
+using Entia.Core;
 using Entia.Unity;
 
 namespace Components
@@ -11,14 +12,14 @@ namespace Components
 
     public struct Physics : IComponent
     {
+        [Default]
+        public static Physics Default => new Physics { Mass = 1f, Drag = 3f, Gravity = -2f };
+
         // Since structs can not have default values, the 'Default' attribute will 
         // cause the generator to generate the default values on the 
         // 'ComponentReference'.
-        [Default(1f)]
         public float Mass;
-        [Default(3f)]
         public float Drag;
-        [Default(-2f)]
         public float Gravity;
     }
 
@@ -33,11 +34,11 @@ namespace Components
 
     public struct Motion : IComponent
     {
-        [Default(2f)]
+        [Default]
+        public static Motion Default => new Motion { Acceleration = 2f, MaximumSpeed = 0.25f, JumpForce = 0.75f };
+
         public float Acceleration;
-        [Default(0.25f)]
         public float MaximumSpeed;
-        [Default(0.75f)]
         public float JumpForce;
     }
 }

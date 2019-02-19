@@ -10,12 +10,12 @@ namespace Components.Generated
 		ref global::System.Single Acceleration => ref this._Acceleration;
 		ref global::System.Single MaximumSpeed => ref this._MaximumSpeed;
 		ref global::System.Single JumpForce => ref this._JumpForce;
-		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Acceleration))] [global::Entia.Unity.DefaultAttribute(2f)]
-		global::System.Single _Acceleration = 2f;
-		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(MaximumSpeed))] [global::Entia.Unity.DefaultAttribute(0.25f)]
-		global::System.Single _MaximumSpeed = 0.25f;
-		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(JumpForce))] [global::Entia.Unity.DefaultAttribute(0.75f)]
-		global::System.Single _JumpForce = 0.75f;
+		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Acceleration))]
+		global::System.Single _Acceleration;
+		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(MaximumSpeed))]
+		global::System.Single _MaximumSpeed;
+		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(JumpForce))]
+		global::System.Single _JumpForce;
 		public override global::Components.Motion Raw
 		{
 			get => new global::Components.Motion

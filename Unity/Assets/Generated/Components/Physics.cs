@@ -10,12 +10,12 @@ namespace Components.Generated
 		ref global::System.Single Mass => ref this._Mass;
 		ref global::System.Single Drag => ref this._Drag;
 		ref global::System.Single Gravity => ref this._Gravity;
-		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Mass))] [global::Entia.Unity.DefaultAttribute(1f)]
-		global::System.Single _Mass = 1f;
-		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Drag))] [global::Entia.Unity.DefaultAttribute(3f)]
-		global::System.Single _Drag = 3f;
-		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Gravity))] [global::Entia.Unity.DefaultAttribute(-2f)]
-		global::System.Single _Gravity = -2f;
+		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Mass))]
+		global::System.Single _Mass;
+		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Drag))]
+		global::System.Single _Drag;
+		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Gravity))]
+		global::System.Single _Gravity;
 		public override global::Components.Physics Raw
 		{
 			get => new global::Components.Physics

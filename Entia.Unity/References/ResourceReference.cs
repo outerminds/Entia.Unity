@@ -44,7 +44,10 @@ namespace Entia.Unity
         bool _initialized;
         bool _disposed;
 
-        protected virtual void Reset() { }
+        protected virtual void Reset()
+        {
+            Raw = DefaultUtility.Cache<T>.Provide();
+        }
 
         void Awake()
         {

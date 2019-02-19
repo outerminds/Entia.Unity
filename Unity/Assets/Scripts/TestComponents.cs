@@ -11,12 +11,20 @@ namespace Components
     public struct Component1 : IComponent
     {
         [FormerlySerializedAs("Poulah")]
+        [Require]
         public float X;
+        [Require]
         public Entity Entity;
+        [Require]
         public Entity World;
+        [Require]
         public int Component;
         [Require]
-        public Collider2D Collider;
+        public BoxCollider2D Collider;
+        [Require]
+        public Generated.IsFrozen Reference1;
+        [Require]
+        public EntityReference Reference2;
     }
 
     namespace Inner
