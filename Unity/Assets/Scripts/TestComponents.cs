@@ -10,6 +10,9 @@ namespace Components
 {
     public struct Component1 : IComponent
     {
+        [Default]
+        public static Component1 Default => new Component1 { Poulah = 312f };
+
         [FormerlySerializedAs("Poulah")]
         [Require]
         public float X;
@@ -25,6 +28,7 @@ namespace Components
         public Generated.IsFrozen Reference1;
         [Require]
         public EntityReference Reference2;
+        public float Poulah;
     }
 
     namespace Inner

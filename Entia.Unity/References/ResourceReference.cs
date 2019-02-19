@@ -62,7 +62,7 @@ namespace Entia.Unity
             if (_initialized.Change(true))
             {
                 World = world;
-                World.Resources().Set(Resource);
+                World.Resources().Set(Raw);
             }
         }
 

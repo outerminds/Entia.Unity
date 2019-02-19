@@ -151,6 +151,7 @@ MonoBehaviour:
   _Collider: {fileID: 609379485}
   _Reference1: {fileID: 609379483}
   _Reference2: {fileID: 609379484}
+  _Poulah: 312
 --- !u!114 &609379483
 MonoBehaviour:
   m_ObjectHideFlags: 0

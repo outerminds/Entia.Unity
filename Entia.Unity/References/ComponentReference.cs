@@ -50,10 +50,9 @@ namespace Entia.Unity
         bool _initialized;
         bool _disposed;
 
-        protected virtual void Reset()
-        {
-            Raw = DefaultUtility.Default<T>();
-        }
+        protected ComponentReference() { Raw = DefaultUtility.Default<T>(); }
+
+        protected virtual void Reset() { }
 
         void Awake()
         {
@@ -69,7 +68,7 @@ namespace Entia.Unity
             {
                 World = world;
                 Entity = entity;
-                World.Components().Set(Entity, Component);
+                World.Components().Set(Entity, Raw);
             }
         }
 

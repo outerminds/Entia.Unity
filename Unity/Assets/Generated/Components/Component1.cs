@@ -22,6 +22,7 @@ namespace Components.Generated
 		ref global::UnityEngine.BoxCollider2D Collider => ref this._Collider;
 		ref global::Components.Generated.IsFrozen Reference1 => ref this._Reference1;
 		ref global::Entia.Unity.EntityReference Reference2 => ref this._Reference2;
+		ref global::System.Single Poulah => ref this._Poulah;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(X))] [global::UnityEngine.Serialization.FormerlySerializedAsAttribute("Poulah")] [global::Entia.Unity.RequireAttribute()]
 		global::System.Single _X;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Entity))] [global::Entia.Unity.RequireAttribute()]
@@ -36,6 +37,8 @@ namespace Components.Generated
 		global::Components.Generated.IsFrozen _Reference1;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Reference2))] [global::Entia.Unity.RequireAttribute()]
 		global::Entia.Unity.EntityReference _Reference2;
+		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Poulah))]
+		global::System.Single _Poulah;
 		public override global::Components.Component1 Raw
 		{
 			get => new global::Components.Component1
@@ -46,7 +49,8 @@ namespace Components.Generated
 				Component = this.Component,
 				Collider = this.Collider,
 				Reference1 = this.Reference1,
-				Reference2 = this.Reference2
+				Reference2 = this.Reference2,
+				Poulah = this.Poulah
 			};
 			set
 			{
@@ -57,6 +61,7 @@ namespace Components.Generated
 				this.Collider = value.Collider;
 				this.Reference1 = value.Reference1;
 				this.Reference2 = value.Reference2;
+				this.Poulah = value.Poulah;
 			}
 		}
 		protected override void Reset()

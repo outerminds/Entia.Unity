@@ -280,6 +280,7 @@ namespace Entia.Unity
 
         static bool Move(string from, string to)
         {
+            if (File.Exists(to)) File.Delete(to);
             if (File.Exists(from))
             {
                 Directory.CreateDirectory(to.Directory());
