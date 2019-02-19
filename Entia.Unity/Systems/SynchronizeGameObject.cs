@@ -4,16 +4,18 @@ using Entia.Systems;
 using Entia.Components;
 using System.Collections.Generic;
 using UnityEngine;
+using Entia.Core;
 
 namespace Entia.Unity.Systems
 {
-    public struct SynchronizeGameObject : IInitialize, IReact<OnAdd<Unity<GameObject>>>, IReact<OnRemove<Unity<GameObject>>>
+    public struct SynchronizeGameObject : IReact<OnAdd<Unity<GameObject>>>, IReact<OnRemove<Unity<GameObject>>>
     {
+        [Default]
+        static SynchronizeGameObject Default => new SynchronizeGameObject { _gameObjects = new Dictionary<Entity, GameObject>() };
+
         public readonly Components<Unity<GameObject>> GameObjects;
 
         Dictionary<Entity, GameObject> _gameObjects;
-
-        void IInitialize.Initialize() => _gameObjects = new Dictionary<Entity, GameObject>();
 
         void IReact<OnAdd<Unity<GameObject>>>.React(in OnAdd<Unity<GameObject>> message)
         {

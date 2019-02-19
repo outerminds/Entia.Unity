@@ -52,7 +52,7 @@ namespace Entia.Unity
 
         protected virtual void Reset()
         {
-            Raw = DefaultUtility.Cache<T>.Provide();
+            Raw = DefaultUtility.Default<T>();
         }
 
         void Awake()
