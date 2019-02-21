@@ -56,8 +56,8 @@ namespace Entia.Unity.Editor
             var input = string.Join("|", arguments);
             var output = "";
             var timer = Stopwatch.StartNew();
-            var task = Task.Run(
-                () =>
+            var task = Task
+                .Run(() =>
                 {
                     using (var client = new NamedPipeClientStream(".", tool, PipeDirection.InOut, PipeOptions.WriteThrough))
                     {
@@ -79,7 +79,7 @@ namespace Entia.Unity.Editor
                         output = Encoding.UTF32.GetString(buffer, 0, count);
                     }
                 })
-                .Timeout(TimeSpan.FromSeconds(settings.Timeout))
+                .Timeout(settings.Timeout)
                 .Do(() =>
                 {
                     if (log) UnityEngine.Debug.Log(
@@ -108,7 +108,7 @@ $@"Generation failed after '{timer.Elapsed}'.
         }
 
         public static bool IsInput(GeneratorSettings settings, string path) =>
-            IsScript(path) && settings.Inputs.Any(input => IsSubPath(path, input)) && !IsSubPath(path, settings.Output);
+            IsScript(path) && settings.Inputs.Any(input => path.IsSubPath(input)) && !path.IsSubPath(settings.Output);
 
         public static bool TryTool(GeneratorSettings settings, bool log, out string tool)
         {
@@ -201,6 +201,8 @@ This may happen because the .Net Core Runtime is not installed on this machine.
             yield return string.Join(";", settings.Assemblies.Select(assembly => assembly.Quote()));
             yield return "--log";
             yield return settings.Log.Quote();
+            yield return "--timeout";
+            yield return settings.Timeout.ToString();
 
             if (changes.Length > 0)
             {
@@ -267,42 +269,28 @@ A default instance was used instead. It can be created from menu 'Assets/Create/
 
         static bool IsScript(string path) => Path.GetExtension(path) == ".cs";
 
-        static bool IsSubPath(string path, string super)
-        {
-            var file = new FileInfo(path);
-            var directory = new DirectoryInfo(Path.Combine(Application.dataPath, super));
-            var current = file.Directory;
-
-            while (current != null)
-            {
-                if (current.FullName.Absolute() == directory.FullName.Absolute()) return true;
-                else current = current.Parent;
-            }
-
-            return false;
-        }
-
         static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssets)
         {
             if (TryFindSettings(out var settings) && settings.Automatic && TryTool(settings, false, out var tool))
             {
                 var (moved, renamed) = movedAssets.Zip(movedFromAssets, (to, from) => (to, from)).Split(pair => Path.GetFileName(pair.to) == Path.GetFileName(pair.from));
-                if (settings.Debug)
-                {
-                    UnityEngine.Debug.Log(
-$@"OnPostprocessAllAssets:
--> Imported: {string.Join(" | ", importedAssets)}
--> Deleted: {string.Join(" | ", deletedAssets)}
--> Renamed: {string.Join(" | ", renamed)}
--> Moved: {string.Join(" | ", moved)}");
-                }
-
                 var changes = moved
                     .SelectMany(pair => new[] { pair.from, pair.to })
                     .Concat(importedAssets, deletedAssets)
                     .Where(asset => IsInput(settings, asset))
                     .Select(asset => asset.Absolute())
                     .ToArray();
+
+                if (settings.Debug)
+                {
+                    UnityEngine.Debug.Log(
+$@"OnPostprocessAllAssets:
+-> Changed: {string.Join(" | ", changes)}
+-> Imported: {string.Join(" | ", importedAssets)}
+-> Deleted: {string.Join(" | ", deletedAssets)}
+-> Renamed: {string.Join(" | ", renamed)}
+-> Moved: {string.Join(" | ", moved)}");
+                }
                 if (changes.Length > 0) Generate(tool, settings, settings.Debug, changes);
             }
         }

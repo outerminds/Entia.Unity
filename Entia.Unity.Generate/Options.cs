@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace Entia.Unity
 {
@@ -10,6 +11,7 @@ namespace Entia.Unity
         public string[] Changes { get; private set; } = { };
         public string Suffix { get; private set; } = "";
         public string Log { get; private set; } = "";
+        public TimeSpan Timeout { get; private set; } = TimeSpan.MaxValue;
         public (int process, long ticks, bool files, string pipe) Watch { get; private set; } = (0, 0L, false, "");
 
         public static Options Parse(params string[] arguments)
@@ -28,12 +30,15 @@ namespace Entia.Unity
                 Next(index + 1);
                 switch (arguments[index])
                 {
-                    case "--inputs": options.Inputs = arguments[index + 1].Split(';').ToArray(); break;
+                    case "--inputs": options.Inputs = arguments[index + 1].Split(';').Distinct().ToArray(); break;
                     case "--output": options.Output = arguments[index + 1]; break;
-                    case "--assemblies": options.Assemblies = arguments[index + 1].Split(';'); break;
-                    case "--changes": options.Changes = arguments[index + 1].Split(";"); break;
+                    case "--assemblies": options.Assemblies = arguments[index + 1].Split(';').Distinct().ToArray(); break;
+                    case "--changes": options.Changes = arguments[index + 1].Split(";").Distinct().ToArray(); break;
                     case "--suffix": options.Suffix = arguments[index + 1]; break;
                     case "--log": options.Log = arguments[index + 1]; break;
+                    case "--timeout":
+                        if (TimeSpan.TryParse(arguments[index + 1], out var span)) options.Timeout = span;
+                        break;
                     case "--watch":
                         var splits = arguments[index + 1].Split(";");
                         if (splits.Length == 4 && int.TryParse(splits[0], out var process) && long.TryParse(splits[1], out var ticks) && bool.TryParse(splits[2], out var files))

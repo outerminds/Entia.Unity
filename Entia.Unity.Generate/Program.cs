@@ -15,7 +15,7 @@ namespace Entia.Unity
     static class Program
     {
         static readonly ConcurrentDictionary<string, DateTime> _writes = new ConcurrentDictionary<string, DateTime>();
-        static readonly object _lock = new object();
+        static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
         static void Main(string[] arguments)
         {
@@ -25,7 +25,7 @@ namespace Entia.Unity
             Console.WriteLine($"-> Birth: {string.Join(", ", arguments)}");
 
             if (string.IsNullOrEmpty(options.Watch.pipe))
-                RunAsync(logger, options, arguments).Wait();
+                RunAsync(logger, options, arguments).Timeout(options.Timeout).Wait();
             else
             {
                 var cancel = new CancellationTokenSource();
@@ -66,48 +66,57 @@ namespace Entia.Unity
 
             void OnChanged(WatcherChangeTypes type, Func<bool> wait = null, bool force = false, params string[] paths)
             {
+                paths = paths.Where(path => !path.IsSubPath(options.Output)).Distinct().ToArray();
+                if (paths.Length == 0) return;
                 wait = wait ?? (() => false);
-                var timer = Stopwatch.StartNew();
-                // NOTE: wait for a few milliseconds to allow 'IO' operations to complete
-                while (wait() && timer.Elapsed < TimeSpan.FromMilliseconds(250)) { }
 
-                if (Monitor.TryEnter(_lock))
+                Task.Run(async () =>
                 {
-                    try
+                    // NOTE: wait for a few milliseconds to allow 'IO' operations to complete
+                    var timer = Stopwatch.StartNew();
+                    while (wait() && timer.Elapsed < TimeSpan.FromMilliseconds(250)) { }
+
+                    if (await _semaphore.WaitAsync(TimeSpan.Zero))
                     {
-                        Console.WriteLine($"-> Detect {type}: {string.Join(", ", paths)}");
-                        if (Change(paths) || force)
+                        try
                         {
-                            Console.WriteLine($"-> Arguments: {string.Join(", ", arguments)}");
-                            Console.WriteLine($"-> Generate...");
-                            logger.Clear();
-                            RunAsync(logger, options, arguments).Wait();
+                            Console.WriteLine($"-> Detect {type}: {string.Join(", ", paths)}");
+                            if (Change(paths) || force)
+                            {
+                                Console.WriteLine($"-> Arguments: {string.Join(", ", arguments)}");
+                                Console.WriteLine($"-> Generate...");
+                                logger.Clear();
+                                await RunAsync(logger, options, arguments).Timeout(options.Timeout);
+                            }
+                        }
+                        catch (Exception exception) { Console.WriteLine($"-> {exception}"); }
+                        finally
+                        {
+                            Console.WriteLine($"-> Done");
+                            Console.WriteLine();
+                            _semaphore.Release();
                         }
                     }
-                    catch (Exception exception) { Console.WriteLine($"-> {exception}"); }
-                    finally
-                    {
-                        Console.WriteLine($"-> Done");
-                        Console.WriteLine();
-                        Monitor.Exit(_lock);
-                    }
-                }
+                });
             }
 
             var watchers = new FileSystemWatcher[options.Inputs.Length];
             for (int i = 0; i < options.Inputs.Length; i++)
             {
                 var input = options.Inputs[i];
-                var watcher = watchers[i] = new FileSystemWatcher(input, "*.cs")
+                if (input.Information() is FileSystemInfo information)
                 {
-                    IncludeSubdirectories = true,
-                    EnableRaisingEvents = true,
-                };
-                watcher.Changed += (_, data) => Task.Run(() => OnChanged(data.ChangeType, () => true, false, data.FullPath));
-                watcher.Deleted += (_, data) => Task.Run(() => OnChanged(data.ChangeType, () => File.Exists(data.FullPath), true, data.FullPath));
-                watcher.Renamed += (_, data) => Task.Run(() => OnChanged(data.ChangeType, () => true, true, data.FullPath, data.OldFullPath));
-                watcher.Created += (_, data) => Task.Run(() => OnChanged(data.ChangeType, () => !File.Exists(data.FullPath), true, data.FullPath));
-                Console.WriteLine($"-> Watch: {input}");
+                    var watcher = watchers[i] = new FileSystemWatcher(information.FullName, "*.cs")
+                    {
+                        IncludeSubdirectories = true,
+                        EnableRaisingEvents = true,
+                    };
+                    watcher.Changed += (_, data) => OnChanged(data.ChangeType, () => true, false, data.FullPath);
+                    watcher.Deleted += (_, data) => OnChanged(data.ChangeType, () => File.Exists(data.FullPath), true, data.FullPath);
+                    watcher.Renamed += (_, data) => OnChanged(data.ChangeType, () => true, true, data.FullPath, data.OldFullPath);
+                    watcher.Created += (_, data) => OnChanged(data.ChangeType, () => !File.Exists(data.FullPath), true, data.FullPath);
+                    Console.WriteLine($"-> Watch: {information.FullName}");
+                }
             }
 
             return new Disposable(() => { foreach (var watcher in watchers) try { watcher.Dispose(); } catch { } });
@@ -122,51 +131,60 @@ namespace Entia.Unity
             Console.WriteLine($"-> Server: {options.Watch}");
             using (var server = new NamedPipeServerStream(options.Watch.pipe, PipeDirection.InOut, 1))
             {
+                async Task Do()
+                {
+                    try
+                    {
+                        var count = server.Read(buffer, 0, buffer.Length);
+                        var request = Encoding.UTF32.GetString(buffer, 0, count).Replace(@"""", "");
+                        Console.WriteLine($"-> Request: {request}");
+
+                        arguments = request.Split('|');
+                        options = Options.Parse(arguments);
+
+                        if (options.Changes.Length == 0 || Change(options.Changes))
+                        {
+                            logger.Clear();
+                            Console.WriteLine($"-> Generate...");
+                            await RunAsync(logger, options, arguments).Timeout(options.Timeout);
+                        }
+
+                        response = "Success";
+                    }
+                    catch (Exception exception) { response = exception.ToString(); }
+                    finally
+                    {
+                        Console.WriteLine($"-> Response: {response}");
+
+                        var count = Encoding.UTF32.GetBytes(response, 0, response.Length, buffer, 0);
+                        server.Write(buffer, 0, count);
+
+                        Console.WriteLine($"-> Wait For Pipe Drain");
+                        server.WaitForPipeDrain();
+
+                        Console.WriteLine($"-> Disconnect");
+                        server.Disconnect();
+                        Console.WriteLine($"-> Done");
+                        Console.WriteLine();
+                    }
+                }
+
                 while (true)
                 {
                     Console.WriteLine($"-> Wait For Connection");
                     Console.WriteLine();
                     server.WaitForConnection();
 
-                    lock (_lock)
+                    try
                     {
-                        try
-                        {
-                            watcher.Dispose();
-
-                            var count = server.Read(buffer, 0, buffer.Length);
-                            var request = Encoding.UTF32.GetString(buffer, 0, count).Replace(@"""", "");
-                            Console.WriteLine($"-> Request: {request}");
-
-                            arguments = request.Split('|');
-                            options = Options.Parse(arguments);
-
-                            if (options.Changes.Length == 0 || Change(options.Changes))
-                            {
-                                logger.Clear();
-                                Console.WriteLine($"-> Generate...");
-                                RunAsync(logger, options, arguments).Wait();
-                            }
-
-                            response = "Success";
-                        }
-                        catch (Exception exception) { response = exception.ToString(); }
-                        finally
-                        {
-                            Console.WriteLine($"-> Response: {response}");
-
-                            var count = Encoding.UTF32.GetBytes(response, 0, response.Length, buffer, 0);
-                            server.Write(buffer, 0, count);
-
-                            Console.WriteLine($"-> Wait For Pipe Drain");
-                            server.WaitForPipeDrain();
-
-                            Console.WriteLine($"-> Disconnect");
-                            server.Disconnect();
-                            watcher = Watch(logger, options, arguments);
-                            Console.WriteLine($"-> Done");
-                            Console.WriteLine();
-                        }
+                        watcher.Dispose();
+                        _semaphore.Wait();
+                        Do().Wait();
+                    }
+                    finally
+                    {
+                        _semaphore.Release();
+                        watcher = Watch(logger, options, arguments);
                     }
                 }
             }
@@ -185,13 +203,11 @@ namespace Entia.Unity
                 logger.AppendLine();
 
                 var assembliesTask = Task.Run(() => options.Assemblies
-                    .Where(assembly => !string.IsNullOrWhiteSpace(assembly))
                     .SelectMany(assembly => assembly.Files("*.dll", SearchOption.TopDirectoryOnly))
                     .Distinct()
                     .ToArray());
                 var currentFilesTask = Task.Run(() => options.Output.Files("*.cs", SearchOption.AllDirectories).ToArray());
                 var inputFilesTask = Task.Run(() => options.Inputs
-                    .Where(input => !string.IsNullOrWhiteSpace(input))
                     .SelectMany(input => input.Files("*.cs", SearchOption.AllDirectories))
                     .Distinct()
                     .ToArray());

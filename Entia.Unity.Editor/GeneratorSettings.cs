@@ -46,7 +46,7 @@ namespace Entia.Unity.Editor
         /// <summary>
         /// Delay in seconds after which the generation will be aborted.
         /// </summary>
-        public float Timeout => _timeout;
+        public TimeSpan Timeout => TimeSpan.FromSeconds(_timeout);
         /// <summary>
         /// Files or directories that will be included in the generation.
         /// These paths are recursive.
@@ -83,7 +83,7 @@ namespace Entia.Unity.Editor
         [SerializeField, Tooltip(
 @"Files or directories that will be included in the generation.
 These paths are recursive.")]
-        string[] _inputs = { Path.Combine("{Assets}", "Scripts"), Path.Combine("{Assets}", "Plugins") };
+        string[] _inputs = { "{Assets}" };
         [SerializeField, Tooltip("Directory where the generated files will be copied to.")]
         string _output = Path.Combine("{Assets}", "Generated");
         [SerializeField, Tooltip(

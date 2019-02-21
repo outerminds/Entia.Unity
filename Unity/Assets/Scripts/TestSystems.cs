@@ -39,7 +39,7 @@ namespace Systems
         }
     }
 
-    public struct Queries : ISystem
+    public struct Queries : IRun
     {
         [All(typeof(IComponent))]
         public Group<Entity> NoEmpty;
@@ -49,6 +49,21 @@ namespace Systems
         public Group<Entity> NoUnity;
         [All(typeof(Entia.Components.Unity<>))]
         public Group<Entity> OnlyUnity;
+        public Group<Read<Components.Inner.Ambiguous>, Read<Components.Ambiguous>> Ambiguous;
+
+        public void Run()
+        {
+            foreach (var item in OnlyUnity)
+            {
+                var entity = item.Entity();
+            }
+
+            foreach (var item in Ambiguous)
+            {
+                var ambiguous = item.Ambiguous();
+
+            }
+        }
     }
 
     public struct Spawner : IRun
@@ -75,6 +90,7 @@ namespace Systems
         [All(typeof(Entia.Components.Unity<>))]
         public Group<Entity, Read<Components.Component1>, Maybe<Read<Components.Inner.Component2>>> Group2;
         public AllEntities Entities;
+        public Group<Entity> Group3;
 
         public void Run()
         {

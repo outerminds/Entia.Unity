@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -1149342265, guid: bd6574cac34fec143851a26fff8716bb, type: 3}
-  m_Name: Settings
+  m_Name: 
   m_EditorClassIdentifier: 
   _tool: '{Entia.Generator}\Entia.Unity.Generate.dll'
   _automatic: 1
@@ -18,8 +18,7 @@ MonoBehaviour:
   _debug: 1
   _timeout: 10
   _inputs:
-  - '{Assets}\Scripts'
-  - '{Assets}\Plugins'
+  - '{Assets}'
   _output: '{Assets}\Generated'
   _assemblies:
   - '{Editor.Mono}'

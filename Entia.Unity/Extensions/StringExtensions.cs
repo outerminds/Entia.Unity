@@ -8,18 +8,16 @@ namespace Entia.Unity
     {
         public static IEnumerable<string> Files(this string path, string filter, SearchOption option = SearchOption.AllDirectories)
         {
-            if (string.IsNullOrWhiteSpace(path)) yield break;
-
-            var file = new FileInfo(path);
-            if (file.Exists) yield return file.FullName;
-
-            var directory = new DirectoryInfo(path);
-            if (directory.Exists)
+            switch (path.Information())
             {
-                foreach (var info in directory.EnumerateFiles(filter, option))
-                    yield return info.FullName;
+                case FileInfo file: yield return file.FullName; break;
+                case DirectoryInfo directory:
+                    foreach (var info in directory.EnumerateFiles(filter, option)) yield return info.FullName;
+                    break;
             }
         }
+
+        public static bool Exists(this string path) => path.Information() is FileSystemInfo;
 
         public static string Absolute(this string path) => string.IsNullOrWhiteSpace(path) ? "" : Path.GetFullPath(path);
 
@@ -43,6 +41,20 @@ namespace Entia.Unity
             return start + value + end;
         }
 
+        public static FileSystemInfo Information(this string path)
+        {
+            try
+            {
+                var absolute = path.Absolute();
+                var file = new FileInfo(absolute);
+                if (file.Exists) return file;
+                var directory = new DirectoryInfo(absolute);
+                if (directory.Exists) return directory;
+            }
+            catch { }
+            return null;
+        }
+
         public static string Extension(this string path) => Path.GetExtension(path);
         public static string Directory(this string path) => new DirectoryInfo(path).Exists ? path : Path.GetDirectoryName(path);
         public static string File(this string path, bool extension = true) => extension ? Path.GetFileName(path) : Path.GetFileNameWithoutExtension(path);
@@ -56,5 +68,7 @@ namespace Entia.Unity
             value[0].ToString().ToUpper() + value.Substring(1);
 
         public static string Justify(this string value, int length) => value + new string(' ', Math.Max(length - value.Length, 0));
+
+        public static bool IsSubPath(this string path, string super) => path.Absolute().StartsWith(super.Absolute());
     }
 }
