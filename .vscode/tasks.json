@@ -6,7 +6,12 @@
 			"command": "dotnet",
 			"type": "process",
 			"group": "build",
-			"args": ["build", "${workspaceFolder}/Entia.Unity.sln", "--configuration", "Debug"],
+			"args": [
+				"build",
+				"${workspaceFolder}/Entia.Unity.sln",
+				"--configuration",
+				"Debug"
+			],
 			"problemMatcher": "$msCompile"
 		},
 		{
@@ -14,7 +19,12 @@
 			"command": "dotnet",
 			"type": "process",
 			"group": "build",
-			"args": ["build", "${workspaceFolder}/Entia.Unity.sln", "--configuration", "Release"],
+			"args": [
+				"build",
+				"${workspaceFolder}/Entia.Unity.sln",
+				"--configuration",
+				"Release"
+			],
 			"problemMatcher": "$msCompile"
 		},
 		{
@@ -22,7 +32,12 @@
 			"command": "dotnet",
 			"type": "process",
 			"group": "build",
-			"args": ["publish", "${workspaceFolder}/Entia.Unity.sln", "--configuration", "Debug"],
+			"args": [
+				"publish",
+				"${workspaceFolder}/Entia.Unity.sln",
+				"--configuration",
+				"Debug"
+			],
 			"problemMatcher": "$msCompile"
 		},
 		{
@@ -30,7 +45,13 @@
 			"command": "dotnet",
 			"type": "process",
 			"group": "build",
-			"args": ["publish", "${workspaceFolder}/Entia.Unity.sln", "--configuration", "Release"],
+			"args": [
+				"publish",
+				"${workspaceFolder}/Entia.Unity.sln",
+				"/p:Version=1.1.1",
+				"--configuration",
+				"Release"
+			],
 			"problemMatcher": "$msCompile"
 		}
 	]

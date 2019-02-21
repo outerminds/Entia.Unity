@@ -7,9 +7,9 @@
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "Entia.Unity.Editor/1.0.0": {
+      "Entia.Unity.Editor/1.1.1": {
         "dependencies": {
-          "Entia.Unity": "1.0.0",
+          "Entia.Unity": "1.1.1",
           "NETStandard.Library": "2.0.3"
         },
         "runtime": {
@@ -22,7 +22,7 @@
           "Microsoft.NETCore.Platforms": "1.1.0"
         }
       },
-      "Entia.Unity/1.0.0": {
+      "Entia.Unity/1.1.1": {
         "runtime": {
           "Entia.Unity.dll": {}
         }
@@ -30,7 +30,7 @@
     }
   },
   "libraries": {
-    "Entia.Unity.Editor/1.0.0": {
+    "Entia.Unity.Editor/1.1.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -49,7 +49,7 @@
       "path": "netstandard.library/2.0.3",
       "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
     },
-    "Entia.Unity/1.0.0": {
+    "Entia.Unity/1.1.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

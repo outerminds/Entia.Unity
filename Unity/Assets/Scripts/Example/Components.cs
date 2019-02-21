@@ -12,12 +12,11 @@ namespace Components
 
     public struct Physics : IComponent
     {
+        // Since structs can not have default values, the 'Default' attribute is
+        // used by the framework to create default initialized instances.
         [Default]
         public static Physics Default => new Physics { Mass = 1f, Drag = 3f, Gravity = -2f };
 
-        // Since structs can not have default values, the 'Default' attribute will 
-        // cause the generator to generate the default values on the 
-        // 'ComponentReference'.
         public float Mass;
         public float Drag;
         public float Gravity;
