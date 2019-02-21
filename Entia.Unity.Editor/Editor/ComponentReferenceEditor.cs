@@ -12,12 +12,8 @@ namespace Entia.Unity.Editor
 
         public override void OnInspectorGUI()
         {
-            using (ReferenceUtility.Component(Targets))
-            using (LayoutUtility.Apply(serializedObject))
-            {
-                var property = ReferenceUtility.Script(serializedObject);
+            using (ReferenceUtility.Component(serializedObject, Targets, out var property))
                 while (property.NextVisible(false)) EditorGUILayout.PropertyField(property, true);
-            }
         }
     }
 }

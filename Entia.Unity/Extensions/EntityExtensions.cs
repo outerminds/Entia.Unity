@@ -12,7 +12,7 @@ namespace Entia.Unity
             if (self)
             {
                 var reference = gameObject.GetComponent<IEntityReference>();
-                if (reference != null && reference.Entity != Entity.Zero) yield return reference.Entity;
+                if (reference != null && reference.Entity) yield return reference.Entity;
             }
 
             if (upwards.HasValue)
@@ -43,7 +43,7 @@ namespace Entia.Unity
             if (self)
             {
                 var reference = gameObject.GetComponent<IEntityReference>();
-                if (reference != null && reference.Entity != Entity.Zero)
+                if (reference != null && reference.Entity)
                 {
                     entity = reference.Entity;
                     return true;

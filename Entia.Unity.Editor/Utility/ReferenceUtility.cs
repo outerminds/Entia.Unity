@@ -50,29 +50,61 @@ namespace Entia.Unity.Editor
             return false;
         }
 
-        public static Disposable Component<T>(IEnumerable<T> references) where T : IComponentReference
+        public static Disposable Component<T>(SerializedObject serialized, IEnumerable<T> references, out SerializedProperty property) where T : IComponentReference
         {
-            foreach (var reference in references) reference.Raw = reference.Component;
-            var disable = LayoutUtility.Disable(references.First().Type.GetCustomAttributes(false).OfType<DisableAttribute>().Any());
-            EditorGUI.BeginChangeCheck();
+            if (EditorApplication.isPlaying)
+            {
+                foreach (var reference in references) reference.Raw = reference.Value;
+                EditorGUI.BeginChangeCheck();
+            }
 
+            var first = references.First();
+            using (LayoutUtility.Horizontal())
+            {
+                property = Script(serialized);
+                if (first.World is World world && first.Entity)
+                {
+                    if (world.Components().Has(first.Entity, first.Type))
+                    {
+                        if (LayoutUtility.MinusButton()) world.Components().Remove(first.Entity, first.Type);
+                    }
+                    else
+                    {
+                        if (LayoutUtility.PlusButton()) world.Components().Set(first.Entity, first.Raw);
+                    }
+                }
+            }
+
+            var disable = LayoutUtility.Disable(first.Type.GetCustomAttributes(false).OfType<DisableAttribute>().Any());
+            var apply = LayoutUtility.Apply(serialized);
             return new Disposable(() =>
             {
+                apply.Dispose();
                 disable.Dispose();
-                if (EditorGUI.EndChangeCheck()) foreach (var reference in references) reference.Component = reference.Raw;
+                if (EditorApplication.isPlaying && EditorGUI.EndChangeCheck())
+                    foreach (var reference in references) reference.Value = reference.Raw;
             });
         }
 
-        public static Disposable Resource<T>(IEnumerable<T> references) where T : IResourceReference
+        public static Disposable Resource<T>(SerializedObject serialized, IEnumerable<T> references, out SerializedProperty property) where T : IResourceReference
         {
-            foreach (var reference in references) reference.Raw = reference.Resource;
-            var disable = LayoutUtility.Disable(references.First().Type.GetCustomAttributes(false).OfType<DisableAttribute>().Any());
-            EditorGUI.BeginChangeCheck();
+            if (EditorApplication.isPlaying)
+            {
+                foreach (var reference in references) reference.Raw = reference.Value;
+                EditorGUI.BeginChangeCheck();
+            }
+
+            var first = references.First();
+            property = Script(serialized);
+            var disable = LayoutUtility.Disable(first.Type.GetCustomAttributes(false).OfType<DisableAttribute>().Any());
+            var apply = LayoutUtility.Apply(serialized);
 
             return new Disposable(() =>
             {
+                apply.Dispose();
                 disable.Dispose();
-                if (EditorGUI.EndChangeCheck()) foreach (var reference in references) reference.Resource = reference.Raw;
+                if (EditorApplication.isPlaying && EditorGUI.EndChangeCheck())
+                    foreach (var reference in references) reference.Value = reference.Raw;
             });
         }
     }

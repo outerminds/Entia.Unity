@@ -7,22 +7,21 @@ namespace Components.Generated
 	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Component1), Link = "Assets/Scripts/TestComponents.cs", Path = new string[] { "Components", "Component1" })][global::UnityEngine.AddComponentMenu("Components/Components.Component1")][global::UnityEngine.RequireComponent(typeof(global::UnityEngine.BoxCollider2D)), global::UnityEngine.RequireComponent(typeof(global::Components.Generated.IsFrozen)), global::UnityEngine.RequireComponent(typeof(global::Entia.Unity.EntityReference))]
 	public sealed partial class Component1 : global::Entia.Unity.ComponentReference<global::Components.Component1>
 	{
-		ref global::System.Single X => ref this._X;
-		new global::Entia.Entity Entity
+		public ref global::System.Single X => ref base.Get((ref global::Components.Component1 data) => ref data.X, ref this._X);
+		new public global::Entia.Unity.EntityReference Entity
 		{
-			get => this._Entity.ToEntia();
-			set => this._Entity = value.FromEntia(base.World);
+			get => base.Get((ref global::Components.Component1 data, global::Entia.World world) => data.Entity.FromEntia(world), this._Entity);
+			set => base.Set((ref global::Components.Component1 data, in global::Entia.Unity.EntityReference state, global::Entia.World _) => data.Entity = state.ToEntia(), value, ref this._Entity);
 		}
-		new global::Entia.Entity World
+		new public global::Entia.Unity.EntityReference World
 		{
-			get => this._World.ToEntia();
-			set => this._World = value.FromEntia(base.World);
+			get => base.Get((ref global::Components.Component1 data, global::Entia.World world) => data.World.FromEntia(world), this._World);
+			set => base.Set((ref global::Components.Component1 data, in global::Entia.Unity.EntityReference state, global::Entia.World _) => data.World = state.ToEntia(), value, ref this._World);
 		}
-		new ref global::System.Int32 Component => ref this._Component;
-		ref global::UnityEngine.BoxCollider2D Collider => ref this._Collider;
-		ref global::Components.Generated.IsFrozen Reference1 => ref this._Reference1;
-		ref global::Entia.Unity.EntityReference Reference2 => ref this._Reference2;
-		ref global::System.Single Poulah => ref this._Poulah;
+		public ref global::System.Int32 Component => ref base.Get((ref global::Components.Component1 data) => ref data.Component, ref this._Component);
+		public ref global::UnityEngine.BoxCollider2D Collider => ref base.Get((ref global::Components.Component1 data) => ref data.Collider, ref this._Collider);
+		public ref global::Components.Generated.IsFrozen Reference1 => ref base.Get((ref global::Components.Component1 data) => ref data.Reference1, ref this._Reference1);
+		public ref global::Entia.Unity.EntityReference Reference2 => ref base.Get((ref global::Components.Component1 data) => ref data.Reference2, ref this._Reference2);
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(X))] [global::UnityEngine.Serialization.FormerlySerializedAsAttribute("Poulah")] [global::Entia.Unity.RequireAttribute()]
 		global::System.Single _X;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Entity))] [global::Entia.Unity.RequireAttribute()]
@@ -37,36 +36,31 @@ namespace Components.Generated
 		global::Components.Generated.IsFrozen _Reference1;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Reference2))] [global::Entia.Unity.RequireAttribute()]
 		global::Entia.Unity.EntityReference _Reference2;
-		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Poulah))]
-		global::System.Single _Poulah;
-		public override global::Components.Component1 Raw
+		protected override global::Components.Component1 Raw
 		{
 			get => new global::Components.Component1
 			{
-				X = this.X,
-				Entity = this.Entity,
-				World = this.World,
-				Component = this.Component,
-				Collider = this.Collider,
-				Reference1 = this.Reference1,
-				Reference2 = this.Reference2,
-				Poulah = this.Poulah
+				X = this._X,
+				Entity = this._Entity.ToEntia(),
+				World = this._World.ToEntia(),
+				Component = this._Component,
+				Collider = this._Collider,
+				Reference1 = this._Reference1,
+				Reference2 = this._Reference2
 			};
 			set
 			{
-				this.X = value.X;
-				this.Entity = value.Entity;
-				this.World = value.World;
-				this.Component = value.Component;
-				this.Collider = value.Collider;
-				this.Reference1 = value.Reference1;
-				this.Reference2 = value.Reference2;
-				this.Poulah = value.Poulah;
+				this._X = value.X;
+				this._Entity = value.Entity.FromEntia(base.World);
+				this._World = value.World.FromEntia(base.World);
+				this._Component = value.Component;
+				this._Collider = value.Collider;
+				this._Reference1 = value.Reference1;
+				this._Reference2 = value.Reference2;
 			}
 		}
-		protected override void Reset()
+		void Reset()
 		{
-			base.Reset();
 			this.Collider = this.GetComponent<global::UnityEngine.BoxCollider2D>();
 			this.Reference1 = this.GetComponent<global::Components.Generated.IsFrozen>();
 			this.Reference2 = this.GetComponent<global::Entia.Unity.EntityReference>();

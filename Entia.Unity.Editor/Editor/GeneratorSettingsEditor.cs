@@ -43,7 +43,7 @@ $@"Generator process:
                 if (GUILayout.Button("Generate")) Generator.Generate(tool, Target, true);
 
             using (LayoutUtility.Disable(!valid || !alive))
-                if (GUILayout.Button("Kill")) Generator.Kill(tool, true);
+                if (GUILayout.Button("Kill")) Generator.Kill(tool, Target, true);
         }
     }
 }

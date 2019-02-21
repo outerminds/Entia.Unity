@@ -10,7 +10,7 @@ namespace Entia.Unity
     {
         World World { get; }
         Entity Entity { get; }
-        IComponent Component { get; set; }
+        IComponent Value { get; set; }
         IComponent Raw { get; set; }
         Type Type { get; }
         Metadata Metadata { get; }
@@ -25,24 +25,31 @@ namespace Entia.Unity
     [DisallowMultipleComponent]
     public abstract class ComponentReference<T> : ComponentReference, IComponentReference where T : struct, IComponent
     {
+        protected delegate ref TMember Mapper<TMember>(ref T component);
+        protected delegate TMember From<TMember>(ref T component, World world);
+        protected delegate void To<TMember>(ref T component, in TMember value, World world);
+
         public World World { get; private set; }
         public Entity Entity { get; private set; }
-        public T Component
+
+        protected abstract T Raw { get; set; }
+
+        IComponent IComponentReference.Value
         {
             get
             {
                 if (_initialized && !_disposed && World.Components().TryGet<T>(Entity, out var component)) return component;
-                else return Raw;
+                return Raw;
             }
             set
             {
-                if (_initialized && !_disposed && World.Components().Has<T>(Entity)) World.Components().Set(Entity, value);
-                else Raw = value;
+                if (value is T casted)
+                {
+                    if (_initialized && !_disposed && World.Components().Has<T>(Entity)) World.Components().Set(Entity, casted);
+                    else Raw = casted;
+                }
             }
         }
-        public abstract T Raw { get; set; }
-
-        IComponent IComponentReference.Component { get => Component; set => Component = value is T component ? component : default; }
         IComponent IComponentReference.Raw { get => Raw; set => Raw = value is T component ? component : default; }
         Type IComponentReference.Type => typeof(T);
         Metadata IComponentReference.Metadata => ComponentUtility.Concrete<T>.Data;
@@ -52,7 +59,20 @@ namespace Entia.Unity
 
         protected ComponentReference() { Raw = DefaultUtility.Default<T>(); }
 
-        protected virtual void Reset() { }
+        protected ref TMember Get<TMember>(Mapper<TMember> map, ref TMember member) => ref
+            World is World world && world.Components().Has<T>(Entity) ?
+            ref map(ref world.Components().Get<T>(Entity)) : ref member;
+
+        protected TMember Get<TMember>(From<TMember> from, in TMember member) =>
+            World is World world && world.Components().Has<T>(Entity) ?
+            from(ref world.Components().Get<T>(Entity), world) : member;
+
+        protected void Set<TMember>(To<TMember> set, in TMember value, ref TMember member)
+        {
+            if (World is World world && world.Components().Has<T>(Entity))
+                set(ref world.Components().Get<T>(Entity), value, world);
+            else member = value;
+        }
 
         void Awake()
         {

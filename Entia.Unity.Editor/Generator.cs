@@ -35,7 +35,7 @@ namespace Entia.Unity.Editor
         static void Kill()
         {
             var settings = FindOrCreateSettings();
-            if (TryTool(settings, true, out var tool)) Kill(tool, true);
+            if (TryTool(settings, true, out var tool)) Kill(tool, settings, true);
         }
 
         [MenuItem("Entia/Generator/Generate %#g")]
@@ -85,26 +85,26 @@ namespace Entia.Unity.Editor
                     if (log) UnityEngine.Debug.Log(
 $@"Generation succeeded after '{timer.Elapsed}'.
 -> Input: {string.Join(" ", arguments)}
--> Output: {output}");
+-> Output: {output}", settings);
                 })
                 .Except<TimeoutException>(exception => UnityEngine.Debug.LogError(
 $@"Generation timed out after '{timer.Elapsed}'.
 This may be happening because the 'Timeout' value of '{settings.Timeout}' is too low.
 -> Input: {string.Join(" ", arguments)}
--> Output: {exception}"))
+-> Output: {exception}", settings))
                 .Except<ConnectionException>(exception => UnityEngine.Debug.LogError(
 $@"Failed to connect to generator process.
 This may happen because the .Net Core Runtime is not installed on this machine.
 -> Go to 'https://dotnet.microsoft.com/download'.
 -> Install the .Net Core Runtime version 2.1+.
--> Restart Unity."))
+-> Restart Unity.", settings))
                 .Except(exception => UnityEngine.Debug.LogError(
 $@"Generation failed after '{timer.Elapsed}'.
 -> Input: {string.Join(" ", arguments)}
--> Output: {exception}"));
+-> Output: {exception}", settings));
 
             task.Wait();
-            if (task.IsCompleted) EditorUtility.Delayed(AssetDatabase.Refresh, 1);
+            if (task.IsCompleted) EditorUtility.Delayed(AssetDatabase.Refresh);
         }
 
         public static bool IsInput(GeneratorSettings settings, string path) =>
@@ -117,7 +117,7 @@ $@"Generation failed after '{timer.Elapsed}'.
             {
                 if (log) UnityEngine.Debug.LogError(
 $@"Could not find a valid executable at path '{settings.Tool}'.
-Make sure a proper path is defined in the '{nameof(GeneratorSettings)}' asset.");
+Make sure a proper path is defined in the '{nameof(GeneratorSettings)}' asset.", settings);
                 return false;
             }
 
@@ -128,7 +128,7 @@ Make sure a proper path is defined in the '{nameof(GeneratorSettings)}' asset.")
         {
             if (TryProcess(tool, out var process))
             {
-                if (log) UnityEngine.Debug.Log($"Generator is already alive in process '{process.Id}'.");
+                if (log) UnityEngine.Debug.Log($"Generator is already alive in process '{process.Id}'.", settings);
                 return process;
             }
 
@@ -152,24 +152,24 @@ $@"Failed to birth generator process.
 This may happen because the .Net Core Runtime is not installed on this machine.
 -> Go to 'https://dotnet.microsoft.com/download'.
 -> Install the .Net Core Runtime version 2.1+.
--> Restart Unity.");
+-> Restart Unity.", settings);
                 throw;
             }
 
-            if (log) UnityEngine.Debug.Log($"Gave birth to generator at path '{tool}' in process '{process.Id}' with input '{input}'.");
+            if (log) UnityEngine.Debug.Log($"Gave birth to generator at path '{tool}' in process '{process.Id}' with input '{input}'.", settings);
             return process;
         }
 
-        public static bool Kill(string tool, bool log)
+        public static bool Kill(string tool, GeneratorSettings settings, bool log)
         {
             if (TryProcess(tool, out var process))
             {
                 process.Kill();
-                if (log) UnityEngine.Debug.Log($"Killed generator process '{process.Id}'.");
+                if (log) UnityEngine.Debug.Log($"Killed generator process '{process.Id}'.", settings);
                 return true;
             }
 
-            if (log) UnityEngine.Debug.Log($"Generator process was not found.");
+            if (log) UnityEngine.Debug.Log($"Generator process was not found.", settings);
             return false;
         }
 
@@ -251,14 +251,14 @@ This may happen because the .Net Core Runtime is not installed on this machine.
                 AssetDatabase.CreateAsset(settings, path);
                 AssetDatabase.Refresh();
                 UnityEngine.Debug.LogWarning(
-    $@"Could not find a '{nameof(GeneratorSettings)}' asset in project.
-A default instance was created at path '{path}'.");
+$@"Could not find a '{nameof(GeneratorSettings)}' asset in project.
+A default instance was created at path '{path}'.", settings);
             }
             catch (Exception exception)
             {
                 UnityEngine.Debug.LogError(
-    $@"Could not find or create a '{nameof(GeneratorSettings)}' asset in project.
-A default instance was used instead. It can be created from menu 'Assets/Create/Entia/Generator/Settings'.");
+$@"Could not find or create a '{nameof(GeneratorSettings)}' asset in project.
+A default instance was used instead. It can be created from menu 'Assets/Create/Entia/Generator/Settings'.", settings);
                 UnityEngine.Debug.LogException(exception);
             }
 
@@ -290,7 +290,7 @@ A default instance was used instead. It can be created from menu 'Assets/Create/
                 if (settings.Debug)
                 {
                     UnityEngine.Debug.Log(
-    $@"OnPostprocessAllAssets:
+$@"OnPostprocessAllAssets:
 -> Imported: {string.Join(" | ", importedAssets)}
 -> Deleted: {string.Join(" | ", deletedAssets)}
 -> Renamed: {string.Join(" | ", renamed)}

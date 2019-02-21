@@ -8,7 +8,7 @@ namespace Entia.Unity
     public interface IResourceReference
     {
         World World { get; }
-        IResource Resource { get; set; }
+        IResource Value { get; set; }
         IResource Raw { get; set; }
         Type Type { get; }
 
@@ -21,32 +21,51 @@ namespace Entia.Unity
     [DisallowMultipleComponent]
     public abstract class ResourceReference<T> : ResourceReference, IResourceReference where T : struct, IResource
     {
+        protected delegate ref TMember Mapper<TMember>(ref T resource);
+        protected delegate TMember From<TMember>(ref T resource, World world);
+        protected delegate void To<TMember>(ref T resource, in TMember value, World world);
+
         public World World { get; private set; }
-        public T Resource
+
+        protected abstract T Raw { get; set; }
+
+        IResource IResourceReference.Value
         {
             get
             {
                 if (_initialized && !_disposed) return World.Resources().Get<T>();
-                else return Raw;
+                return Raw;
             }
             set
             {
-                if (_initialized && !_disposed) World.Resources().Set(value);
-                else Raw = value;
+                if (value is T casted)
+                {
+                    if (_initialized && !_disposed) World.Resources().Set(casted);
+                    else Raw = casted;
+                }
             }
         }
-        public abstract T Raw { get; set; }
-
-        IResource IResourceReference.Resource { get => Resource; set => Resource = value is T casted ? casted : default; }
-        IResource IResourceReference.Raw { get => Raw; set => Raw = value is T component ? component : default; }
+        IResource IResourceReference.Raw { get => Raw; set => Raw = value is T resource ? resource : default; }
         Type IResourceReference.Type => typeof(T);
 
         bool _initialized;
         bool _disposed;
 
-        protected virtual void Reset()
+        protected ResourceReference() { Raw = DefaultUtility.Default<T>(); }
+
+        protected ref TMember Get<TMember>(Mapper<TMember> map, ref TMember member) => ref
+            World is World world && world.Resources().Has<T>() ?
+            ref map(ref world.Resources().Get<T>()) : ref member;
+
+        protected TMember Get<TMember>(From<TMember> from, in TMember member) =>
+            World is World world && world.Resources().Has<T>() ?
+            from(ref world.Resources().Get<T>(), world) : member;
+
+        protected void Set<TMember>(To<TMember> set, in TMember value, ref TMember member)
         {
-            Raw = DefaultUtility.Default<T>();
+            if (World is World world && world.Resources().Has<T>())
+                set(ref world.Resources().Get<T>(), value, world);
+            else member = value;
         }
 
         void Awake()

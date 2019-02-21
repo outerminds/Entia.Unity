@@ -14,6 +14,8 @@ namespace Entia.Unity
         World World { get; }
         IWorldModifier[] Modifiers { get; }
         World Create();
+        void Initialize();
+        void Dispose();
     }
 
     [DisallowMultipleComponent]
@@ -44,7 +46,7 @@ namespace Entia.Unity
             return world;
         }
 
-        void Initialize()
+        public void Initialize()
         {
             if (_initialized.Change(true))
             {
@@ -69,9 +71,7 @@ namespace Entia.Unity
             }
         }
 
-        void Unload(Scene scene) { if (scene == _scene) Dispose(); }
-
-        void Dispose()
+        public void Dispose()
         {
             if (_initialized && _disposed.Change(true))
             {
@@ -94,5 +94,7 @@ namespace Entia.Unity
                 World = null;
             }
         }
+
+        void Unload(Scene scene) { if (scene == _scene) Dispose(); }
     }
 }

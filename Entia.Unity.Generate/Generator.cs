@@ -317,20 +317,21 @@ $@"{indentation}{attributes}
 {indentation}{(@new ? "new " : "")}{type} {name};";
         }
 
-        static string FormatProperty(int indent, IFieldSymbol field, string type, string from, string to, INamedTypeSymbol reference)
+        static string FormatProperty(int indent, IFieldSymbol field, string type, string data, string from, string to, INamedTypeSymbol reference, Context context)
         {
             var indentation = Indentation(indent);
-            var name = $"_{field.Name}";
-            var @new = reference.Members(true).Any(member => member.Name == field.Name);
+            var name = $"this._{field.Name}";
+            var @new = reference.Members(true).Any(member => member.Name == field.Name) ? "new " : "";
+            var world = FormatPath(context.World);
 
             if (string.IsNullOrWhiteSpace(from) && string.IsNullOrWhiteSpace(to))
-                return $"{indentation}{(@new ? "new " : "")}ref {type} {field.Name} => ref this.{name};";
+                return $"{indentation}{@new}public ref {type} {field.Name} => ref base.Get((ref {data} data) => ref data.{field.Name}, ref {name});";
             else
                 return
-$@"{indentation}{(@new ? "new " : "")}{type} {field.Name}
+$@"{indentation}{@new}public {type} {field.Name}
 {indentation}{{
-{indentation}	get => this.{name}{string.Format(to, "")};
-{indentation}	set => this.{name} = value{string.Format(from, "base.World")};
+{indentation}	get => base.Get((ref {data} data, {world} world) => data.{field.Name}{string.Format(from, "world")}, {name});
+{indentation}	set => base.Set((ref {data} data, in {type} state, {world} _) => data.{field.Name} = state{string.Format(to, "")}, value, ref {name});
 {indentation}}}";
         }
 
@@ -355,16 +356,16 @@ $@"{indentation}{(@new ? "new " : "")}{type} {field.Name}
                 .ToArray();
             var properties = string.Join(
                 Environment.NewLine,
-                converted.Select(pair => FormatProperty(indent + 1, pair.field, FormatGenericPath(pair.field.Type), pair.conversion.from, pair.conversion.to, reference)));
+                converted.Select(pair => FormatProperty(indent + 1, pair.field, pair.conversion.type, fullName, pair.conversion.from, pair.conversion.to, reference, context)));
             var members = string.Join(
                 Environment.NewLine,
                 converted.Select(pair => FormatField(indent + 1, pair.field, pair.conversion.type, reference, context)));
             var initializers = string.Join(
                 "," + Environment.NewLine,
-                converted.Select(pair => $"{indentation}			{pair.field.Name} = this.{pair.field.Name}"));
+                converted.Select(pair => $"{indentation}			{pair.field.Name} = this._{pair.field.Name}{string.Format(pair.conversion.to, "")}"));
             var setters = string.Join(
                 Environment.NewLine,
-                converted.Select(pair => $"{indentation}			this.{pair.field.Name} = value.{pair.field.Name};"));
+                converted.Select(pair => $"{indentation}			this._{pair.field.Name} = value.{pair.field.Name}{string.Format(pair.conversion.from, "base.World")};"));
             var declaration = string.Join(
                 Environment.NewLine + Environment.NewLine,
                 declarations.Select(pair => string.Join(Environment.NewLine, pair.Value.declaration.Select(line => $"{indentation}	{line}"))));
@@ -382,9 +383,8 @@ $@"{indentation}{(@new ? "new " : "")}{type} {field.Name}
                 Environment.NewLine,
                 requireFields.Select(field => $"{indentation}		this.{field.Name} = this.GetComponent<{FormatPath(field.Type)}>();"));
             var reset = requireAttributes.Length == 0 ? "" :
-$@"{indentation}	protected override void Reset()
+$@"{indentation}	void Reset()
 {indentation}	{{
-{indentation}		base.Reset();
 {resetFields}
 {indentation}	}}";
             string.Join(
@@ -410,7 +410,7 @@ $@"{indentation}using System.Linq;
 {indentation}{{
 {properties}
 {members}
-{indentation}	public override {fullName} Raw
+{indentation}	protected override {fullName} Raw
 {indentation}	{{
 {indentation}		get => new {fullName}
 {indentation}		{{

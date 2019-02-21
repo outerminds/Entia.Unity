@@ -7,25 +7,25 @@ namespace Components.Generated
 	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Link), Link = "Assets/Scripts/TestComponents.cs", Path = new string[] { "Components", "Link" })][global::UnityEngine.AddComponentMenu("Components/Components.Link")]
 	public sealed partial class Link : global::Entia.Unity.ComponentReference<global::Components.Link>
 	{
-		global::Entia.Entity HasComponent
+		public global::Entia.Unity.EntityReference HasComponent
 		{
-			get => this._HasComponent.ToEntia();
-			set => this._HasComponent = value.FromEntia(base.World);
+			get => base.Get((ref global::Components.Link data, global::Entia.World world) => data.HasComponent.FromEntia(world), this._HasComponent);
+			set => base.Set((ref global::Components.Link data, in global::Entia.Unity.EntityReference state, global::Entia.World _) => data.HasComponent = state.ToEntia(), value, ref this._HasComponent);
 		}
-		global::Entia.Entity NoComponent
+		public global::Entia.Unity.EntityReference NoComponent
 		{
-			get => this._NoComponent.ToEntia();
-			set => this._NoComponent = value.FromEntia(base.World);
+			get => base.Get((ref global::Components.Link data, global::Entia.World world) => data.NoComponent.FromEntia(world), this._NoComponent);
+			set => base.Set((ref global::Components.Link data, in global::Entia.Unity.EntityReference state, global::Entia.World _) => data.NoComponent = state.ToEntia(), value, ref this._NoComponent);
 		}
-		global::Entia.Entity HasUnity
+		public global::Entia.Unity.EntityReference HasUnity
 		{
-			get => this._HasUnity.ToEntia();
-			set => this._HasUnity = value.FromEntia(base.World);
+			get => base.Get((ref global::Components.Link data, global::Entia.World world) => data.HasUnity.FromEntia(world), this._HasUnity);
+			set => base.Set((ref global::Components.Link data, in global::Entia.Unity.EntityReference state, global::Entia.World _) => data.HasUnity = state.ToEntia(), value, ref this._HasUnity);
 		}
-		global::Entia.Entity NoUnity
+		public global::Entia.Unity.EntityReference NoUnity
 		{
-			get => this._NoUnity.ToEntia();
-			set => this._NoUnity = value.FromEntia(base.World);
+			get => base.Get((ref global::Components.Link data, global::Entia.World world) => data.NoUnity.FromEntia(world), this._NoUnity);
+			set => base.Set((ref global::Components.Link data, in global::Entia.Unity.EntityReference state, global::Entia.World _) => data.NoUnity = state.ToEntia(), value, ref this._NoUnity);
 		}
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(HasComponent))] [global::Entia.Queryables.AllAttribute(new global::System.Type[] { typeof(Entia.IComponent) })]
 		global::Entia.Unity.EntityReference _HasComponent;
@@ -35,21 +35,21 @@ namespace Components.Generated
 		global::Entia.Unity.EntityReference _HasUnity;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(NoUnity))] [global::Entia.Queryables.NoneAttribute(new global::System.Type[] { typeof(Entia.Components.Unity<>) })]
 		global::Entia.Unity.EntityReference _NoUnity;
-		public override global::Components.Link Raw
+		protected override global::Components.Link Raw
 		{
 			get => new global::Components.Link
 			{
-				HasComponent = this.HasComponent,
-				NoComponent = this.NoComponent,
-				HasUnity = this.HasUnity,
-				NoUnity = this.NoUnity
+				HasComponent = this._HasComponent.ToEntia(),
+				NoComponent = this._NoComponent.ToEntia(),
+				HasUnity = this._HasUnity.ToEntia(),
+				NoUnity = this._NoUnity.ToEntia()
 			};
 			set
 			{
-				this.HasComponent = value.HasComponent;
-				this.NoComponent = value.NoComponent;
-				this.HasUnity = value.HasUnity;
-				this.NoUnity = value.NoUnity;
+				this._HasComponent = value.HasComponent.FromEntia(base.World);
+				this._NoComponent = value.NoComponent.FromEntia(base.World);
+				this._HasUnity = value.HasUnity.FromEntia(base.World);
+				this._NoUnity = value.NoUnity.FromEntia(base.World);
 			}
 		}
 

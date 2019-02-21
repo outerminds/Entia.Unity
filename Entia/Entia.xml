@@ -146,14 +146,14 @@
     <member name="M:Entia.Modules.Components.Default``1">
       <summary>
             Gets a default component of type <typeref name="T" />.
-            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
+            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.Core.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
             </summary>
       <returns>The default component.</returns>
     </member>
     <member name="M:Entia.Modules.Components.TryDefault(System.Type,Entia.IComponent@)">
       <summary>
             Gets a default component of provided <paramref name="type" />.
-            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
+            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.Core.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
             </summary>
       <param name="type">The concrete component type.</param>
       <param name="component">The default component.</param>
@@ -178,7 +178,17 @@
       <param name="success">Is <c>true</c> if the component was found; otherwise, <c>false</c>.</param>
       <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
     </member>
-    <!-- Badly formed XML comment ignored for member "M:Entia.Modules.Components.GetOrAdd``1(Entia.Entity,System.Func{``0})" -->
+    <member name="M:Entia.Modules.Components.GetOrAdd``1(Entia.Entity,System.Func{``0})">
+      <summary>
+            Gets a component of type <typeref name="T" /> associated with the <paramref name="entity" />.
+            If the component is missing, a new instance will be created using the <paramref name="create" /> function.
+            If the <paramref name="create" /> function is omitted, the default provider will be used.
+            </summary>
+      <typeparam name="T">The concrete component type.</typeparam>
+      <param name="entity">The entity associated with the component.</param>
+      <param name="create">A function that creates a component of type <typeparamref name="T" />.</param>
+      <returns>The existing or added component reference.</returns>
+    </member>
     <member name="M:Entia.Modules.Components.TryGet``1(Entia.Entity,``0@)">
       <summary>
             Tries to get a component of type <typeparamref name="T" /> associated with the <paramref name="entity" />.
@@ -283,7 +293,15 @@
       <param name="component">The component.</param>
       <returns>Returns <c>true</c> if the component was added; otherwise, <c>false</c>.</returns>
     </member>
-    <!-- Badly formed XML comment ignored for member "M:Entia.Modules.Components.Set(Entia.Entity,System.Type)" -->
+    <member name="M:Entia.Modules.Components.Set(Entia.Entity,System.Type)">
+      <summary>
+            Sets a default component of provided type <paramref name="type" /> associated with the <paramref name="entity" />.
+            If the component is missing, it is added.
+            </summary>
+      <param name="entity">The entity.</param>
+      <param name="type">The concrete component type.</param>
+      <returns>Returns <c>true</c> if the component was added; otherwise, <c>false</c>.</returns>
+    </member>
     <member name="M:Entia.Modules.Components.Set(Entia.Entity,Entia.IComponent)">
       <summary>
             Sets the <paramref name="component" /> associated with the <paramref name="entity" />.
@@ -489,7 +507,13 @@
       <param name="index">The component type index.</param>
       <returns>The component store.</returns>
     </member>
-    <!-- Badly formed XML comment ignored for member "M:Entia.Modules.Component.Segment.Ensure" -->
+    <member name="M:Entia.Modules.Component.Segment.Ensure">
+      <summary>
+            Ensures that all component stores are at least of the same size as the <see cref="F:Entia.Modules.Component.Segment.Entities" /> array.
+            If a component store not large enough, it is resized.
+            </summary>
+      <returns>Returns <c>true</c> if a component store was resized; otherwise, <c>false</c>.</returns>
+    </member>
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>
       <returns>An enumerator that can be used to iterate through the collection.</returns>
@@ -1153,14 +1177,14 @@
     <member>
       <summary>
             Gets a default component of type <typeref name="T" />.
-            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
+            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.Core.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
             </summary>
       <returns>The default component.</returns>
     </member>
     <member>
       <summary>
             Gets a default component of provided <paramref name="type" />.
-            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
+            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.Core.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
             </summary>
       <param name="component">The default component.</param>
       <returns>Returns <c>true</c> if a valid component was created; otherwise, <c>false</c>.</returns>
@@ -1248,14 +1272,14 @@
     <member>
       <summary>
             Gets a default component of type <typeref name="T" />.
-            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
+            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.Core.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
             </summary>
       <returns>The default component.</returns>
     </member>
     <member>
       <summary>
             Gets a default component of provided <paramref name="type" />.
-            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
+            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.Core.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
             </summary>
       <param name="component">The default component.</param>
       <returns>Returns <c>true</c> if a valid component was created; otherwise, <c>false</c>.</returns>
@@ -1343,14 +1367,14 @@
     <member>
       <summary>
             Gets a default component of type <typeref name="T" />.
-            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
+            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.Core.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
             </summary>
       <returns>The default component.</returns>
     </member>
     <member>
       <summary>
             Gets a default component of provided <paramref name="type" />.
-            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
+            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.Core.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
             </summary>
       <param name="component">The default component.</param>
       <returns>Returns <c>true</c> if a valid component was created; otherwise, <c>false</c>.</returns>
@@ -1364,8 +1388,15 @@
       <param name="entity">The entity associated with the component.</param>
       <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
     </member>
-    <member name="M:Entia.Injectables.AllComponents.GetOrAdd``1(Entia.Entity,System.Func{``0})">
-      <inheritdoc cref="M:Entia.Modules.Components.GetOrAdd``1(Entia.Entity,System.Func{``0})" />
+    <member>
+      <summary>
+            Gets a component of type <typeref name="T" /> associated with the <paramref name="entity" />.
+            If the component is missing, a new instance will be created using the <paramref name="create" /> function.
+            If the <paramref name="create" /> function is omitted, the default provider will be used.
+            </summary>
+      <typeparam name="T">The concrete component type.</typeparam>
+      <param name="create">A function that creates a component of type <typeparamref name="T" />.</param>
+      <returns>The existing or added component reference.</returns>
     </member>
     <member>
       <summary>
@@ -1439,8 +1470,13 @@
       <param name="component">The component.</param>
       <returns>Returns <c>true</c> if the component was added; otherwise, <c>false</c>.</returns>
     </member>
-    <member name="M:Entia.Injectables.AllComponents.Set(Entia.Entity,System.Type)">
-      <inheritdoc cref="M:Entia.Modules.Components.Set(Entia.Entity,System.Type)" />
+    <member>
+      <summary>
+            Sets a default component of provided type <paramref name="type" /> associated with the <paramref name="entity" />.
+            If the component is missing, it is added.
+            </summary>
+      <param name="type">The concrete component type.</param>
+      <returns>Returns <c>true</c> if the component was added; otherwise, <c>false</c>.</returns>
     </member>
     <member>
       <summary>
@@ -1522,7 +1558,7 @@
     <member>
       <summary>
             Gets a default component of type <typeref name="T" />.
-            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
+            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.Core.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
             </summary>
       <returns>The default component.</returns>
     </member>
@@ -1578,7 +1614,7 @@
     <member>
       <summary>
             Gets a default component of type <typeref name="T" />.
-            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
+            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.Core.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
             </summary>
       <returns>The default component.</returns>
     </member>
@@ -1629,12 +1665,19 @@
     <member>
       <summary>
             Gets a default component of type <typeref name="T" />.
-            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
+            If the component type has a <c>static</c> field, property or method tagged with the <see cref="T:Entia.Core.DefaultAttribute" /> attribute, this member will be used to instantiate the component.
             </summary>
       <returns>The default component.</returns>
     </member>
-    <member name="M:Entia.Injectables.Components`1.GetOrAdd(Entia.Entity,System.Func{`0})">
-      <inheritdoc cref="M:Entia.Modules.Components.GetOrAdd``1(Entia.Entity,System.Func{``0})" />
+    <member>
+      <summary>
+            Gets a component of type <typeref name="T" /> associated with the <paramref name="entity" />.
+            If the component is missing, a new instance will be created using the <paramref name="create" /> function.
+            If the <paramref name="create" /> function is omitted, the default provider will be used.
+            </summary>
+      <typeparam name="T">The concrete component type.</typeparam>
+      <param name="create">A function that creates a component of type <typeparamref name="T" />.</param>
+      <returns>The existing or added component reference.</returns>
     </member>
     <member>
       <summary>
@@ -2236,6 +2279,12 @@
       <summary>
             Implements the operator !=.
             </summary>
+    </member>
+    <member name="M:Entia.Entity.op_Implicit(Entia.Entity)~System.Boolean">
+      <summary>
+            Implements and implicit <c>bool</c> operator.
+            </summary>
+      <returns>Returns <c>true</c> if the entity is valid; otherwise, <c>false</c>.</returns>
     </member>
     <member name="P:Entia.Entity.Identifier">
       <summary>

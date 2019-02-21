@@ -7,18 +7,18 @@ namespace Components.Inner.Generated
 	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Inner.Component7), Link = "Assets/Scripts/TestComponents.cs", Path = new string[] { "Components", "Inner", "Component7" })][global::UnityEngine.AddComponentMenu("Components/Inner/Components.Inner.Component7")]
 	public sealed partial class Component7 : global::Entia.Unity.ComponentReference<global::Components.Inner.Component7>
 	{
-		ref global::System.Single X => ref this._X;
-		ref global::System.Single A => ref this._A;
-		ref global::System.Single B => ref this._B;
-		ref global::System.Single C => ref this._C;
-		ref global::System.Single D => ref this._D;
-		ref global::System.Single E => ref this._E;
-		ref global::System.Single F => ref this._F;
-		ref global::System.Single G => ref this._G;
-		ref global::System.Single H => ref this._H;
-		ref global::System.Single I => ref this._I;
-		ref global::System.Single J => ref this._J;
-		ref global::System.Single K => ref this._K;
+		public ref global::System.Single X => ref base.Get((ref global::Components.Inner.Component7 data) => ref data.X, ref this._X);
+		public ref global::System.Single A => ref base.Get((ref global::Components.Inner.Component7 data) => ref data.A, ref this._A);
+		public ref global::System.Single B => ref base.Get((ref global::Components.Inner.Component7 data) => ref data.B, ref this._B);
+		public ref global::System.Single C => ref base.Get((ref global::Components.Inner.Component7 data) => ref data.C, ref this._C);
+		public ref global::System.Single D => ref base.Get((ref global::Components.Inner.Component7 data) => ref data.D, ref this._D);
+		public ref global::System.Single E => ref base.Get((ref global::Components.Inner.Component7 data) => ref data.E, ref this._E);
+		public ref global::System.Single F => ref base.Get((ref global::Components.Inner.Component7 data) => ref data.F, ref this._F);
+		public ref global::System.Single G => ref base.Get((ref global::Components.Inner.Component7 data) => ref data.G, ref this._G);
+		public ref global::System.Single H => ref base.Get((ref global::Components.Inner.Component7 data) => ref data.H, ref this._H);
+		public ref global::System.Single I => ref base.Get((ref global::Components.Inner.Component7 data) => ref data.I, ref this._I);
+		public ref global::System.Single J => ref base.Get((ref global::Components.Inner.Component7 data) => ref data.J, ref this._J);
+		public ref global::System.Single K => ref base.Get((ref global::Components.Inner.Component7 data) => ref data.K, ref this._K);
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(X))]
 		global::System.Single _X;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(A))]
@@ -43,37 +43,37 @@ namespace Components.Inner.Generated
 		global::System.Single _J;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(K))]
 		global::System.Single _K;
-		public override global::Components.Inner.Component7 Raw
+		protected override global::Components.Inner.Component7 Raw
 		{
 			get => new global::Components.Inner.Component7
 			{
-				X = this.X,
-				A = this.A,
-				B = this.B,
-				C = this.C,
-				D = this.D,
-				E = this.E,
-				F = this.F,
-				G = this.G,
-				H = this.H,
-				I = this.I,
-				J = this.J,
-				K = this.K
+				X = this._X,
+				A = this._A,
+				B = this._B,
+				C = this._C,
+				D = this._D,
+				E = this._E,
+				F = this._F,
+				G = this._G,
+				H = this._H,
+				I = this._I,
+				J = this._J,
+				K = this._K
 			};
 			set
 			{
-				this.X = value.X;
-				this.A = value.A;
-				this.B = value.B;
-				this.C = value.C;
-				this.D = value.D;
-				this.E = value.E;
-				this.F = value.F;
-				this.G = value.G;
-				this.H = value.H;
-				this.I = value.I;
-				this.J = value.J;
-				this.K = value.K;
+				this._X = value.X;
+				this._A = value.A;
+				this._B = value.B;
+				this._C = value.C;
+				this._D = value.D;
+				this._E = value.E;
+				this._F = value.F;
+				this._G = value.G;
+				this._H = value.H;
+				this._I = value.I;
+				this._J = value.J;
+				this._K = value.K;
 			}
 		}
 

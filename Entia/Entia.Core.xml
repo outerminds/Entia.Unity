@@ -130,8 +130,8 @@
       <summary>Sets the enumerator to its initial position, which is before the first element in the collection.</summary>
       <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
     </member>
-    <member name="M:Entia.Core.SwitchList`1.Enumerator.Dispose">
-      <inheritdoc cref="!:IDisposable.Dispose" />
+    <member>
+      <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
     </member>
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>
