@@ -52,15 +52,19 @@ namespace Entia.Unity.Editor
             return new Disposable(() => EditorGUI.indentLevel--);
         }
 
-        public static Disposable Horizontal(params GUILayoutOption[] options)
+        public static Disposable Horizontal(params GUILayoutOption[] options) => Horizontal(out _, options);
+
+        public static Disposable Horizontal(out Rect area, params GUILayoutOption[] options)
         {
-            EditorGUILayout.BeginHorizontal(options);
+            area = EditorGUILayout.BeginHorizontal(options);
             return new Disposable(EditorGUILayout.EndHorizontal);
         }
 
-        public static Disposable Vertical(params GUILayoutOption[] options)
+        public static Disposable Vertical(params GUILayoutOption[] options) => Vertical(out _, options);
+
+        public static Disposable Vertical(out Rect area, params GUILayoutOption[] options)
         {
-            EditorGUILayout.BeginVertical(options);
+            area = EditorGUILayout.BeginVertical(options);
             return new Disposable(EditorGUILayout.EndVertical);
         }
 
@@ -277,7 +281,7 @@ namespace Entia.Unity.Editor
         {
             var fields = TypeUtility.GetFields(value.GetType(), TypeUtility.PublicInstance);
 
-            if (fields.Length == 0) Label(label);
+            if (fields.Length == 0) EditorGUILayout.LabelField(label, value.ToString());
             else if (Foldout(label, type, path))
                 using (Indent()) using (Vertical()) foreach (var field in fields) Field(field, value);
 
@@ -290,7 +294,7 @@ namespace Entia.Unity.Editor
                 return EditorGUILayout.ObjectField(label, (UnityEngine.Object)value, type, true);
             else
             {
-                EditorGUILayout.LabelField(label, $"null: ({type.Format()})");
+                EditorGUILayout.LabelField(label, $"null ({type.Format()})");
                 return value;
             }
         }
@@ -331,10 +335,11 @@ namespace Entia.Unity.Editor
                     using (Disable()) EditorGUILayout.IntField("Size", dictionary.Count);
                     using (Disable(dictionary.IsReadOnly))
                     {
+                        var index = 0;
                         foreach (var pair in dictionary.Keys.Cast<object>().Select(key => (key, value: dictionary[key])).ToArray())
                         {
-                            var keySegment = $"{pair.key.GetHashCode()}.key";
-                            var valueSegment = $"{pair.key.GetHashCode()}.value";
+                            var keySegment = $"{pair.key.GetHashCode()}.key[{index++}]";
+                            var valueSegment = $"{pair.key.GetHashCode()}.value[{index++}]";
 
                             using (Horizontal())
                             {
@@ -349,7 +354,7 @@ namespace Entia.Unity.Editor
                                     }
                                 }
 
-                                using (Vertical())
+                                using (NoIndent()) using (Indent()) using (Vertical())
                                 {
                                     EditorGUI.BeginChangeCheck();
                                     var modifiedValue = Object("Value", pair.value, element.value, path.Append(valueSegment).ToArray());
