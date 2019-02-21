@@ -14,6 +14,7 @@
 [wiki/node]:https://github.com/outerminds/Entia/wiki/Node
 [wiki/queryable]:https://github.com/outerminds/Entia/wiki/Queryable
 [tutorial/plugins]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/Plugins.PNG
+[tutorial/templates]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/Templates.png
 [tutorial/unity-profiler]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/UnityProfiler.png
 [tutorial/world-profiler]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/WorldProfiler.png
 [tutorial/generate]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/Generate.png
@@ -44,6 +45,9 @@ ___
 - Extract the _'Entia.Unity.zip'_ package in a _'Plugins'_ folder in your Unity project (ex: _'Project/Assets/Plugins/Entia/'_).
 - Ensure that you have a _[.Net Core Runtime][net-core]_ with version 2.0+ (required for the code generator to work).
 - Optionally install the Unity templates by clicking on the _'Entia/Install/Templates'_ menu (requires the Unity editor to be running in administrator mode).
+  - Templates provide an easy way to create **Entia** elements through the _'Assets/Create/Entia'_ menu.
+
+    ![][tutorial/templates]
 - Optionally install the packaged Visual Studio 2017 extension _'Entia.Analyze.vsix'_ to get [**Entia**][entia] specific code analysis.
 ___
 
@@ -60,6 +64,7 @@ ___
 - Define a couple [components][wiki/component] in the _'Assets/Scripts'_ folder.
 ```csharp
 using Entia;
+using Entia.Core;
 using Entia.Unity;
 
 namespace Components
@@ -72,14 +77,13 @@ namespace Components
 
     public struct Physics : IComponent
     {
-        // Since structs can not have default values, the 'Default' attribute will 
-        // cause the generator to generate the default values on the 
-        // 'ComponentReference'.
-        [Default(1f)]
+        // Since structs can not have default values, the 'Default' attribute is
+        // used by the framework to create default initialized instances.
+        [Default]
+        public static Physics Default => new Physics { Mass = 1f, Drag = 3f, Gravity = -2f };
+
         public float Mass;
-        [Default(3f)]
         public float Drag;
-        [Default(-2f)]
         public float Gravity;
     }
 
@@ -94,11 +98,11 @@ namespace Components
 
     public struct Motion : IComponent
     {
-        [Default(2f)]
+        [Default]
+        public static Motion Default => new Motion { Acceleration = 2f, MaximumSpeed = 0.25f, JumpForce = 0.75f };
+
         public float Acceleration;
-        [Default(0.25f)]
         public float MaximumSpeed;
-        [Default(0.75f)]
         public float JumpForce;
     }
 }
@@ -200,7 +204,7 @@ namespace Systems
     public struct UpdatePosition : IRun
     {
         // 'Unity<Transform>' is a Unity-specific query that gives access 
-        // to core Unity components.
+        // to any Unity component associated with the entity.
         // Note that it will not work for custom 'MonoBehaviour' types.
         public readonly Group<Unity<Transform>, Write<Components.Velocity>> Group;
 
