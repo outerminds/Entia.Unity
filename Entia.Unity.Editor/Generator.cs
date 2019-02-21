@@ -21,7 +21,14 @@ namespace Entia.Unity.Editor
         static Generator()
         {
             if (TryFindSettings(out var settings) && settings.Automatic && TryTool(settings, settings.Debug, out var tool))
-                Birth(tool, settings, settings.Debug);
+            {
+                try { Birth(tool, settings, settings.Debug); }
+                catch (Exception exception)
+                {
+                    UnityEngine.Debug.LogException(exception, settings);
+                    UnityEngine.Debug.LogWarning($"Automatic birth of the generator may be disabled in the '{nameof(GeneratorSettings)}' asset by unchecking the '{nameof(GeneratorSettings.Automatic)}' option.", settings);
+                }
+            }
         }
 
         [MenuItem("Entia/Generator/Birth")]
@@ -148,7 +155,7 @@ Make sure a proper path is defined in the '{nameof(GeneratorSettings)}' asset.",
             catch
             {
                 UnityEngine.Debug.LogError(
-$@"Failed to birth generator process.
+$@"Failed to birth generator process from path '{tool}'.
 This may happen because the .Net Core Runtime is not installed on this machine.
 -> Go to 'https://dotnet.microsoft.com/download'.
 -> Install the .Net Core Runtime version 2.1+.
@@ -291,7 +298,16 @@ $@"OnPostprocessAllAssets:
 -> Renamed: {string.Join(" | ", renamed)}
 -> Moved: {string.Join(" | ", moved)}");
                 }
-                if (changes.Length > 0) Generate(tool, settings, settings.Debug, changes);
+
+                if (changes.Length > 0)
+                {
+                    try { Generate(tool, settings, settings.Debug, changes); }
+                    catch (Exception exception)
+                    {
+                        UnityEngine.Debug.LogException(exception, settings);
+                        UnityEngine.Debug.LogWarning($"Automatic birth of the generator may be disabled in the '{nameof(GeneratorSettings)}' asset by unchecking the '{nameof(GeneratorSettings.Automatic)}' option.", settings);
+                    }
+                }
             }
         }
     }

@@ -26,7 +26,7 @@
     </member>
     <member name="P:Entia.Unity.Editor.GeneratorSettings.Timeout">
       <summary>
-            Delay in seconds after which the generation will be aborted.
+            Delay after which the generation will be aborted.
             </summary>
     </member>
     <member name="P:Entia.Unity.Editor.GeneratorSettings.Inputs">

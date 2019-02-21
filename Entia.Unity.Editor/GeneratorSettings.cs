@@ -44,7 +44,7 @@ namespace Entia.Unity.Editor
         /// </summary>
         public bool Debug => _debug;
         /// <summary>
-        /// Delay in seconds after which the generation will be aborted.
+        /// Delay after which the generation will be aborted.
         /// </summary>
         public TimeSpan Timeout => TimeSpan.FromSeconds(_timeout);
         /// <summary>
