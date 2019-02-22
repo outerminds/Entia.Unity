@@ -10,23 +10,6 @@ namespace Entia.Unity.Editor
     [CreateAssetMenu(fileName = "Settings", menuName = "Entia/Generator/Settings")]
     public class GeneratorSettings : ScriptableObject
     {
-        public static GeneratorSettings Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = AssetDatabase.FindAssets($"t:{nameof(GeneratorSettings)}")
-                        .Select(AssetDatabase.GUIDToAssetPath)
-                        .Select(AssetDatabase.LoadAssetAtPath<GeneratorSettings>)
-                        .FirstOrDefault(settings => settings != null);
-                }
-
-                return _instance;
-            }
-        }
-        static GeneratorSettings _instance;
-
         /// <summary>
         /// The path to the generator executable.
         /// </summary>

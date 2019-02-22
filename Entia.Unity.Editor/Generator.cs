@@ -18,6 +18,8 @@ namespace Entia.Unity.Editor
     {
         sealed class ConnectionException : Exception { }
 
+        static GeneratorSettings _settings;
+
         static Generator()
         {
             if (TryFindSettings(out var settings) && settings.Automatic && TryTool(settings, settings.Debug, out var tool))
@@ -245,7 +247,17 @@ This may happen because the .Net Core Runtime is not installed on this machine.
 
         static string ProcessKey(string tool) => $"Entia_Generator:{tool}";
 
-        static bool TryFindSettings(out GeneratorSettings settings) => (settings = GeneratorSettings.Instance) != null;
+        static bool TryFindSettings(out GeneratorSettings settings)
+        {
+            if (_settings == null)
+            {
+                _settings = AssetDatabase.FindAssets($"t:{nameof(GeneratorSettings)}")
+                    .Select(AssetDatabase.GUIDToAssetPath)
+                    .Select(AssetDatabase.LoadAssetAtPath<GeneratorSettings>)
+                    .FirstOrDefault(current => current != null);
+            }
+            return (settings = _settings) != null;
+        }
 
         static GeneratorSettings FindOrCreateSettings()
         {
