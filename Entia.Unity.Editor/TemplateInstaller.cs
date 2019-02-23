@@ -53,6 +53,9 @@ namespace Systems
 {
 	public struct #SCRIPTNAME# : IRun
 	{
+		[Default]
+		static #SCRIPTNAME# Default => new #SCRIPTNAME# { };
+
 		void IRun.Run()
 		{
 
@@ -121,7 +124,7 @@ namespace Controllers
 	public sealed class #SCRIPTNAME# : ControllerReference
 	{
 		public override Node Node =>
-			Sequence(""#SCRIPTNAME#"",
+			Sequence(nameof(#SCRIPTNAME#)),
 				Nodes.Default
 				// Insert systems here using System<T>() where 'T' is your system type.
 			);

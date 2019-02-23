@@ -14,26 +14,26 @@ namespace Entia.Unity
         bool TryCreate(UnityEngine.Object value, out IComponent component);
         bool TryGet(Entity entity, World world, out IComponent component);
         bool Set(UnityEngine.Object value, Entity entity, World world);
-        bool Remove(Entity entity, World world);
+        bool Remove(UnityEngine.Object value, Entity entity, World world);
     }
 
     public static class ComponentDelegate
     {
-        static readonly TypeMap<UnityEngine.Object, IComponentDelegate> _modifiers = new TypeMap<UnityEngine.Object, IComponentDelegate>();
+        static readonly TypeMap<UnityEngine.Object, IComponentDelegate> _delegates = new TypeMap<UnityEngine.Object, IComponentDelegate>();
 
-        public static bool TryGet(Type type, out IComponentDelegate modifier)
+        public static bool TryGet(Type type, out IComponentDelegate @delegate)
         {
-            if (_modifiers.TryGet(type, out modifier)) return modifier != null;
-            try { modifier = Activator.CreateInstance(typeof(ComponentDelegate<>).MakeGenericType(type)) as IComponentDelegate; }
+            if (_delegates.TryGet(type, out @delegate)) return @delegate != null;
+            try { @delegate = Activator.CreateInstance(typeof(ComponentDelegate<>).MakeGenericType(type)) as IComponentDelegate; }
             catch { }
-            return (_modifiers[type] = modifier) != null;
+            return (_delegates[type] = @delegate) != null;
         }
 
         public static IComponentDelegate Get<T>() where T : UnityEngine.Object
         {
-            if (_modifiers.TryGet<T>(out var modifier)) return modifier;
-            _modifiers.Set<T>(modifier = new ComponentDelegate<T>());
-            return modifier;
+            if (_delegates.TryGet<T>(out var @delegate)) return @delegate;
+            _delegates.Set<T>(@delegate = new ComponentDelegate<T>());
+            return @delegate;
         }
     }
 
@@ -66,6 +66,8 @@ namespace Entia.Unity
         }
 
         public bool Set(UnityEngine.Object value, Entity entity, World world) => value is T casted && world.Components().Set(entity, new Unity<T> { Value = casted });
-        public bool Remove(Entity entity, World world) => world.Components().Remove<Unity<T>>(entity);
+        public bool Remove(UnityEngine.Object value, Entity entity, World world) =>
+            value is T casted && world.Components().TryUnity<T>(entity, out var component) &&
+            casted == component && world.Components().Remove<Unity<T>>(entity);
     }
 }

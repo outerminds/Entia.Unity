@@ -66,11 +66,13 @@ namespace Entia.Unity.Editor
                 {
                     if (world.Components().Has(first.Entity, first.Type))
                     {
-                        if (LayoutUtility.MinusButton()) world.Components().Remove(first.Entity, first.Type);
+                        if (LayoutUtility.MinusButton())
+                            foreach (var reference in references) reference.World?.Components().Remove(reference.Entity, reference.Type);
                     }
                     else
                     {
-                        if (LayoutUtility.PlusButton()) world.Components().Set(first.Entity, first.Raw);
+                        if (LayoutUtility.PlusButton())
+                            foreach (var reference in references) reference.World?.Components().Set(reference.Entity, reference.Raw);
                     }
                 }
             }
