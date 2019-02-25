@@ -32,6 +32,13 @@
       <param name="world">The world.</param>
       <returns>The module.</returns>
     </member>
+    <member name="M:Entia.Modules.WorldExtensions.Cloners(Entia.World)">
+      <summary>
+            Gets or create the <see cref="T:Entia.Modules.Cloners" /> module.
+            </summary>
+      <param name="world">The world.</param>
+      <returns>The module.</returns>
+    </member>
     <member name="M:Entia.Modules.WorldExtensions.Components(Entia.World)">
       <summary>
             Gets or create the <see cref="T:Entia.Modules.Components" /> module.
@@ -130,6 +137,10 @@
       <summary>Returns an enumerator that iterates through the collection.</summary>
       <returns>An enumerator that can be used to iterate through the collection.</returns>
     </member>
+    <member>
+      <summary>Returns an enumerator that iterates through the collection.</summary>
+      <returns>An enumerator that can be used to iterate through the collection.</returns>
+    </member>
     <member name="T:Entia.Modules.Components">
       <summary>
             Module that stores and manages components.
@@ -143,12 +154,10 @@
             The segments.
             </value>
     </member>
-    <member name="M:Entia.Modules.Components.#ctor(Entia.Modules.Entities,Entia.Modules.Messages)">
+    <member name="M:Entia.Modules.Components.#ctor(Entia.Modules.Entities,Entia.Modules.Messages,Entia.Modules.Cloners)">
       <summary>
             Initializes a new instance of the <see cref="T:Entia.Modules.Components" /> class.
             </summary>
-      <param name="entities"></param>
-      <param name="messages"></param>
     </member>
     <member name="M:Entia.Modules.Components.Default``1">
       <summary>
@@ -389,6 +398,14 @@
       <param name="pair">The segment and the index of the entity within it.</param>
       <returns>Returns <c>true</c> if the segment was found; otherwise, <c>false</c>.</returns>
     </member>
+    <member name="M:Entia.Modules.Components.Clone(Entia.Entity,Entia.Entity)">
+      <summary>
+            Clones all the components from the <paramref name="source" /> and sets them on the <paramref name="target" />.
+            </summary>
+      <param name="source">The source entity.</param>
+      <param name="target">The target entity.</param>
+      <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
+    </member>
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>
       <returns>An enumerator that can be used to iterate through the collection.</returns>
@@ -414,9 +431,14 @@
             </summary>
       <value>Returns <c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
     </member>
-    <member name="F:Entia.Modules.Component.Metadata.Type">
+    <member name="P:Entia.Modules.Component.Metadata.Type">
       <summary>
             The component type.
+            </summary>
+    </member>
+    <member name="F:Entia.Modules.Component.Metadata.Data">
+      <summary>
+            The component type data.
             </summary>
     </member>
     <member name="F:Entia.Modules.Component.Metadata.Index">
@@ -424,12 +446,7 @@
             The component index.
             </summary>
     </member>
-    <member name="F:Entia.Modules.Component.Metadata.IsPlain">
-      <summary>
-            Is <c>true</c> if the component type has recusively no references to managed types; otherwise, <c>false</c>.
-            </summary>
-    </member>
-    <member name="M:Entia.Modules.Component.Metadata.#ctor(System.Type,System.Int32)">
+    <member name="M:Entia.Modules.Component.Metadata.#ctor(Entia.Core.TypeData,System.Int32)">
       <summary>
             Initializes a new instance of the <see cref="T:Entia.Modules.Component.Metadata" /> struct.
             </summary>

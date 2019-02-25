@@ -279,7 +279,7 @@ namespace Entia.Unity.Editor
 
         public static object Fields(string label, object value, Type type, string[] path)
         {
-            var fields = TypeUtility.GetFields(value.GetType(), TypeUtility.PublicInstance);
+            var fields = value.GetType().InstanceFields().Where(field => field.IsPublic).ToArray();
 
             if (fields.Length == 0) EditorGUILayout.LabelField(label, value.ToString());
             else if (Foldout(label, type, path))
@@ -308,7 +308,7 @@ namespace Entia.Unity.Editor
                     using (Disable(list.IsFixedSize))
                     {
                         var count = EditorGUILayout.IntField("Size", list.Count);
-                        while (list.Count < count) list.Add(TypeUtility.GetDefault(element));
+                        while (list.Count < count) list.Add(DefaultUtility.Default(element));
                         while (list.Count > count && list.Count > 0) list.RemoveAt(list.Count - 1);
                     }
 

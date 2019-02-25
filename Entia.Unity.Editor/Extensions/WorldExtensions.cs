@@ -65,15 +65,18 @@ namespace Entia.Unity.Editor
 
         public static void ShowInjectable(this World world, string label, IInjectable injectable, params string[] path)
         {
+            Result<T> GetValue<T>(string name) => Result.Try(() =>
+                injectable.GetType().GetField(name, TypeUtility.Instance).GetValue(injectable)).Cast<T>();
+
             var type = injectable.GetType();
             if (injectable is AllEntities || injectable is AllEntities.Read) world.ShowEntities(label, world.Entities(), path);
             else if (injectable is AllComponents) world.ShowComponents(label, world.Entities(), path);
-            else if (injectable.Is(typeof(Resource<>), definition: true) || injectable.Is(typeof(Resource<>.Read), definition: true))
+            else if (TypeUtility.Is(injectable, typeof(Resource<>), definition: true) || TypeUtility.Is(injectable, typeof(Resource<>.Read), definition: true))
             {
                 var resource = type.GetGenericArguments()[0];
                 world.ShowResource(label, world.Resources().Get(resource), path);
             }
-            else if (injectable.Is(typeof(Components<>), definition: true) || injectable.Is(typeof(Components<>.Read), definition: true))
+            else if (TypeUtility.Is(injectable, typeof(Components<>), definition: true) || TypeUtility.Is(injectable, typeof(Components<>.Read), definition: true))
             {
                 var component = type.GetGenericArguments()[0];
                 var pairs = world.Entities()
@@ -81,13 +84,13 @@ namespace Entia.Unity.Editor
                     .Where(pair => pair.component != null);
                 world.ShowComponents(label, pairs, component, path);
             }
-            else if (injectable.Is(typeof(Injectables.Emitter<>), definition: true) && injectable.GetValue<IEmitter>("_emitter").TryValue(out var emitter))
+            else if (TypeUtility.Is(injectable, typeof(Injectables.Emitter<>), definition: true) && GetValue<IEmitter>("_emitter").TryValue(out var emitter))
                 world.ShowEmitter(label, emitter);
-            else if (injectable.Is(typeof(Injectables.Receiver<>), definition: true) && injectable.GetValue<IReceiver>("_receiver").TryValue(out var receiver))
+            else if (TypeUtility.Is(injectable, typeof(Injectables.Receiver<>), definition: true) && GetValue<IReceiver>("_receiver").TryValue(out var receiver))
                 world.ShowReceiver(label, receiver);
-            else if (injectable.Is(typeof(Injectables.Reaction<>), definition: true) && injectable.GetValue<IReaction>("_reaction").TryValue(out var reaction))
+            else if (TypeUtility.Is(injectable, typeof(Injectables.Reaction<>), definition: true) && GetValue<IReaction>("_reaction").TryValue(out var reaction))
                 world.ShowReaction(label, reaction);
-            else if (injectable.GetValue<IGroup>("_group").TryValue(out var group))
+            else if (GetValue<IGroup>("_group").TryValue(out var group))
                 world.ShowGroup(label, group, path);
             else LayoutUtility.Label(label);
         }
@@ -115,7 +118,7 @@ namespace Entia.Unity.Editor
                                 {
                                     var content = new GUIContent(string.Join("/", type.Path().SkipLast().Append(type.Format())));
                                     if (world.Components().Has(entity, type)) menu.AddDisabledItem(content, false);
-                                    else menu.AddItem(content, false, () => world.Components().Set(entity, TypeUtility.GetDefault(type) as IComponent));
+                                    else menu.AddItem(content, false, () => world.Components().Set(entity, type));
                                 }
                                 menu.ShowAsContext();
                             }
@@ -290,7 +293,7 @@ namespace Entia.Unity.Editor
                     case Entia.Nodes.System _ when controller.TryRunner(node, out var runner) && runner.Instance is ISystem system:
                         using (LayoutUtility.Box())
                         {
-                            var fields = TypeUtility.GetFields(system.GetType());
+                            var fields = system.GetType().InstanceFields();
                             var (enabled, expanded) = Label(system.GetType());
                             if (expanded)
                             {
