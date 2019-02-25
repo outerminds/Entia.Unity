@@ -193,31 +193,29 @@ namespace Entia.Unity
             if (conversions.TryGetValue(type, out var conversion)) return conversion;
             if (replacements.TryGetValue(type, out var replacement)) return conversions[type] = (true, Descend(replacement.type).type, replacement.from, replacement.to);
 
+            conversion = (false, FormatGenericPath(type), "", "");
             switch (type)
             {
                 case IArrayTypeSymbol array:
-                    {
-                        var element = Descend(array.ElementType);
-                        conversion = (element.changed, $"{element.type}[]", $"?.Select(item => item{element.from}).ToArray()", $"?.Select(item => item{element.to}).ToArray()");
-                        break;
-                    }
+                    var element = Descend(array.ElementType);
+                    if (element.changed)
+                        conversion = (element.changed, $"{element.type}[]",
+                            $"?.Map({{0}}, (item, state) => item{string.Format(element.from, "state")})",
+                            $"?.Map(item => item{element.to})");
+                    break;
                 case INamedTypeSymbol list when list.Implements(context.List):
-                    {
-                        var item = Descend(list.TypeArguments[0]);
-                        conversion = (item.changed, $"{FormatPath(list)}<{item.type}>", $"?.Select(item => item{item.from}).ToList()", $"?.Select(item => item{item.to}).ToList()");
-                        break;
-                    }
+                    var item = Descend(list.TypeArguments[0]);
+                    if (item.changed)
+                        conversion = (item.changed, $"{FormatPath(list)}<{item.type}>",
+                            $"?.Map({{0}}, (item, state) => item{string.Format(item.from, "state")})",
+                            $"?.Map(item => item{item.to})");
+                    break;
                 case INamedTypeSymbol nullable when nullable.Implements(context.Nullable):
-                    {
-                        var argument = nullable.TypeArguments[0];
-                        var underlying = Descend(argument);
-                        if (replacements.TryGetValue(argument, out var current) && current.type.IsReferenceType)
-                            conversion = (underlying.changed, $"{underlying.type}", $"?{underlying.from}", $"?{underlying.to}");
-                        else
-                            conversion = (underlying.changed, $"{FormatPath(nullable)}<{underlying.type}>", $"?{underlying.from}", $"?{underlying.to}");
-                        break;
-                    }
-                default: conversion = (false, FormatGenericPath(type), "", ""); break;
+                    var argument = nullable.TypeArguments[0];
+                    var underlying = Descend(argument);
+                    if (underlying.changed)
+                        conversion = (underlying.changed, $"{underlying.type}", $"?{underlying.from}", $"?{underlying.to}");
+                    break;
             }
 
             if (type is INamedTypeSymbol named &&
@@ -604,7 +602,8 @@ $@"namespace {@namespace}
         {
             var @namespace = string.Join(".", component.Path().SkipLast().Append(context.Suffix));
             return
-$@"using {nameof(Entia)}.{nameof(Unity)}.{nameof(Generation)};
+$@"using {nameof(Entia)}.{nameof(Core)};
+using {nameof(Entia)}.{nameof(Unity)}.{nameof(Generation)};
 
 namespace {@namespace}
 {{

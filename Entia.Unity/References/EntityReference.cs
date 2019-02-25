@@ -4,11 +4,7 @@ using Entia.Components;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Entia.Initializers;
-using Entia.Templaters;
-using Entia.Modules.Template;
 using System.Linq;
-using Entia.Instantiators;
 
 namespace Entia.Unity
 {
@@ -16,6 +12,9 @@ namespace Entia.Unity
     {
         World World { get; }
         Entity Entity { get; }
+
+        Entity Clone(World world);
+        Entity Copy(World world);
 
         void PreInitialize();
         void Initialize(World world);
@@ -39,62 +38,31 @@ namespace Entia.Unity
             Post = 1 << 2
         }
 
-        sealed class Initializer : Initializer<Entia.Entity>
-        {
-            public readonly int[] Components;
-            public readonly World World;
-
-            public Initializer(int[] components, World world)
-            {
-                Components = components;
-                World = world;
-            }
-
-            public override Result<Unit> Initialize(Entia.Entity instance, object[] instances)
-            {
-                var components = World.Components();
-                components.Clear(instance);
-
-                foreach (var component in Components)
-                {
-                    var result = Result.Cast<IComponent>(instances[component]);
-                    if (result.TryValue(out var value)) components.Set(instance, value);
-                    else return result;
-                }
-
-                return Result.Success();
-            }
-        }
-
-        sealed class Templater : Templater<EntityReference>
-        {
-            public override Result<IInitializer> Initializer(Unity.EntityReference value, Context context, World world)
-            {
-                var result = value.gameObject.GetComponents<UnityEngine.Component>()
-                    .OfType<IComponentReference>()
-                    .Select(reference => reference.Value)
-                    .Append(new Components.Debug { Name = value.name })
-                    .Select(component => world.Templaters().Template(component, context).Map(element => element.Reference))
-                    .All();
-                if (result.TryFailure(out var failure)) return failure;
-                if (result.TryValue(out var components)) return new Initializers.EntityReference(components, world);
-                return Result.Failure();
-            }
-
-            public override Result<IInstantiator> Instantiator(Unity.EntityReference value, Context context, World world) =>
-                new Instantiators.Factory<Entity>(() => world.Entities().Create());
-        }
-
-        [Templater]
-        static readonly Templater _templater = new Templater();
         static readonly List<IEntityReference> _entities = new List<IEntityReference>();
-        static readonly List<UnityEngine.Component> _components = new List<UnityEngine.Component>();
+        static readonly List<Component> _components = new List<Component>();
 
         public World World { get; private set; }
         public Entity Entity { get; private set; }
 
+        IComponentReference[] _cache;
         States _initialized;
         States _disposed;
+
+        public Entity Copy(World world)
+        {
+            _cache = _cache ?? GetComponents<IComponentReference>();
+            var entity = world.Entities().Create();
+            for (int i = 0; i < _cache.Length; i++) _cache[i].Copy(entity, world);
+            return entity;
+        }
+
+        public Entity Clone(World world)
+        {
+            _cache = _cache ?? GetComponents<IComponentReference>();
+            var entity = world.Entities().Create();
+            for (int i = 0; i < _cache.Length; i++) _cache[i].Clone(entity, world);
+            return entity;
+        }
 
         void OnEnable() => World?.Components().Remove<IsDisabled>(Entity);
         void OnDisable() => World?.Components().Set<IsDisabled>(Entity, default);

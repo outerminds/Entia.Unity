@@ -17,6 +17,8 @@ namespace Entia.Unity
 
         void Initialize(Entity entity, World world);
         void Dispose();
+        bool Copy(Entity entity, World world);
+        bool Clone(Entity entity, World world);
     }
 
     [RequireComponent(typeof(EntityReference))]
@@ -59,6 +61,14 @@ namespace Entia.Unity
 
         protected ComponentReference() { Raw = DefaultUtility.Default<T>(); }
 
+        public bool Copy(Entity entity, World world) => world.Components().Set(entity, Raw);
+
+        public bool Clone(Entity entity, World world)
+        {
+            if (TypeUtility.Cache<T>.Data.IsPlain) return Copy(entity, world);
+            return world.Cloners().Clone(Raw).TryValue(out var component) && world.Components().Set(entity, component);
+        }
+
         protected ref TMember Get<TMember>(Mapper<TMember> map, ref TMember member) => ref
             World is World world && world.Components().Has<T>(Entity) ?
             ref map(ref world.Components().Get<T>(Entity)) : ref member;
@@ -76,7 +86,7 @@ namespace Entia.Unity
 
         void Awake()
         {
-            if (GetComponent<IEntityReference>() is IEntityReference reference && reference.World is World world)
+            if (GetComponent<IEntityReference>() is IEntityReference reference && reference.Entity && reference.World is World world)
                 Initialize(reference.Entity, world);
         }
         void OnDestroy() => Dispose();
