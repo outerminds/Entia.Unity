@@ -145,7 +145,7 @@ namespace Entia.Unity
                 var components = World.Components();
 
                 if (UnityEngine.Debug.isDebugBuild) components.Set(Entity, new Components.Debug { Name = gameObject.name });
-                if (gameObject.activeInHierarchy) OnEnable();
+                if (enabled && gameObject.activeInHierarchy) OnEnable();
                 else OnDisable();
 
                 components.Set(Entity, new Components.Unity<UnityEngine.GameObject> { Value = gameObject });
