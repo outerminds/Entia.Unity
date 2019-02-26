@@ -1,3 +1,4 @@
+using Entia.Core;
 using Entia.Unity.Generation;
 
 namespace Entia.Components.Generated

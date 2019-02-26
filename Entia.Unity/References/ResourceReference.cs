@@ -25,7 +25,7 @@ namespace Entia.Unity
         protected delegate TMember From<TMember>(ref T resource, World world);
         protected delegate void To<TMember>(ref T resource, in TMember value, World world);
 
-        public World World { get; private set; }
+        World IResourceReference.World => _world;
 
         protected abstract T Raw { get; set; }
 
@@ -33,14 +33,14 @@ namespace Entia.Unity
         {
             get
             {
-                if (_initialized && !_disposed) return World.Resources().Get<T>();
+                if (_initialized && !_disposed) return _world.Resources().Get<T>();
                 return Raw;
             }
             set
             {
                 if (value is T casted)
                 {
-                    if (_initialized && !_disposed) World.Resources().Set(casted);
+                    if (_initialized && !_disposed) _world.Resources().Set(casted);
                     else Raw = casted;
                 }
             }
@@ -48,22 +48,23 @@ namespace Entia.Unity
         IResource IResourceReference.Raw { get => Raw; set => Raw = value is T resource ? resource : default; }
         Type IResourceReference.Type => typeof(T);
 
+        protected World _world;
         bool _initialized;
         bool _disposed;
 
         protected ResourceReference() { Raw = DefaultUtility.Default<T>(); }
 
         protected ref TMember Get<TMember>(Mapper<TMember> map, ref TMember member) => ref
-            World is World world && world.Resources().Has<T>() ?
+            _world is World world && world.Resources().Has<T>() ?
             ref map(ref world.Resources().Get<T>()) : ref member;
 
         protected TMember Get<TMember>(From<TMember> from, in TMember member) =>
-            World is World world && world.Resources().Has<T>() ?
+            _world is World world && world.Resources().Has<T>() ?
             from(ref world.Resources().Get<T>(), world) : member;
 
         protected void Set<TMember>(To<TMember> set, in TMember value, ref TMember member)
         {
-            if (World is World world && world.Resources().Has<T>())
+            if (_world is World world && world.Resources().Has<T>())
                 set(ref world.Resources().Get<T>(), value, world);
             else member = value;
         }
@@ -80,8 +81,8 @@ namespace Entia.Unity
         {
             if (_initialized.Change(true))
             {
-                World = world;
-                World.Resources().Set(Raw);
+                _world = world;
+                _world.Resources().Set(Raw);
             }
         }
 
@@ -89,8 +90,8 @@ namespace Entia.Unity
         {
             if (_initialized && _disposed.Change(true))
             {
-                World?.Resources().Remove<T>();
-                World = null;
+                _world?.Resources().Remove<T>();
+                _world = null;
             }
         }
 

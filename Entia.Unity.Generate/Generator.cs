@@ -363,7 +363,7 @@ $@"{indentation}{@new}public {type} {field.Name}
                 converted.Select(pair => $"{indentation}			{pair.field.Name} = this._{pair.field.Name}{string.Format(pair.conversion.to, "")}"));
             var setters = string.Join(
                 Environment.NewLine,
-                converted.Select(pair => $"{indentation}			this._{pair.field.Name} = value.{pair.field.Name}{string.Format(pair.conversion.from, "base.World")};"));
+                converted.Select(pair => $"{indentation}			this._{pair.field.Name} = value.{pair.field.Name}{string.Format(pair.conversion.from, "base._world")};"));
             var declaration = string.Join(
                 Environment.NewLine + Environment.NewLine,
                 declarations.Select(pair => string.Join(Environment.NewLine, pair.Value.declaration.Select(line => $"{indentation}	{line}"))));

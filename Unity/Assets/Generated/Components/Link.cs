@@ -1,3 +1,4 @@
+using Entia.Core;
 using Entia.Unity.Generation;
 
 namespace Components.Generated
@@ -46,10 +47,10 @@ namespace Components.Generated
 			};
 			set
 			{
-				this._HasComponent = value.HasComponent.FromEntia(base.World);
-				this._NoComponent = value.NoComponent.FromEntia(base.World);
-				this._HasUnity = value.HasUnity.FromEntia(base.World);
-				this._NoUnity = value.NoUnity.FromEntia(base.World);
+				this._HasComponent = value.HasComponent.FromEntia(base._world);
+				this._NoComponent = value.NoComponent.FromEntia(base._world);
+				this._HasUnity = value.HasUnity.FromEntia(base._world);
+				this._NoUnity = value.NoUnity.FromEntia(base._world);
 			}
 		}
 

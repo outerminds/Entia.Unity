@@ -1,3 +1,4 @@
+using Entia.Core;
 using Entia.Unity.Generation;
 
 namespace Components.Generated
@@ -8,12 +9,12 @@ namespace Components.Generated
 	public sealed partial class Component1 : global::Entia.Unity.ComponentReference<global::Components.Component1>
 	{
 		public ref global::System.Single X => ref base.Get((ref global::Components.Component1 data) => ref data.X, ref this._X);
-		new public global::Entia.Unity.EntityReference Entity
+		public global::Entia.Unity.EntityReference Entity
 		{
 			get => base.Get((ref global::Components.Component1 data, global::Entia.World world) => data.Entity.FromEntia(world), this._Entity);
 			set => base.Set((ref global::Components.Component1 data, in global::Entia.Unity.EntityReference state, global::Entia.World _) => data.Entity = state.ToEntia(), value, ref this._Entity);
 		}
-		new public global::Entia.Unity.EntityReference World
+		public global::Entia.Unity.EntityReference World
 		{
 			get => base.Get((ref global::Components.Component1 data, global::Entia.World world) => data.World.FromEntia(world), this._World);
 			set => base.Set((ref global::Components.Component1 data, in global::Entia.Unity.EntityReference state, global::Entia.World _) => data.World = state.ToEntia(), value, ref this._World);
@@ -51,8 +52,8 @@ namespace Components.Generated
 			set
 			{
 				this._X = value.X;
-				this._Entity = value.Entity.FromEntia(base.World);
-				this._World = value.World.FromEntia(base.World);
+				this._Entity = value.Entity.FromEntia(base._world);
+				this._World = value.World.FromEntia(base._world);
 				this._Component = value.Component;
 				this._Collider = value.Collider;
 				this._Reference1 = value.Reference1;
