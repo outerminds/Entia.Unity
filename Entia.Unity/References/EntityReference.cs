@@ -44,23 +44,26 @@ namespace Entia.Unity
         public World World { get; private set; }
         public Entity Entity { get; private set; }
 
-        IComponentReference[] _cache;
         States _initialized;
         States _disposed;
+        IComponentReference[] _references;
+        string _name;
 
         public Entity Copy(World world)
         {
-            _cache = _cache ?? GetComponents<IComponentReference>();
+            var pair = UnpackCache();
             var entity = world.Entities().Create();
-            for (int i = 0; i < _cache.Length; i++) _cache[i].Copy(entity, world);
+            if (UnityEngine.Debug.isDebugBuild) world.Components().Set(entity, new Components.Debug { Name = pair.name });
+            for (int i = 0; i < pair.references.Length; i++) pair.references[i].Copy(entity, world);
             return entity;
         }
 
         public Entity Clone(World world)
         {
-            _cache = _cache ?? GetComponents<IComponentReference>();
+            var pair = UnpackCache();
             var entity = world.Entities().Create();
-            for (int i = 0; i < _cache.Length; i++) _cache[i].Clone(entity, world);
+            if (UnityEngine.Debug.isDebugBuild) world.Components().Set(entity, new Components.Debug { Name = pair.name });
+            for (int i = 0; i < pair.references.Length; i++) pair.references[i].Clone(entity, world);
             return entity;
         }
 
@@ -112,7 +115,7 @@ namespace Entia.Unity
             {
                 var components = World.Components();
 
-                if (UnityEngine.Debug.isDebugBuild) components.Set(Entity, new Components.Debug { Name = gameObject.name });
+                if (UnityEngine.Debug.isDebugBuild) components.Set(Entity, new Components.Debug { Name = name });
                 if (enabled && gameObject.activeInHierarchy) OnEnable();
                 else OnDisable();
 
@@ -175,6 +178,10 @@ namespace Entia.Unity
         {
             if (_initialized == States.All) _disposed.Change(_disposed | States.Post);
         }
+
+        (string name, IComponentReference[] references) UnpackCache() => (
+            string.IsNullOrEmpty(_name) ? (_name = name) : _name,
+            _references ?? (_references = GetComponents<IComponentReference>()));
 
         void IEntityReference.PreInitialize() => PreInitialize();
         void IEntityReference.Initialize(World world) => Initialize(world, false);
