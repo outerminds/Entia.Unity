@@ -3,7 +3,6 @@ using Entia.Unity.Generation;
 
 namespace Components.Inner.Generated
 {
-	using System.Linq;
 
 	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Inner.Component7), Link = "Assets/Scripts/TestComponents.cs", Path = new string[] { "Components", "Inner", "Component7" })][global::UnityEngine.AddComponentMenu("Components/Inner/Components.Inner.Component7")]
 	public sealed partial class Component7 : global::Entia.Unity.ComponentReference<global::Components.Inner.Component7>

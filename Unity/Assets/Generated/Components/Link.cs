@@ -3,7 +3,6 @@ using Entia.Unity.Generation;
 
 namespace Components.Generated
 {
-	using System.Linq;
 
 	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Link), Link = "Assets/Scripts/TestComponents.cs", Path = new string[] { "Components", "Link" })][global::UnityEngine.AddComponentMenu("Components/Components.Link")]
 	public sealed partial class Link : global::Entia.Unity.ComponentReference<global::Components.Link>
@@ -47,10 +46,10 @@ namespace Components.Generated
 			};
 			set
 			{
-				this._HasComponent = value.HasComponent.FromEntia(base._world);
-				this._NoComponent = value.NoComponent.FromEntia(base._world);
-				this._HasUnity = value.HasUnity.FromEntia(base._world);
-				this._NoUnity = value.NoUnity.FromEntia(base._world);
+				this._HasComponent = value.HasComponent.FromEntia(base.World);
+				this._NoComponent = value.NoComponent.FromEntia(base.World);
+				this._HasUnity = value.HasUnity.FromEntia(base.World);
+				this._NoUnity = value.NoUnity.FromEntia(base.World);
 			}
 		}
 

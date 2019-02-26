@@ -14,7 +14,7 @@ namespace Entia.Unity.Editor
         static bool _details;
 
         public IWorldReference Reference => _reference ?? (_reference = Target.GetComponent<IWorldReference>());
-        public World World => Target?.Controller?.World ?? Reference?.World ?? _world ?? (_world = Reference?.Create());
+        public World World => Target?.World ?? Reference?.World ?? _world ?? (_world = Reference?.Create());
         public Node Node => _node ?? (_node = Target?.Node);
         public ControllerReference Target => target as ControllerReference;
 

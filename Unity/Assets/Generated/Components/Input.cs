@@ -3,7 +3,6 @@ using Entia.Unity.Generation;
 
 namespace Components.Generated
 {
-	using System.Linq;
 
 	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Input), Link = "Assets/Scripts/Example/Components.cs", Path = new string[] { "Components", "Input" })][global::UnityEngine.AddComponentMenu("Components/Components.Input")]
 	public sealed partial class Input : global::Entia.Unity.ComponentReference<global::Components.Input>

@@ -61,7 +61,7 @@ namespace Entia.Unity.Editor
         {
             var process = Birth(tool, settings, settings.Debug || log);
             var arguments = Arguments(tool, settings, true, changes).ToArray();
-            var buffer = new byte[8192];
+            var buffer = new byte[65536];
             var input = string.Join("|", arguments);
             var output = "";
             var timer = Stopwatch.StartNew();

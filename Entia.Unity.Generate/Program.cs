@@ -124,7 +124,7 @@ namespace Entia.Unity
 
         static void Run(StringBuilder logger, Options options, string[] arguments)
         {
-            var buffer = new byte[8192];
+            var buffer = new byte[65536];
             var response = "";
             var watcher = Watch(logger, options, arguments);
 

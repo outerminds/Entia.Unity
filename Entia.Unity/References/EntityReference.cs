@@ -41,10 +41,9 @@ namespace Entia.Unity
         static readonly List<IEntityReference> _entities = new List<IEntityReference>();
         static readonly List<Component> _components = new List<Component>();
 
+        public World World { get; private set; }
         public Entity Entity { get; private set; }
-        World IEntityReference.World => _world;
 
-        World _world;
         States _initialized;
         States _disposed;
         IComponentReference[] _references;
@@ -68,8 +67,8 @@ namespace Entia.Unity
             return entity;
         }
 
-        void OnEnable() => _world?.Components().Remove<IsDisabled>(Entity);
-        void OnDisable() => _world?.Components().Set<IsDisabled>(Entity, default);
+        void OnEnable() => World?.Components().Remove<IsDisabled>(Entity);
+        void OnDisable() => World?.Components().Set<IsDisabled>(Entity, default);
 
         void Awake()
         {
@@ -97,8 +96,8 @@ namespace Entia.Unity
         {
             if (_initialized.Change(_initialized | States.Current))
             {
-                _world = world;
-                Entity = _world.Entities().Create();
+                World = world;
+                Entity = World.Entities().Create();
                 EntityRegistry.Set(this);
 
                 if (propagate)
@@ -111,10 +110,10 @@ namespace Entia.Unity
 
         void PostInitialize()
         {
-            if (_world == null || Entity == Entity.Zero) return;
+            if (World == null || Entity == Entity.Zero) return;
             if (_initialized.Change(_initialized | States.Post))
             {
-                var components = _world.Components();
+                var components = World.Components();
 
                 if (UnityEngine.Debug.isDebugBuild) components.Set(Entity, new Components.Debug { Name = name });
                 if (enabled && gameObject.activeInHierarchy) OnEnable();
@@ -127,10 +126,10 @@ namespace Entia.Unity
                     switch (component)
                     {
                         case IEntityReference _: break;
-                        case IComponentReference reference: reference.Initialize(Entity, _world); break;
+                        case IComponentReference reference: reference.Initialize(Entity, World); break;
                         default:
                             if (ComponentDelegate.TryGet(component.GetType(), out var @delegate))
-                                @delegate.Set(component, Entity, _world);
+                                @delegate.Set(component, Entity, World);
                             break;
                     }
                 }
@@ -142,7 +141,7 @@ namespace Entia.Unity
         {
             if (_initialized == States.All && _disposed.Change(_disposed | States.Pre))
             {
-                var components = _world.Components();
+                var components = World.Components();
 
                 GetComponents(_components);
                 foreach (var component in _components)
@@ -153,7 +152,7 @@ namespace Entia.Unity
                         case IComponentReference reference: reference.Dispose(); break;
                         default:
                             if (ComponentDelegate.TryGet(component.GetType(), out var @delegate))
-                                @delegate.Remove(component, Entity, _world);
+                                @delegate.Remove(component, Entity, World);
                             break;
                     }
                 }
@@ -169,9 +168,9 @@ namespace Entia.Unity
             if (_initialized == States.All && _disposed.Change(_disposed | States.Current))
             {
                 EntityRegistry.Remove(this);
-                _world?.Entities().Destroy(Entity);
+                World?.Entities().Destroy(Entity);
                 Entity = Entity.Zero;
-                _world = null;
+                World = null;
             }
         }
 

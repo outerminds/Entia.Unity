@@ -3,7 +3,6 @@ using Entia.Unity.Generation;
 
 namespace Components.Generated
 {
-	using System.Linq;
 
 	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Physics), Link = "Assets/Scripts/Example/Components.cs", Path = new string[] { "Components", "Physics" })][global::UnityEngine.AddComponentMenu("Components/Components.Physics")]
 	public sealed partial class Physics : global::Entia.Unity.ComponentReference<global::Components.Physics>

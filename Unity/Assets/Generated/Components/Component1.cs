@@ -3,18 +3,17 @@ using Entia.Unity.Generation;
 
 namespace Components.Generated
 {
-	using System.Linq;
 
 	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Component1), Link = "Assets/Scripts/TestComponents.cs", Path = new string[] { "Components", "Component1" })][global::UnityEngine.AddComponentMenu("Components/Components.Component1")][global::UnityEngine.RequireComponent(typeof(global::UnityEngine.BoxCollider2D)), global::UnityEngine.RequireComponent(typeof(global::Components.Generated.IsFrozen)), global::UnityEngine.RequireComponent(typeof(global::Entia.Unity.EntityReference))]
 	public sealed partial class Component1 : global::Entia.Unity.ComponentReference<global::Components.Component1>
 	{
 		public ref global::System.Single X => ref base.Get((ref global::Components.Component1 data) => ref data.X, ref this._X);
-		public global::Entia.Unity.EntityReference Entity
+		new public global::Entia.Unity.EntityReference Entity
 		{
 			get => base.Get((ref global::Components.Component1 data, global::Entia.World world) => data.Entity.FromEntia(world), this._Entity);
 			set => base.Set((ref global::Components.Component1 data, in global::Entia.Unity.EntityReference state, global::Entia.World _) => data.Entity = state.ToEntia(), value, ref this._Entity);
 		}
-		public global::Entia.Unity.EntityReference World
+		new public global::Entia.Unity.EntityReference World
 		{
 			get => base.Get((ref global::Components.Component1 data, global::Entia.World world) => data.World.FromEntia(world), this._World);
 			set => base.Set((ref global::Components.Component1 data, in global::Entia.Unity.EntityReference state, global::Entia.World _) => data.World = state.ToEntia(), value, ref this._World);
@@ -52,8 +51,8 @@ namespace Components.Generated
 			set
 			{
 				this._X = value.X;
-				this._Entity = value.Entity.FromEntia(base._world);
-				this._World = value.World.FromEntia(base._world);
+				this._Entity = value.Entity.FromEntia(base.World);
+				this._World = value.World.FromEntia(base.World);
 				this._Component = value.Component;
 				this._Collider = value.Collider;
 				this._Reference1 = value.Reference1;

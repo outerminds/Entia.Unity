@@ -31,8 +31,8 @@ namespace Entia.Unity
         protected delegate TMember From<TMember>(ref T component, World world);
         protected delegate void To<TMember>(ref T component, in TMember value, World world);
 
-        World IComponentReference.World => _world;
-        Entity IComponentReference.Entity => _entity;
+        public World World { get; private set; }
+        public Entity Entity { get; private set; }
 
         protected abstract T Raw { get; set; }
 
@@ -40,14 +40,14 @@ namespace Entia.Unity
         {
             get
             {
-                if (_initialized && !_disposed && _world.Components().TryGet<T>(_entity, out var component)) return component;
+                if (_initialized && !_disposed && World.Components().TryGet<T>(Entity, out var component)) return component;
                 return Raw;
             }
             set
             {
                 if (value is T casted)
                 {
-                    if (_initialized && !_disposed && _world.Components().Has<T>(_entity)) _world.Components().Set(_entity, casted);
+                    if (_initialized && !_disposed && World.Components().Has<T>(Entity)) World.Components().Set(Entity, casted);
                     else Raw = casted;
                 }
             }
@@ -56,8 +56,6 @@ namespace Entia.Unity
         Type IComponentReference.Type => typeof(T);
         Metadata IComponentReference.Metadata => ComponentUtility.Concrete<T>.Data;
 
-        protected World _world;
-        protected Entity _entity;
         bool _initialized;
         bool _disposed;
 
@@ -72,17 +70,17 @@ namespace Entia.Unity
         }
 
         protected ref TMember Get<TMember>(Mapper<TMember> map, ref TMember member) => ref
-            _world is World world && world.Components().Has<T>(_entity) ?
-            ref map(ref world.Components().Get<T>(_entity)) : ref member;
+            World is World world && world.Components().Has<T>(Entity) ?
+            ref map(ref world.Components().Get<T>(Entity)) : ref member;
 
         protected TMember Get<TMember>(From<TMember> from, in TMember member) =>
-            _world is World world && world.Components().Has<T>(_entity) ?
-            from(ref world.Components().Get<T>(_entity), world) : member;
+            World is World world && world.Components().Has<T>(Entity) ?
+            from(ref world.Components().Get<T>(Entity), world) : member;
 
         protected void Set<TMember>(To<TMember> set, in TMember value, ref TMember member)
         {
-            if (_world is World world && world.Components().Has<T>(_entity))
-                set(ref world.Components().Get<T>(_entity), value, world);
+            if (World is World world && world.Components().Has<T>(Entity))
+                set(ref world.Components().Get<T>(Entity), value, world);
             else member = value;
         }
 
@@ -95,12 +93,12 @@ namespace Entia.Unity
 
         void Initialize(Entity entity, World world)
         {
-            if (entity == Entity.Zero || world == null) return;
+            if (entity == Entia.Entity.Zero || world == null) return;
             if (_initialized.Change(true))
             {
-                _world = world;
-                _entity = entity;
-                _world.Components().Set(_entity, Raw);
+                World = world;
+                Entity = entity;
+                World.Components().Set(Entity, Raw);
             }
         }
 
@@ -108,9 +106,9 @@ namespace Entia.Unity
         {
             if (_initialized && _disposed.Change(true))
             {
-                _world.Components().Remove<T>(_entity);
-                _entity = Entity.Zero;
-                _world = null;
+                World.Components().Remove<T>(Entity);
+                Entity = Entity.Zero;
+                World = null;
             }
         }
 

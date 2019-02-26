@@ -22,9 +22,9 @@ namespace Entia.Unity
     [RequireComponent(typeof(WorldReference))]
     public abstract class ControllerReference : MonoBehaviour, IControllerReference
     {
+        public World World => Controller?.World;
         public Controller Controller { get; private set; }
         public abstract Node Node { get; }
-        World IControllerReference.World => Controller?.World;
 
         bool _initialized;
         bool _disposed;

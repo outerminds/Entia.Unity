@@ -3,7 +3,6 @@ using Entia.Unity.Generation;
 
 namespace Entia.Components.Generated
 {
-	using System.Linq;
 
 	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Entia.Components.Debug), Link = "", Path = new string[] { "Entia", "Components", "Debug" })][global::UnityEngine.AddComponentMenu("Entia/Components/Entia.Components.Debug")]
 	public sealed partial class Debug : global::Entia.Unity.ComponentReference<global::Entia.Components.Debug>
