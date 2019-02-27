@@ -60,9 +60,9 @@ namespace Entia.Unity.Editor
         public static void Generate(string tool, GeneratorSettings settings, bool log, params string[] changes)
         {
             var process = Birth(tool, settings, settings.Debug || log);
-            var arguments = Arguments(tool, settings, true, changes).ToArray();
             var buffer = new byte[65536];
-            var input = string.Join("|", arguments);
+            // NOTE: add trailing ';' to prevent 'input' from being empty
+            var input = string.Join(";", changes) + ";";
             var output = "";
             var timer = Stopwatch.StartNew();
             var task = Task
@@ -93,13 +93,13 @@ namespace Entia.Unity.Editor
                 {
                     if (log) UnityEngine.Debug.Log(
 $@"Generation succeeded after '{timer.Elapsed}'.
--> Input: {string.Join(" ", arguments)}
+-> Input: {input}
 -> Output: {output}", settings);
                 })
                 .Except<TimeoutException>(exception => UnityEngine.Debug.LogError(
 $@"Generation timed out after '{timer.Elapsed}'.
 This may be happening because the 'Timeout' value of '{settings.Timeout}' is too low.
--> Input: {string.Join(" ", arguments)}
+-> Input: {input}
 -> Output: {exception}", settings))
                 .Except<ConnectionException>(exception => UnityEngine.Debug.LogError(
 $@"Failed to connect to generator process.
@@ -109,7 +109,7 @@ This may happen because the .Net Core Runtime is not installed on this machine.
 -> Restart Unity.", settings))
                 .Except(exception => UnityEngine.Debug.LogError(
 $@"Generation failed after '{timer.Elapsed}'.
--> Input: {string.Join(" ", arguments)}
+-> Input: {string.Join(" ", input)}
 -> Output: {exception}", settings));
 
             task.Wait();
@@ -198,7 +198,7 @@ This may happen because the .Net Core Runtime is not installed on this machine.
             return false;
         }
 
-        static IEnumerable<string> Arguments(string tool, GeneratorSettings settings, bool watch, params string[] changes)
+        static IEnumerable<string> Arguments(string tool, GeneratorSettings settings, bool watch)
         {
             yield return "--inputs";
             yield return string.Join(";", settings.Inputs.Select(input => input.Quote()));
@@ -212,12 +212,6 @@ This may happen because the .Net Core Runtime is not installed on this machine.
             yield return settings.Log.Quote();
             yield return "--timeout";
             yield return settings.Timeout.ToString();
-
-            if (changes.Length > 0)
-            {
-                yield return "--changes";
-                yield return string.Join(";", changes.Select(change => change.Quote()));
-            }
 
             if (watch)
             {

@@ -139,10 +139,8 @@ namespace Entia.Unity
                         var request = Encoding.UTF32.GetString(buffer, 0, count).Replace(@"""", "");
                         Console.WriteLine($"-> Request: {request}");
 
-                        arguments = request.Split('|');
-                        options = Options.Parse(arguments);
-
-                        if (options.Changes.Length == 0 || Change(options.Changes))
+                        var changes = request.Split(';', StringSplitOptions.RemoveEmptyEntries);
+                        if (changes.Length == 0 || Change(changes))
                         {
                             logger.Clear();
                             Console.WriteLine($"-> Generate...");
