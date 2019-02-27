@@ -284,7 +284,7 @@ Most of the time you will not have to worry about the generator, but it is usefu
 The generator uses [Roslyn][roslyn] to run before the Unity compiler does such that it does not depend on the compiled assembly. This prevents many typical and unpleasant generator bugs (example: _you delete a type and the Unity compiler can't run because some generated code depends on it and since the generator depends on a successful compilation, it can't run either, forcing you to manually modify generated code_).
 
 - The generator is smart enough to detect most renaming scenarios and renames the _.meta_ files associated with the generated `MonoBehaviour` wrappers such that your links will not be lost.
-  - Renaming a type through refactor is always detected.
+  - Renaming a type through refactor is detected as long as all modified files are saved.
   - Renaming a file is detected.
   - Renaming or changing the `namespace` of a type is detected as long as the file is not renamed at the same time.
 - The generator exists only in the Unity editor and will never encumber your builds.
