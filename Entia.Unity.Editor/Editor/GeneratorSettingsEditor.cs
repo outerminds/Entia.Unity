@@ -28,7 +28,7 @@ namespace Entia.Unity.Editor
             {
                 EditorGUILayout.HelpBox(
 $@"Generator process:
--> Id: {process.Id}
+-> Idendifier: {process.Id}
 -> Name: {process.ProcessName}
 -> Start time: {process.StartTime}
 -> Process time: {process.TotalProcessorTime}",
