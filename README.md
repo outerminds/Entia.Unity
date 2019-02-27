@@ -44,10 +44,6 @@ ___
 - [Download][releases] the most recent stable version of **Entia.Unity**.
 - Extract the _'Entia.Unity.zip'_ package in a _'Plugins'_ folder in your Unity project (ex: _'Project/Assets/Plugins/Entia/'_).
 - Ensure that you have a _[.Net Core Runtime][net-core]_ with version 2.0+ (required for the code generator to work).
-- Optionally install the Unity templates by clicking on the _'Entia/Install/Templates'_ menu (requires the Unity editor to be running in administrator mode).
-  - Templates provide an easy way to create **Entia** elements through the _'Assets/Create/Entia'_ menu.
-
-    ![][tutorial/templates]
 - Optionally install the packaged Visual Studio 2017 extension _'Entia.Analyze.vsix'_ to get [**Entia**][entia] specific code analysis.
 ___
 
