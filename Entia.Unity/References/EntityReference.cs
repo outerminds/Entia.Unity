@@ -103,7 +103,7 @@ namespace Entia.Unity
                 if (propagate)
                 {
                     GetComponentsInChildren(_entities);
-                    foreach (var entity in _entities) entity.Initialize(world);
+                    foreach (var entity in _entities) entity.Initialize(world, false);
                 }
             }
         }

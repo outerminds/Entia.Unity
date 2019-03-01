@@ -62,7 +62,7 @@ namespace Entia.Unity
 
                 var entities = roots.SelectMany(root => root.GetComponentsInChildren<IEntityReference>()).ToArray();
                 foreach (var entity in entities) entity.PreInitialize();
-                foreach (var entity in entities) entity.Initialize(World);
+                foreach (var entity in entities) entity.Initialize(World, false);
                 foreach (var entity in entities) entity.PostInitialize();
 
                 WorldRegistry.Set(_scene, this);
