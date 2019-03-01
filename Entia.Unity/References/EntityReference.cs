@@ -17,7 +17,7 @@ namespace Entia.Unity
         Entity Copy(World world);
 
         void PreInitialize();
-        void Initialize(World world);
+        void Initialize(World world, bool propagate = true);
         void PostInitialize();
 
         void PreDispose();
@@ -92,7 +92,7 @@ namespace Entia.Unity
             _initialized.Change(_initialized | States.Pre);
         }
 
-        void Initialize(World world, bool propagate)
+        void Initialize(World world, bool propagate = true)
         {
             if (_initialized.Change(_initialized | States.Current))
             {
@@ -176,7 +176,11 @@ namespace Entia.Unity
 
         void PostDispose()
         {
-            if (_initialized == States.All) _disposed.Change(_disposed | States.Post);
+            if (_initialized == States.All && _disposed.Change(_disposed | States.Post))
+            {
+                _initialized = States.None;
+                _disposed = States.None;
+            }
         }
 
         (string name, IComponentReference[] references) UnpackCache() => (
@@ -184,7 +188,7 @@ namespace Entia.Unity
             _references ?? (_references = GetComponents<IComponentReference>()));
 
         void IEntityReference.PreInitialize() => PreInitialize();
-        void IEntityReference.Initialize(World world) => Initialize(world, false);
+        void IEntityReference.Initialize(World world, bool propagate) => Initialize(world, propagate);
         void IEntityReference.PostInitialize() => PostInitialize();
         void IEntityReference.PreDispose() => PreDispose();
         void IEntityReference.Dispose() => Dispose();

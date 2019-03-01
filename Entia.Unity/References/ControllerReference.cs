@@ -73,6 +73,8 @@ namespace Entia.Unity
             {
                 Controller?.Run<React.Dispose>();
                 Controller?.Run<Dispose>();
+                _initialized = false;
+                _disposed = false;
             }
         }
 

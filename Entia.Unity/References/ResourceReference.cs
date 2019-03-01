@@ -91,6 +91,8 @@ namespace Entia.Unity
             {
                 World?.Resources().Remove<T>();
                 World = null;
+                _initialized = false;
+                _disposed = false;
             }
         }
 

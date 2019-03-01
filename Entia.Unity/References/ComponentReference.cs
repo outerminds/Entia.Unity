@@ -109,6 +109,8 @@ namespace Entia.Unity
                 World.Components().Remove<T>(Entity);
                 Entity = Entity.Zero;
                 World = null;
+                _initialized = false;
+                _disposed = false;
             }
         }
 

@@ -90,6 +90,8 @@ namespace Entia.Unity
                 SceneManager.sceneUnloaded -= Unload;
                 Application.quitting -= Dispose;
                 World = null;
+                _initialized = false;
+                _disposed = false;
             }
         }
 
