@@ -15,5 +15,8 @@
       <param name="world">The world.</param>
       <returns>The module.</returns>
     </member>
+    <member name="M:Entia.Injectables.Cloner.Clone(Entia.Entity,Entia.Entity,Entia.Modules.Depth)">
+      <inheritdoc cref="M:Entia.Modules.Components.Clone(Entia.Entity,Entia.Entity,Entia.Modules.Depth)" />
+    </member>
   </members>
 </doc>
