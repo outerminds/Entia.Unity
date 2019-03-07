@@ -36,7 +36,7 @@ namespace Components.Generated
 		global::Components.Generated.IsFrozen _Reference1;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Reference2))] [global::Entia.Unity.RequireAttribute()]
 		global::Entia.Unity.EntityReference _Reference2;
-		protected override global::Components.Component1 Raw
+		public override global::Components.Component1 Raw
 		{
 			get => new global::Components.Component1
 			{

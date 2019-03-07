@@ -8,7 +8,7 @@ namespace Resources.Inner.Generated
 	{
 
 
-		protected override global::Resources.Inner.Resource2 Raw
+		public override global::Resources.Inner.Resource2 Raw
 		{
 			get => new global::Resources.Inner.Resource2
 			{

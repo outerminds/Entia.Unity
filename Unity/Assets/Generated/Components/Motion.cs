@@ -16,7 +16,7 @@ namespace Components.Generated
 		global::System.Single _MaximumSpeed;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(JumpForce))]
 		global::System.Single _JumpForce;
-		protected override global::Components.Motion Raw
+		public override global::Components.Motion Raw
 		{
 			get => new global::Components.Motion
 			{

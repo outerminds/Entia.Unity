@@ -12,7 +12,7 @@ namespace Entia.Resources.Generated
 		global::System.Single _Delta;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Current))] [global::Entia.Unity.DisableAttribute()]
 		global::System.Single _Current;
-		protected override global::Entia.Resources.Time Raw
+		public override global::Entia.Resources.Time Raw
 		{
 			get => new global::Entia.Resources.Time
 			{

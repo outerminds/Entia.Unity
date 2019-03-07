@@ -407,7 +407,7 @@ $@"{proxy}
 {indentation}{{
 {properties}
 {members}
-{indentation}	protected override {fullName} Raw
+{indentation}	public override {fullName} Raw
 {indentation}	{{
 {indentation}		get => new {fullName}
 {indentation}		{{

@@ -10,7 +10,7 @@ namespace Entia.Components.Generated
 		public ref global::System.String Name => ref base.Get((ref global::Entia.Components.Debug data) => ref data.Name, ref this._Name);
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Name))]
 		global::System.String _Name;
-		protected override global::Entia.Components.Debug Raw
+		public override global::Entia.Components.Debug Raw
 		{
 			get => new global::Entia.Components.Debug
 			{

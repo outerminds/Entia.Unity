@@ -391,56 +391,33 @@
       <param name="pair">The segment and the index of the entity within it.</param>
       <returns>Returns <c>true</c> if the segment was found; otherwise, <c>false</c>.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.Copy``1(Entia.Entity,Entia.Entity)">
-      <summary>
-            Copies components of type <typeparamref name="T" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
-            </summary>
-      <typeparam name="T">The component type.</typeparam>
-      <param name="source">The source entity.</param>
-      <param name="target">The target entity.</param>
-      <returns>Returns <c>true</c> if the copy was successful; otherwise, <c>false</c>.</returns>
-    </member>
-    <member name="M:Entia.Modules.Components.Copy(Entia.Entity,Entia.Entity,System.Type)">
-      <summary>
-            Copies components of provided <paramref name="type" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
-            </summary>
-      <param name="source">The source entity.</param>
-      <param name="target">The target entity.</param>
-      <param name="type">The component type.</param>
-      <returns>Returns <c>true</c> if the copy was successful; otherwise, <c>false</c>.</returns>
-    </member>
-    <member name="M:Entia.Modules.Components.Copy(Entia.Entity,Entia.Entity)">
-      <summary>
-            Copies all the components from the <paramref name="source" /> and sets them on the <paramref name="target" />.
-            </summary>
-      <param name="source">The source entity.</param>
-      <param name="target">The target entity.</param>
-      <returns>Returns <c>true</c> if the copy was successful; otherwise, <c>false</c>.</returns>
-    </member>
-    <member name="M:Entia.Modules.Components.Clone``1(Entia.Entity,Entia.Entity)">
+    <member name="M:Entia.Modules.Components.Clone``1(Entia.Entity,Entia.Entity,Entia.Modules.Depth)">
       <summary>
             Clones components of type <typeparamref name="T" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
             </summary>
       <typeparam name="T">The component type.</typeparam>
       <param name="source">The source entity.</param>
       <param name="target">The target entity.</param>
+      <param name="depth">The depth of the clone.</param>
       <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.Clone(Entia.Entity,Entia.Entity,System.Type)">
+    <member name="M:Entia.Modules.Components.Clone(Entia.Entity,Entia.Entity,System.Type,Entia.Modules.Depth)">
       <summary>
             Clones components of provided <paramref name="type" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
             </summary>
       <param name="source">The source entity.</param>
       <param name="target">The target entity.</param>
       <param name="type">The component type.</param>
+      <param name="depth">The depth of the clone.</param>
       <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.Clone(Entia.Entity,Entia.Entity)">
+    <member name="M:Entia.Modules.Components.Clone(Entia.Entity,Entia.Entity,Entia.Modules.Depth)">
       <summary>
             Clones all the components from the <paramref name="source" /> and sets them on the <paramref name="target" />.
             </summary>
       <param name="source">The source entity.</param>
       <param name="target">The target entity.</param>
+      <param name="depth">The depth of the clone.</param>
       <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
     </member>
     <member name="M:Entia.Modules.Components.Trim(Entia.Entity,Entia.Entity)">
@@ -1606,33 +1583,11 @@
     </member>
     <member>
       <summary>
-            Copies components of type <typeparamref name="T" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
-            </summary>
-      <typeparam name="T">The component type.</typeparam>
-      <param name="target">The target entity.</param>
-      <returns>Returns <c>true</c> if the copy was successful; otherwise, <c>false</c>.</returns>
-    </member>
-    <member>
-      <summary>
-            Copies components of provided <paramref name="type" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
-            </summary>
-      <param name="target">The target entity.</param>
-      <param name="type">The component type.</param>
-      <returns>Returns <c>true</c> if the copy was successful; otherwise, <c>false</c>.</returns>
-    </member>
-    <member>
-      <summary>
-            Copies all the components from the <paramref name="source" /> and sets them on the <paramref name="target" />.
-            </summary>
-      <param name="target">The target entity.</param>
-      <returns>Returns <c>true</c> if the copy was successful; otherwise, <c>false</c>.</returns>
-    </member>
-    <member>
-      <summary>
             Clones components of type <typeparamref name="T" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
             </summary>
       <typeparam name="T">The component type.</typeparam>
       <param name="target">The target entity.</param>
+      <param name="depth">The depth of the clone.</param>
       <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
     </member>
     <member>
@@ -1641,6 +1596,7 @@
             </summary>
       <param name="target">The target entity.</param>
       <param name="type">The component type.</param>
+      <param name="depth">The depth of the clone.</param>
       <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
     </member>
     <member>
@@ -1648,6 +1604,7 @@
             Clones all the components from the <paramref name="source" /> and sets them on the <paramref name="target" />.
             </summary>
       <param name="target">The target entity.</param>
+      <param name="depth">The depth of the clone.</param>
       <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
     </member>
     <member>
@@ -1870,18 +1827,11 @@
     </member>
     <member>
       <summary>
-            Copies components of type <typeparamref name="T" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
-            </summary>
-      <typeparam name="T">The component type.</typeparam>
-      <param name="target">The target entity.</param>
-      <returns>Returns <c>true</c> if the copy was successful; otherwise, <c>false</c>.</returns>
-    </member>
-    <member>
-      <summary>
             Clones components of type <typeparamref name="T" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
             </summary>
       <typeparam name="T">The component type.</typeparam>
       <param name="target">The target entity.</param>
+      <param name="depth">The depth of the clone.</param>
       <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
     </member>
     <member>

@@ -9,7 +9,7 @@ namespace Entia.Components.Generated
 	{
 
 
-		protected override global::Entia.Components.IsDisabled Raw
+		public override global::Entia.Components.IsDisabled Raw
 		{
 			get => new global::Entia.Components.IsDisabled
 			{

@@ -13,7 +13,7 @@ namespace Components.Generated
 		global::System.Single _Direction;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Jump))] [global::Entia.Unity.DisableAttribute()]
 		global::System.Boolean _Jump;
-		protected override global::Components.Input Raw
+		public override global::Components.Input Raw
 		{
 			get => new global::Components.Input
 			{

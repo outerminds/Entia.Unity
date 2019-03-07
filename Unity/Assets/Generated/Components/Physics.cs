@@ -16,7 +16,7 @@ namespace Components.Generated
 		global::System.Single _Drag;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Gravity))]
 		global::System.Single _Gravity;
-		protected override global::Components.Physics Raw
+		public override global::Components.Physics Raw
 		{
 			get => new global::Components.Physics
 			{

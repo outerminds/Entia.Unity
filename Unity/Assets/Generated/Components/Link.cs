@@ -35,7 +35,7 @@ namespace Components.Generated
 		global::Entia.Unity.EntityReference _HasUnity;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(NoUnity))] [global::Entia.Queryables.NoneAttribute(new global::System.Type[] { typeof(Entia.Components.Unity<>) })]
 		global::Entia.Unity.EntityReference _NoUnity;
-		protected override global::Components.Link Raw
+		public override global::Components.Link Raw
 		{
 			get => new global::Components.Link
 			{

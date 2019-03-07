@@ -13,7 +13,7 @@ namespace Components.Generated
 		global::System.Single _X;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Y))]
 		global::System.Single _Y;
-		protected override global::Components.Velocity Raw
+		public override global::Components.Velocity Raw
 		{
 			get => new global::Components.Velocity
 			{

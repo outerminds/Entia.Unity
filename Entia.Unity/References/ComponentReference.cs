@@ -1,4 +1,5 @@
 ﻿using Entia.Core;
+using Entia.Delegables;
 using Entia.Modules;
 using Entia.Modules.Component;
 using System;
@@ -17,15 +18,13 @@ namespace Entia.Unity
 
         void Initialize(Entity entity, World world);
         void Dispose();
-        bool Copy(Entity entity, World world);
-        bool Clone(Entity entity, World world);
     }
 
     [RequireComponent(typeof(EntityReference))]
     public abstract class ComponentReference : MonoBehaviour { }
 
     [DisallowMultipleComponent]
-    public abstract class ComponentReference<T> : ComponentReference, IComponentReference where T : struct, IComponent
+    public abstract class ComponentReference<T> : ComponentReference, IComponentReference, IDelegable<Delegates.Reference<T>> where T : struct, IComponent
     {
         protected delegate ref TMember Mapper<TMember>(ref T component);
         protected delegate TMember From<TMember>(ref T component, World world);
@@ -34,7 +33,7 @@ namespace Entia.Unity
         public World World { get; private set; }
         public Entity Entity { get; private set; }
 
-        protected abstract T Raw { get; set; }
+        public abstract T Raw { get; set; }
 
         IComponent IComponentReference.Value
         {
@@ -60,14 +59,6 @@ namespace Entia.Unity
         bool _disposed;
 
         protected ComponentReference() { Raw = DefaultUtility.Default<T>(); }
-
-        public bool Copy(Entity entity, World world) => world.Components().Set(entity, Raw);
-
-        public bool Clone(Entity entity, World world)
-        {
-            if (TypeUtility.Cache<T>.Data.IsPlain) return Copy(entity, world);
-            return world.Cloners().Clone(Raw).TryValue(out var component) && world.Components().Set(entity, component);
-        }
 
         protected ref TMember Get<TMember>(Mapper<TMember> map, ref TMember member) => ref
             World is World world && world.Components().Has<T>(Entity) ?

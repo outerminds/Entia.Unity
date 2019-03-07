@@ -9,7 +9,7 @@ namespace Components.Generated
 	{
 
 
-		protected override global::Components.Ambiguous Raw
+		public override global::Components.Ambiguous Raw
 		{
 			get => new global::Components.Ambiguous
 			{

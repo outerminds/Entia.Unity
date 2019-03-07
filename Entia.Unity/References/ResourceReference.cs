@@ -27,7 +27,7 @@ namespace Entia.Unity
 
         public World World { get; private set; }
 
-        protected abstract T Raw { get; set; }
+        public abstract T Raw { get; set; }
 
         IResource IResourceReference.Value
         {

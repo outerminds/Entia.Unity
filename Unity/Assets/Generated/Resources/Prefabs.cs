@@ -9,7 +9,7 @@ namespace Resources.Generated
 		public ref global::Entia.Unity.EntityReference Prefab => ref base.Get((ref global::Resources.Prefabs data) => ref data.Prefab, ref this._Prefab);
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Prefab))]
 		global::Entia.Unity.EntityReference _Prefab;
-		protected override global::Resources.Prefabs Raw
+		public override global::Resources.Prefabs Raw
 		{
 			get => new global::Resources.Prefabs
 			{

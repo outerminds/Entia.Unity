@@ -43,7 +43,7 @@ namespace Components.Inner.Generated
 		global::System.Double _J;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(K))]
 		global::System.Double _K;
-		protected override global::Components.Inner.Component3 Raw
+		public override global::Components.Inner.Component3 Raw
 		{
 			get => new global::Components.Inner.Component3
 			{
