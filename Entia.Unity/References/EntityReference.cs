@@ -45,9 +45,11 @@ namespace Entia.Unity
 
         public World World { get; private set; }
         public Entity Entity { get; private set; }
+        public string Name => _name ?? (_name = name);
 
         States _initialized;
         States _disposed;
+        string _name;
 
         void OnEnable() => World?.Components().Remove<IsDisabled>(Entity);
         void OnDisable() => World?.Components().Set<IsDisabled>(Entity, default);
@@ -101,7 +103,7 @@ namespace Entia.Unity
                 var components = World.Components();
                 var delegates = World.Delegates();
 
-                if (UnityEngine.Debug.isDebugBuild) components.Set(Entity, new Components.Debug { Name = name });
+                if (UnityEngine.Debug.isDebugBuild) components.Set(Entity, new Components.Debug { Name = Name });
                 if (enabled && gameObject.activeInHierarchy) OnEnable();
                 else OnDisable();
 

@@ -14,4 +14,11 @@ namespace Entia.Components
     {
         public T Value;
     }
+
+    [Plain]
+    public struct Link : IComponent
+    {
+        public EntityReference Reference;
+        public GameObject Instance;
+    }
 }

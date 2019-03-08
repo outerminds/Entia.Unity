@@ -50,9 +50,9 @@ namespace Entia.Injectables
         /// <inheritdoc cref="Modules.Components.Clone(Entity, Entity, Depth)"/>
         public bool Clone(Entity source, Entity target, Depth depth = Depth.Shallow) => _components.Clone(source, target, depth);
 
-        public bool Clone(GameObject source, Entity target, Depth depth = Depth.Shallow)
+        public bool Clone(EntityReference source, Entity target, Depth depth = Depth.Shallow, bool link = true)
         {
-            if (UnityEngine.Debug.isDebugBuild) _components.Set(target, new Components.Debug { Name = source.name });
+            if (Debug.isDebugBuild) _components.Set(target, new Components.Debug { Name = source.Name });
 
             var cloned = false;
             using (var list = _references.Use())
@@ -60,17 +60,16 @@ namespace Entia.Injectables
                 source.GetComponents(list.Instance);
                 foreach (var component in list.Instance) cloned |= _delegates.Get(component.GetType()).Clone(component, target, depth, _world);
             }
+
+            if (link) _components.Set(target, new Components.Link { Reference = source });
             return cloned;
         }
 
-        public Entity Clone(GameObject source, Depth depth = Depth.Shallow)
+        public Entity Clone(EntityReference source, Depth depth = Depth.Shallow, bool link = true)
         {
             var target = _entities.Create();
-            Clone(source, target, depth);
+            Clone(source, target, depth, link);
             return target;
         }
-
-        public bool Clone(EntityReference source, Entity target, Depth depth = Depth.Shallow) => Clone(source.gameObject, target, depth);
-        public Entity Clone(EntityReference source, Depth depth = Depth.Shallow) => Clone(source.gameObject, depth);
     }
 }
