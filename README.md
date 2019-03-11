@@ -13,6 +13,7 @@
 [wiki/resource]:https://github.com/outerminds/Entia/wiki/Resource
 [wiki/node]:https://github.com/outerminds/Entia/wiki/Node
 [wiki/queryable]:https://github.com/outerminds/Entia/wiki/Queryable
+[sample/ateroimania]:https://github.com/Magicolo/Entia.Unity.Sample.Asteroimania
 [tutorial/plugins]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/Plugins.PNG
 [tutorial/templates]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/Templates.png
 [tutorial/unity-profiler]:https://github.com/outerminds/Entia.Unity/blob/master/Resources/UnityProfiler.png
@@ -38,6 +39,8 @@ ___
 - [Integration](#integration)
 - [Generator](#generator)
 - [Wiki][wiki]
+- Samples
+  - [Asteroimania][sample/ateroimania]
 ___
 
 # Installation
