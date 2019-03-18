@@ -22,14 +22,14 @@ namespace Entia.Modules
                 }
                 return new Default();
             });
-        public IDelegate Get(Type type) => _delegates.TryGet(type, out var @delegate) ? @delegate : Default(type);
-        public IDelegate Get<T>() where T : UnityEngine.Object => _delegates.TryGet<T>(out var @delegate) ? @delegate : Default(typeof(T));
-        public bool Has<T>() where T : UnityEngine.Object => _delegates.Has<T>(true);
-        public bool Has(Type type) => _delegates.Has(type, true);
+        public IDelegate Get(Type type) => _delegates.TryGet(type, out var @delegate, true, false) ? @delegate : Default(type);
+        public IDelegate Get<T>() where T : UnityEngine.Object => _delegates.TryGet<T>(out var @delegate, true, false) ? @delegate : Default(typeof(T));
+        public bool Has<T>() where T : UnityEngine.Object => _delegates.Has<T>(true, false);
+        public bool Has(Type type) => _delegates.Has(type, true, false);
         public bool Set<T>(Delegate<T> @delegate) where T : UnityEngine.Object => _delegates.Set<T>(@delegate);
         public bool Set(Type type, IDelegate @delegate) => _delegates.Set(type, @delegate);
-        public bool Remove<T>() where T : UnityEngine.Object => _delegates.Remove<T>();
-        public bool Remove(Type type) => _delegates.Remove(type);
+        public bool Remove<T>() where T : UnityEngine.Object => _delegates.Remove<T>(false, false);
+        public bool Remove(Type type) => _delegates.Remove(type, false, false);
         public bool Clear() => _defaults.Clear() | _delegates.Clear();
 
         /// <inheritdoc cref="IEnumerable{T}.GetEnumerator"/>

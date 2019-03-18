@@ -59,7 +59,7 @@ namespace Entia.Runners
         {
             if (Child.Specialize<T>(controller).TryValue(out var child))
             {
-                if (Map.TryGet<T>(out var pair))
+                if (Map.TryGet<T>(out var pair, false, false))
                 {
                     var (sampler, recorder) = pair;
                     var messages = controller.World.Messages();

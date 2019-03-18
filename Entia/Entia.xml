@@ -32,13 +32,6 @@
       <param name="world">The world.</param>
       <returns>The module.</returns>
     </member>
-    <member name="M:Entia.Modules.WorldExtensions.Cloners(Entia.World)">
-      <summary>
-            Gets or create the <see cref="T:Entia.Modules.Cloners" /> module.
-            </summary>
-      <param name="world">The world.</param>
-      <returns>The module.</returns>
-    </member>
     <member name="M:Entia.Modules.WorldExtensions.Components(Entia.World)">
       <summary>
             Gets or create the <see cref="T:Entia.Modules.Components" /> module.
@@ -116,6 +109,13 @@
       <param name="world">The world.</param>
       <returns>The module.</returns>
     </member>
+    <member name="M:Entia.Modules.WorldExtensions.Templaters(Entia.World)">
+      <summary>
+            Gets or create the <see cref="T:Entia.Modules.Templaters" /> module.
+            </summary>
+      <param name="world">The world.</param>
+      <returns>The module.</returns>
+    </member>
     <member name="T:Entia.Modules.Build.IBuildable">
       <summary>
             Tag interface that all buildables must implement.
@@ -125,10 +125,6 @@
       <summary>
             Tag interface that links a buildable to its builder implementation.
             </summary>
-    </member>
-    <member>
-      <summary>Returns an enumerator that iterates through the collection.</summary>
-      <returns>An enumerator that can be used to iterate through the collection.</returns>
     </member>
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>
@@ -147,7 +143,7 @@
             The segments.
             </value>
     </member>
-    <member name="M:Entia.Modules.Components.#ctor(Entia.Modules.Entities,Entia.Modules.Messages,Entia.Modules.Cloners)">
+    <member name="M:Entia.Modules.Components.#ctor(Entia.Modules.Entities,Entia.Modules.Messages)">
       <summary>
             Initializes a new instance of the <see cref="T:Entia.Modules.Components" /> class.
             </summary>
@@ -391,33 +387,30 @@
       <param name="pair">The segment and the index of the entity within it.</param>
       <returns>Returns <c>true</c> if the segment was found; otherwise, <c>false</c>.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.Clone``1(Entia.Entity,Entia.Entity,Entia.Modules.Depth)">
+    <member name="M:Entia.Modules.Components.Copy``1(Entia.Entity,Entia.Entity)">
       <summary>
-            Clones components of type <typeparamref name="T" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
+            Copies components of type <typeparamref name="T" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
             </summary>
       <typeparam name="T">The component type.</typeparam>
       <param name="source">The source entity.</param>
       <param name="target">The target entity.</param>
-      <param name="depth">The depth of the clone.</param>
       <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.Clone(Entia.Entity,Entia.Entity,System.Type,Entia.Modules.Depth)">
+    <member name="M:Entia.Modules.Components.Copy(Entia.Entity,Entia.Entity,System.Type)">
       <summary>
-            Clones components of provided <paramref name="type" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
+            Copies components of provided <paramref name="type" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
             </summary>
       <param name="source">The source entity.</param>
       <param name="target">The target entity.</param>
       <param name="type">The component type.</param>
-      <param name="depth">The depth of the clone.</param>
       <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.Clone(Entia.Entity,Entia.Entity,Entia.Modules.Depth)">
+    <member name="M:Entia.Modules.Components.Copy(Entia.Entity,Entia.Entity)">
       <summary>
-            Clones all the components from the <paramref name="source" /> and sets them on the <paramref name="target" />.
+            Copies all the components from the <paramref name="source" /> and sets them on the <paramref name="target" />.
             </summary>
       <param name="source">The source entity.</param>
       <param name="target">The target entity.</param>
-      <param name="depth">The depth of the clone.</param>
       <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
     </member>
     <member name="M:Entia.Modules.Components.Trim(Entia.Entity,Entia.Entity)">
@@ -1072,6 +1065,10 @@
       <summary>Returns an enumerator that iterates through the collection.</summary>
       <returns>An enumerator that can be used to iterate through the collection.</returns>
     </member>
+    <member>
+      <summary>Returns an enumerator that iterates through the collection.</summary>
+      <returns>An enumerator that can be used to iterate through the collection.</returns>
+    </member>
     <member name="T:Entia.Messages.OnAdd">
       <summary>
             Message emitted after a component has been added to an entity.
@@ -1583,28 +1580,25 @@
     </member>
     <member>
       <summary>
-            Clones components of type <typeparamref name="T" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
+            Copies components of type <typeparamref name="T" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
             </summary>
       <typeparam name="T">The component type.</typeparam>
       <param name="target">The target entity.</param>
-      <param name="depth">The depth of the clone.</param>
       <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
     </member>
     <member>
       <summary>
-            Clones components of provided <paramref name="type" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
+            Copies components of provided <paramref name="type" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
             </summary>
       <param name="target">The target entity.</param>
       <param name="type">The component type.</param>
-      <param name="depth">The depth of the clone.</param>
       <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
     </member>
     <member>
       <summary>
-            Clones all the components from the <paramref name="source" /> and sets them on the <paramref name="target" />.
+            Copies all the components from the <paramref name="source" /> and sets them on the <paramref name="target" />.
             </summary>
       <param name="target">The target entity.</param>
-      <param name="depth">The depth of the clone.</param>
       <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
     </member>
     <member>
@@ -1827,11 +1821,10 @@
     </member>
     <member>
       <summary>
-            Clones components of type <typeparamref name="T" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
+            Copies components of type <typeparamref name="T" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
             </summary>
       <typeparam name="T">The component type.</typeparam>
       <param name="target">The target entity.</param>
-      <param name="depth">The depth of the clone.</param>
       <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
     </member>
     <member>
@@ -2352,6 +2345,8 @@
             Represents a world-unique identifier used to logically group components.
             </summary>
       <seealso cref="T:Entia.Queryables.IQueryable" />
+      <seealso cref="T:Entia.Templateables.ITemplateable" />
+      <seealso cref="T:Entia.Dependables.IDependable" />
     </member>
     <member name="F:Entia.Entity.Zero">
       <summary>

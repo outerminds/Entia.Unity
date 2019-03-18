@@ -14,7 +14,6 @@ namespace Entia.Delegates
         bool TryGet(Entity entity, World world, out IComponent component);
         bool Set(UnityEngine.Object value, Entity entity, World world);
         bool Remove(UnityEngine.Object value, Entity entity, World world);
-        bool Clone(UnityEngine.Object value, Entity entity, Depth depth, World world);
     }
 
     public abstract class Delegate<T> : IDelegate where T : UnityEngine.Object
@@ -25,7 +24,6 @@ namespace Entia.Delegates
         public abstract bool TryGet(Entity entity, World world, out IComponent component);
         public abstract bool Set(T value, Entity entity, World world);
         public abstract bool Remove(T value, Entity entity, World world);
-        public abstract bool Clone(T value, Entity entity, Depth depth, World world);
 
         bool IDelegate.TryCreate(UnityEngine.Object value, out IComponent component)
         {
@@ -36,7 +34,6 @@ namespace Entia.Delegates
 
         bool IDelegate.Set(UnityEngine.Object value, Entity entity, World world) => value is T casted && Set(casted, entity, world);
         bool IDelegate.Remove(UnityEngine.Object value, Entity entity, World world) => value is T casted && Remove(casted, entity, world);
-        bool IDelegate.Clone(UnityEngine.Object value, Entity entity, Depth depth, World world) => value is T casted && Clone(casted, entity, depth, world);
     }
 
     public sealed class Default : IDelegate
@@ -57,7 +54,6 @@ namespace Entia.Delegates
 
         public bool Set(UnityEngine.Object value, Entity entity, World world) => false;
         public bool Remove(UnityEngine.Object value, Entity entity, World world) => false;
-        public bool Clone(UnityEngine.Object value, Entity entity, Depth depth, World world) => false;
     }
 
     public sealed class Reference<T> : Delegate<ComponentReference<T>> where T : struct, IComponent
@@ -84,12 +80,6 @@ namespace Entia.Delegates
 
         public override bool Set(ComponentReference<T> value, Entity entity, World world) => world.Components().Set(entity, value.Raw);
         public override bool Remove(ComponentReference<T> value, Entity entity, World world) => world.Components().Remove<T>(entity);
-
-        public override bool Clone(ComponentReference<T> value, Entity entity, Depth depth, World world)
-        {
-            if (depth == Depth.Shallow || Type.Data.IsPlain) return Set(value, entity, world);
-            return world.Cloners().Clone(value.Raw).TryValue(out var clone) && world.Components().Set(entity, clone);
-        }
     }
 
     public sealed class Unity<T> : Delegate<T> where T : UnityEngine.Object
@@ -120,7 +110,5 @@ namespace Entia.Delegates
             world.Components().TryUnity<T>(entity, out var component) &&
             value == component &&
             world.Components().Remove<Components.Unity<T>>(entity);
-
-        public override bool Clone(T value, Entity entity, Depth depth, World world) => Set(value, entity, world);
     }
 }
