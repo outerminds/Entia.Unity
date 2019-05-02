@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using Entia.Modules;
+using UnityEditor;
 
 namespace Entia.Unity.Editor
 {
@@ -11,7 +12,7 @@ namespace Entia.Unity.Editor
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            World?.ShowEntity(World.Name(Target.Entity), Target.Entity, nameof(EntityReferenceEditor), Target.Entity.ToString());
+            World?.ShowEntity(Target.Entity.ToString(World), Target.Entity, nameof(EntityReferenceEditor), Target.Entity.ToString());
         }
     }
 }

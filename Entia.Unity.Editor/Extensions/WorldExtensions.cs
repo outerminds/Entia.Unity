@@ -29,13 +29,6 @@ namespace Entia.Unity.Editor
             .ToArray());
         static Type[] _concretes;
 
-        public static string Name(this World world, Entity entity)
-        {
-            ref var debug = ref world.Components().GetOrDummy<Components.Debug>(entity, out var success);
-            if (success) return $"{debug.Name}: {entity}";
-            return entity.ToString();
-        }
-
         public static object ShowValue(this World world, string label, object value, params string[] path)
         {
             switch (value)
@@ -134,7 +127,7 @@ namespace Entia.Unity.Editor
             LayoutUtility.ChunksFoldout(
                 label,
                 entities.ToArray(),
-                (entity, index) => world.ShowEntity(world.Name(entity), entity, path.Append(index.ToString()).ToArray()),
+                (entity, index) => world.ShowEntity(entity.ToString(world), entity, path.Append(index.ToString()).ToArray()),
                 entities.GetType(),
                 path.Append(entities.GetType().FullName).ToArray());
 
@@ -158,7 +151,7 @@ namespace Entia.Unity.Editor
             LayoutUtility.ChunksFoldout(
                 label,
                 components.ToArray(),
-                (pair, index2) => world.ShowComponent(world.Name(pair.entity), pair.entity, pair.component, path.Append(index2.ToString()).ToArray()),
+                (pair, index2) => world.ShowComponent(pair.entity.ToString(world), pair.entity, pair.component, path.Append(index2.ToString()).ToArray()),
                 type,
                 path.Append(type.FullName).ToArray());
 

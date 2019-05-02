@@ -40,6 +40,7 @@ namespace Entia.Unity
             world.Builders().Set<Parallel>(new Builders.Parallel());
             world.Analyzers().Set(new Analyzers.Parallel());
             world.Templaters().Set<UnityEngine.Object>(new Templaters.Object());
+            if (UnityEngine.Debug.isDebugBuild) world.Resources().Set(new Resources.Debug { Name = $"{{ Name: {name}, Scene: {gameObject.scene.name} }}" });
             foreach (var modifier in _modifiers) modifier?.Modify(world);
             return world;
         }

@@ -15,7 +15,7 @@ namespace Entia.Unity.Generation
         public static List<List<Entity>> ToEntia(this List<List<EntityReference>> references) => references?.Select(ToEntia).ToList();
 
         public static T FromEntia<T>(this T value, World _) => value;
-        public static EntityReference FromEntia(this Entity entity, World world) => EntityRegistry.TryGet(world, entity, out var reference) && reference is EntityReference casted ? casted : default;
+        public static EntityReference FromEntia(this Entity entity, World world) => entity && EntityRegistry.TryGet(world, entity, out var reference) ? reference as EntityReference : default;
         public static EntityReference[] FromEntia(this Entity[] entities, World world) => entities?.Select(entity => FromEntia(entity, world)).ToArray();
         public static EntityReference[][] FromEntia(this Entity[][] entities, World world) => entities?.Select(entity => FromEntia(entity, world)).ToArray();
         public static List<EntityReference>[] FromEntia(this List<Entity>[] entities, World world) => entities?.Select(entity => FromEntia(entity, world)).ToArray();
