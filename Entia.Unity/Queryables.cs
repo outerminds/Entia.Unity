@@ -11,7 +11,7 @@ using UnityEngine;
 namespace Entia.Queryables
 {
     [ThreadSafe]
-    public readonly struct Unity<T> : IQueryable where T : Object
+    public readonly struct Unity<T> : IQueryable<Unity<T>.Querier> where T : Object
     {
         sealed class Querier : Querier<Unity<T>>
         {
@@ -27,9 +27,6 @@ namespace Entia.Queryables
                 return false;
             }
         }
-
-        [Querier]
-        static readonly Querier _querier = new Querier();
 
         public T Value => _value.Value.Value;
         readonly Read<Components.Unity<T>> _value;

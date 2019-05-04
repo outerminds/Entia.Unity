@@ -26,7 +26,6 @@ namespace Entia.Unity
 
         [SerializeField]
         WorldModifier[] _modifiers = { };
-        Scene _scene;
         bool _initialized;
         bool _disposed;
 
@@ -39,8 +38,12 @@ namespace Entia.Unity
             world.Builders().Set<Profile>(new Builders.Profile());
             world.Builders().Set<Parallel>(new Builders.Parallel());
             world.Analyzers().Set(new Analyzers.Parallel());
-            world.Templaters().Set<UnityEngine.Object>(new Templaters.Object());
-            if (UnityEngine.Debug.isDebugBuild) world.Resources().Set(new Resources.Debug { Name = $"{{ Name: {name}, Scene: {gameObject.scene.name} }}" });
+            world.Templaters().Set<UnityEngine.Object>(new Templaters.Object(), true);
+
+            var resources = world.Resources();
+            if (UnityEngine.Debug.isDebugBuild) resources.Set(new Resources.Debug { Name = $"{{ Name: {name}, Scene: {gameObject.scene.name} }}" });
+            resources.Set(new Resources.Unity { Scene = gameObject.scene, Reference = this });
+
             foreach (var modifier in _modifiers) modifier?.Modify(world);
             return world;
         }
@@ -50,11 +53,11 @@ namespace Entia.Unity
             if (_initialized.Change(true))
             {
                 World = Create();
-                _scene = gameObject.scene;
+                World.TryScene(out var scene);
                 SceneManager.sceneUnloaded += Unload;
                 Application.quitting += Dispose;
 
-                var roots = _scene.GetRootGameObjects();
+                var roots = scene.GetRootGameObjects();
                 foreach (var resource in roots.SelectMany(root => root.GetComponentsInChildren<IResourceReference>()))
                     resource.Initialize(World);
 
@@ -65,17 +68,17 @@ namespace Entia.Unity
                 foreach (var entity in entities) entity.PreInitialize();
                 foreach (var entity in entities) entity.Initialize(World, false);
                 foreach (var entity in entities) entity.PostInitialize();
-
-                WorldRegistry.Set(_scene, this);
             }
         }
 
         public void Dispose()
         {
-            if (_initialized && _disposed.Change(true))
-            {
-                var roots = _scene.GetRootGameObjects();
+            if (World == null) return;
 
+            var resources = World.Resources();
+            if (resources.TryScene(out var scene) && _initialized && _disposed.Change(true))
+            {
+                var roots = scene.GetRootGameObjects();
                 var entities = roots.SelectMany(root => root.GetComponentsInChildren<IEntityReference>()).ToArray();
                 foreach (var entity in entities) entity.PreDispose();
                 foreach (var entity in entities) entity.Dispose();
@@ -87,7 +90,8 @@ namespace Entia.Unity
                 foreach (var resource in roots.SelectMany(root => root.GetComponentsInChildren<IResourceReference>()))
                     resource.Dispose();
 
-                WorldRegistry.Remove(_scene);
+                // NOTE: remove the resource in case the world is accessed through the static registry before it is GC'd
+                resources.Remove<Resources.Unity>();
                 SceneManager.sceneUnloaded -= Unload;
                 Application.quitting -= Dispose;
                 World = null;
@@ -96,6 +100,10 @@ namespace Entia.Unity
             }
         }
 
-        void Unload(Scene scene) { if (scene == _scene) Dispose(); }
+        void Unload(Scene scene)
+        {
+            if (World == null) return;
+            if (World.TryScene(out var other) && scene == other) Dispose();
+        }
     }
 }

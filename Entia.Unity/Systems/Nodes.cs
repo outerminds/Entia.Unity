@@ -8,7 +8,7 @@ namespace Entia.Unity
         public static readonly Node Default =
             Sequence("Unity",
                 System<Systems.LogException>(),
-                System<Systems.SynchronizeGameObject>(),
+                System<Systems.SynchronizeEntityReference>(),
                 System<Systems.UpdateTime>()
             );
     }

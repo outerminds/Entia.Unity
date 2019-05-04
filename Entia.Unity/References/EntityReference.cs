@@ -6,6 +6,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Entia.Delegables;
+using Entia.Templaters;
+using Entia.Instantiators;
+using Entia.Delegates;
+using Entia.Initializers;
+using Entia.Modules.Template;
+using Entia.Templateables;
 
 namespace Entia.Unity
 {
@@ -24,7 +30,7 @@ namespace Entia.Unity
     }
 
     [DisallowMultipleComponent]
-    public sealed class EntityReference : MonoBehaviour, IEntityReference
+    public sealed class EntityReference : MonoBehaviour, IEntityReference, ITemplateable<EntityReference.Templater>
     {
         [System.Flags]
         enum States : byte
@@ -34,6 +40,110 @@ namespace Entia.Unity
             Pre = 1 << 0,
             Current = 1 << 1,
             Post = 1 << 2
+        }
+
+        sealed class Templater : ITemplater
+        {
+            sealed class PoolInstantiate : IInstantiator
+            {
+                public readonly GameObject Template;
+
+                public PoolInstantiate(GameObject template) { Template = template; }
+
+                public Result<object> Instantiate(object[] instances)
+                {
+                    // TODO: get the template instance from a pool instead
+                    var instance = UnityEngine.Object.Instantiate(Template);
+                    instance.SetActive(true);
+                    return instance;
+                }
+            }
+
+            sealed class UnityGameObject : Instantiator<Components.Unity<GameObject>>
+            {
+                public readonly int Reference;
+                public UnityGameObject(int reference) { Reference = reference; }
+                public override Result<Components.Unity<GameObject>> Instantiate(object[] instances) =>
+                    new Components.Unity<GameObject> { Value = instances[Reference] as GameObject };
+            }
+
+            sealed class UnityComponent : Instantiator<IComponent>
+            {
+                public readonly int Reference;
+                public readonly Type Type;
+                public readonly IDelegate Delegate;
+
+                public UnityComponent(int reference, Type type, IDelegate @delegate)
+                {
+                    Reference = reference;
+                    Type = type;
+                    Delegate = @delegate;
+                }
+
+                public override Result<IComponent> Instantiate(object[] instances)
+                {
+                    var gameObject = instances[Reference] as GameObject;
+                    var component = gameObject.GetComponent(Type);
+                    Delegate.TryCreate(component, out var unity);
+                    return Result.Cast<IComponent>(unity);
+                }
+            }
+
+            public Result<(IInstantiator instantiator, IInitializer initializer)> Template(in Context context, World world)
+            {
+                // NOTE: the 'UnityComponent' instantiation can be cached in an 'Instance' data structure managed by the pool;
+                // i.e. the pool will cache an instance of 'Unity<T>' ready to be added to the entity
+
+                if (context.Index == 0 && context.Value is Unity.EntityReference root)
+                {
+                    var delegates = world.Delegates();
+                    var templaters = world.Templaters();
+                    var active = root.gameObject.activeSelf;
+                    root.gameObject.SetActive(false);
+                    var stripped = UnityEngine.Object.Instantiate(root.gameObject);
+                    root.gameObject.SetActive(active);
+                    var pooled = context.Add(root.gameObject, new PoolInstantiate(stripped), new Identity());
+                    var indices = new List<int>();
+
+                    {
+                        var wrapped = new Components.Unity<GameObject> { Value = stripped };
+                        var reference = context.Add(wrapped, new UnityGameObject(pooled.Index), new Identity());
+                        indices.Add(reference.Index);
+                    }
+
+                    using (var list = _components.Use())
+                    {
+                        stripped.GetComponents(list.Instance);
+                        foreach (var unity in list.Instance)
+                        {
+                            switch (unity)
+                            {
+                                case IEntityReference entity: break;
+                                case IComponentReference component:
+                                    UnityEngine.Object.DestroyImmediate(unity);
+                                    break;
+                                default:
+                                    var type = unity.GetType();
+                                    var @delegate = delegates.Get(type);
+                                    @delegate.TryCreate(unity, out var wrapped);
+                                    var reference = context.Add(wrapped, new UnityComponent(pooled.Index, type, @delegate), new Identity());
+                                    indices.Add(reference.Index);
+                                    break;
+                            }
+                        }
+                    }
+
+                    using (var list = _entities.Use())
+                    {
+                        stripped.GetComponents(list.Instance);
+                        foreach (var entity in list.Instance) UnityEngine.Object.DestroyImmediate(entity as UnityEngine.Object);
+                    }
+
+                    return (new Entity.Instantiator(world.Entities()), new Entity.Initializer(indices.ToArray(), world));
+                }
+                else
+                    return (new Constant(context.Value), new Identity());
+            }
         }
 
         static readonly Pool<List<IEntityReference>> _entities = new Pool<List<IEntityReference>>(
@@ -56,7 +166,7 @@ namespace Entia.Unity
 
         void Awake()
         {
-            if (WorldRegistry.TryGet(gameObject.scene, out var reference) && reference.World is World world)
+            if (gameObject.TryWorld(out var world))
             {
                 PreInitialize();
                 Initialize(world, true);
@@ -82,7 +192,7 @@ namespace Entia.Unity
             {
                 World = world;
                 Entity = World.Entities().Create();
-                EntityRegistry.Set(this);
+                World.Components().Set(Entity, new Components.Unity<EntityReference> { Value = this });
 
                 if (propagate)
                 {
@@ -104,9 +214,6 @@ namespace Entia.Unity
                 var delegates = World.Delegates();
 
                 if (UnityEngine.Debug.isDebugBuild) components.Set(Entity, new Components.Debug { Name = Name });
-                if (enabled && gameObject.activeInHierarchy) OnEnable();
-                else OnDisable();
-
                 components.Set(Entity, new Components.Unity<UnityEngine.GameObject> { Value = gameObject });
 
                 using (var list = _components.Use())
@@ -122,11 +229,15 @@ namespace Entia.Unity
                         }
                     }
                 }
+
+                if (enabled && gameObject.activeInHierarchy) OnEnable();
+                else OnDisable();
             }
         }
 
         void PreDispose()
         {
+            if (World == null || Entity == Entity.Zero) return;
             if (_initialized == States.All && _disposed.Change(_disposed | States.Pre))
             {
                 var components = World.Components();
@@ -147,16 +258,16 @@ namespace Entia.Unity
                 }
 
                 components.Remove<Components.Unity<UnityEngine.GameObject>>(Entity);
-                if (UnityEngine.Debug.isDebugBuild) components.Remove<Components.Debug>(Entity);
             }
         }
 
         void Dispose()
         {
+            if (World == null || Entity == Entity.Zero) return;
             if (_initialized == States.All && _disposed.Change(_disposed | States.Current))
             {
-                EntityRegistry.Remove(this);
-                World?.Entities().Destroy(Entity);
+                World.Components().Remove<Components.Unity<EntityReference>>(Entity);
+                World.Entities().Destroy(Entity);
                 Entity = Entity.Zero;
                 World = null;
             }

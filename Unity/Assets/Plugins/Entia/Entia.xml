@@ -729,11 +729,11 @@
             An enumerable that enumerates over the group entities.
             </summary>
     </member>
-    <member name="M:Entia.Modules.Group.Group`1.EntityEnumerable.#ctor(Entia.Modules.Group.Segment{`0}[])">
+    <member name="M:Entia.Modules.Group.Group`1.EntityEnumerable.#ctor(Entia.Modules.Group.Group{`0})">
       <summary>
             Initializes a new instance of the <see cref="T:Entia.Modules.Group.Group`1.EntityEnumerable" /> struct.
             </summary>
-      <param name="segments">The segments.</param>
+      <param name="group">The group.</param>
     </member>
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>

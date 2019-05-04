@@ -1,4 +1,5 @@
 ﻿using Entia.Unity;
+using UnityEngine.SceneManagement;
 
 namespace Entia.Resources
 {
@@ -8,5 +9,11 @@ namespace Entia.Resources
         public float Delta;
         [Disable]
         public float Current;
+    }
+
+    public struct Unity : IResource
+    {
+        public Scene Scene;
+        public WorldReference Reference;
     }
 }

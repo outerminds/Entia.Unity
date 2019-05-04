@@ -16,7 +16,6 @@ namespace Entia.Unity.Editor
             {
                 var types = reference.GetComponents<Component>()
                     .SelectMany(component =>
-                        component is IEntityReference ? new[] { component.GetType() } :
                         component is IComponentReference casted ? new[] { casted.Type } :
                         new[] { component.GetType(), typeof(Unity<>).MakeGenericType(component.GetType()) })
                     .Append(typeof(GameObject), typeof(Unity<GameObject>))

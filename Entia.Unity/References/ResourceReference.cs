@@ -70,8 +70,7 @@ namespace Entia.Unity
 
         void Awake()
         {
-            if (WorldRegistry.TryGet(gameObject.scene, out var reference) && reference.World is World world)
-                Initialize(world);
+            if (gameObject.TryWorld(out var world)) Initialize(world);
         }
 
         void OnDestroy() => Dispose();

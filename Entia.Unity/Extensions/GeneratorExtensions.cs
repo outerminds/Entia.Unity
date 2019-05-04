@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Entia.Components;
+using Entia.Modules;
 
 namespace Entia.Unity.Generation
 {
@@ -15,7 +17,7 @@ namespace Entia.Unity.Generation
         public static List<List<Entity>> ToEntia(this List<List<EntityReference>> references) => references?.Select(ToEntia).ToList();
 
         public static T FromEntia<T>(this T value, World _) => value;
-        public static EntityReference FromEntia(this Entity entity, World world) => entity && EntityRegistry.TryGet(world, entity, out var reference) ? reference as EntityReference : default;
+        public static EntityReference FromEntia(this Entity entity, World world) => world?.Components().GetOrDummy<Unity<EntityReference>>(entity, out _).Value;
         public static EntityReference[] FromEntia(this Entity[] entities, World world) => entities?.Select(entity => FromEntia(entity, world)).ToArray();
         public static EntityReference[][] FromEntia(this Entity[][] entities, World world) => entities?.Select(entity => FromEntia(entity, world)).ToArray();
         public static List<EntityReference>[] FromEntia(this List<Entity>[] entities, World world) => entities?.Select(entity => FromEntia(entity, world)).ToArray();
