@@ -44,102 +44,141 @@ namespace Entia.Unity
 
         sealed class Templater : ITemplater
         {
-            sealed class PoolInstantiate : IInstantiator
+            sealed class PoolInstantiate : Instantiator<Instance>
             {
-                public readonly GameObject Template;
-
-                public PoolInstantiate(GameObject template) { Template = template; }
-
-                public Result<object> Instantiate(object[] instances)
-                {
-                    // TODO: get the template instance from a pool instead
-                    var instance = UnityEngine.Object.Instantiate(Template);
-                    instance.SetActive(true);
-                    return instance;
-                }
+                public readonly Pool Pool;
+                public PoolInstantiate(Pool pool) { Pool = pool; }
+                public override Result<Instance> Instantiate(object[] instances) => Pool.Take();
             }
 
-            sealed class UnityGameObject : Instantiator<Components.Unity<GameObject>>
+            sealed class PoolInitialize : Initializer<Instance>
             {
                 public readonly int Reference;
-                public UnityGameObject(int reference) { Reference = reference; }
-                public override Result<Components.Unity<GameObject>> Instantiate(object[] instances) =>
-                    new Components.Unity<GameObject> { Value = instances[Reference] as GameObject };
-            }
+                public readonly Pool Pool;
+                public readonly World World;
 
-            sealed class UnityComponent : Instantiator<IComponent>
-            {
-                public readonly int Reference;
-                public readonly Type Type;
-                public readonly IDelegate Delegate;
-
-                public UnityComponent(int reference, Type type, IDelegate @delegate)
+                public PoolInitialize(int reference, Pool pool, World world)
                 {
                     Reference = reference;
-                    Type = type;
-                    Delegate = @delegate;
+                    Pool = pool;
+                    World = world;
                 }
 
-                public override Result<IComponent> Instantiate(object[] instances)
+                public override Result<Unit> Initialize(Instance instance, object[] instances)
                 {
-                    var gameObject = instances[Reference] as GameObject;
-                    var component = gameObject.GetComponent(Type);
-                    Delegate.TryCreate(component, out var unity);
-                    return Result.Cast<IComponent>(unity);
+                    var result = Result.Cast<Entity>(instances[Reference]);
+                    if (result.TryValue(out var entity))
+                    {
+                        var components = World.Components();
+                        if (UnityEngine.Debug.isDebugBuild) components.Set(entity, new Components.Debug { Name = instance.Name });
+                        components.Set(entity, new Components.Unity<GameObject> { Value = instance.GameObject });
+                        foreach (var component in instance.Components) components.Set(entity, component);
+                        foreach (var component in Pool.References) components.Set(entity, component.Value);
+                        return Result.Success();
+                    }
+                    return result;
                 }
             }
+
+            sealed class Pool
+            {
+                public Transform Root;
+                public GameObject Template;
+                public GameObject Stripped;
+                public IComponentReference[] References;
+                public World World;
+
+                readonly Stack<Instance> _instances = new Stack<Instance>();
+
+                public Instance Take()
+                {
+                    if (_instances.Count > 0)
+                    {
+                        var instance = _instances.Pop();
+                        instance.GameObject.SetActive(true);
+                        return instance;
+                    }
+                    else
+                    {
+                        var delegates = World.Delegates();
+                        var name = Template.name;
+                        var instance = UnityEngine.Object.Instantiate(Stripped, Root);
+                        instance.name = name;
+                        instance.SetActive(true);
+
+                        using (var list = _components.Use())
+                        {
+                            instance.GetComponents(list.Instance);
+                            return new Instance
+                            {
+                                Name = name,
+                                GameObject = instance,
+                                Transform = instance.transform,
+                                Components = list.Instance
+                                    .TrySelect((Component unity, out IComponent component) => delegates.Get(unity.GetType()).TryCreate(unity, out component))
+                                    .ToArray(),
+                                Children = new Instance[0]
+                            };
+                        }
+                    }
+                }
+
+                public void Put(Instance instance)
+                {
+                    instance.GameObject.SetActive(false);
+                    instance.Transform.parent = Root;
+                    _instances.Push(instance);
+                }
+            }
+
+            sealed class Instance
+            {
+                public string Name;
+                public GameObject GameObject;
+                public Transform Transform;
+                public IComponent[] Components;
+                public Instance[] Children;
+            }
+
+            readonly Dictionary<GameObject, Pool> _pools = new Dictionary<GameObject, Pool>();
+
+            Pool GetPool(GameObject template, World world)
+            {
+                if (_pools.TryGetValue(template, out var pool)) return pool;
+
+                var active = template.activeSelf;
+                template.SetActive(false);
+                var root = new GameObject(template.name).transform;
+                var stripped = UnityEngine.Object.Instantiate(template, root);
+                stripped.name = "Template";
+                template.SetActive(active);
+
+                using (var list = _components.Use())
+                {
+                    stripped.GetComponents(list.Instance);
+                    foreach (var unity in list.Instance) if (unity is IComponentReference) UnityEngine.Object.DestroyImmediate(unity);
+                    foreach (var unity in list.Instance) if (unity is IEntityReference) UnityEngine.Object.DestroyImmediate(unity);
+                }
+
+                return _pools[template] = new Pool
+                {
+                    Root = root,
+                    Template = template,
+                    Stripped = stripped,
+                    References = template.GetComponents<IComponentReference>(),
+                    World = world,
+                };
+            }
+
+            Instance GetInstance(GameObject template, World world) => GetPool(template, world).Take();
 
             public Result<(IInstantiator instantiator, IInitializer initializer)> Template(in Context context, World world)
             {
-                // NOTE: the 'UnityComponent' instantiation can be cached in an 'Instance' data structure managed by the pool;
-                // i.e. the pool will cache an instance of 'Unity<T>' ready to be added to the entity
-
                 if (context.Index == 0 && context.Value is Unity.EntityReference root)
                 {
-                    var delegates = world.Delegates();
-                    var templaters = world.Templaters();
-                    var active = root.gameObject.activeSelf;
-                    root.gameObject.SetActive(false);
-                    var stripped = UnityEngine.Object.Instantiate(root.gameObject);
-                    root.gameObject.SetActive(active);
-                    var pooled = context.Add(root.gameObject, new PoolInstantiate(stripped), new Identity());
-                    var indices = new List<int>();
-
-                    {
-                        var wrapped = new Components.Unity<GameObject> { Value = stripped };
-                        var reference = context.Add(wrapped, new UnityGameObject(pooled.Index), new Identity());
-                        indices.Add(reference.Index);
-                    }
-
-                    using (var list = _components.Use())
-                    {
-                        stripped.GetComponents(list.Instance);
-                        foreach (var unity in list.Instance)
-                        {
-                            switch (unity)
-                            {
-                                case IEntityReference entity: break;
-                                case IComponentReference component:
-                                    UnityEngine.Object.DestroyImmediate(unity);
-                                    break;
-                                default:
-                                    var type = unity.GetType();
-                                    var @delegate = delegates.Get(type);
-                                    @delegate.TryCreate(unity, out var wrapped);
-                                    var reference = context.Add(wrapped, new UnityComponent(pooled.Index, type, @delegate), new Identity());
-                                    indices.Add(reference.Index);
-                                    break;
-                            }
-                        }
-                    }
-
-                    using (var list = _entities.Use())
-                    {
-                        stripped.GetComponents(list.Instance);
-                        foreach (var entity in list.Instance) UnityEngine.Object.DestroyImmediate(entity as UnityEngine.Object);
-                    }
-
-                    return (new Entity.Instantiator(world.Entities()), new Entity.Initializer(indices.ToArray(), world));
+                    var pool = GetPool(root.gameObject, world);
+                    var pooled = context.Add(root.gameObject, new PoolInstantiate(pool), new PoolInitialize(context.Index, pool, world));
+                    return (new Entity.Instantiator(world.Entities()), new Identity());
                 }
                 else
                     return (new Constant(context.Value), new Identity());
