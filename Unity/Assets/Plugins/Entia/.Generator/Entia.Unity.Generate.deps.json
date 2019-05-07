@@ -10,8 +10,8 @@
         "dependencies": {
           "Entia.Unity": "1.1.1",
           "Microsoft.CodeAnalysis.CSharp": "2.10.0",
-          "Entia.Core": "1.0.4.0",
-          "Entia": "1.0.4.0"
+          "Entia.Core": "1.0.5.0",
+          "Entia": "1.0.5.0"
         },
         "runtime": {
           "Entia.Unity.Generate.dll": {}
@@ -903,19 +903,19 @@
           "Entia.Unity.dll": {}
         }
       },
-      "Entia.Core/1.0.4.0": {
+      "Entia.Core/1.0.5.0": {
         "runtime": {
           "Entia.Core.dll": {
-            "assemblyVersion": "1.0.4.0",
-            "fileVersion": "1.0.4.0"
+            "assemblyVersion": "1.0.5.0",
+            "fileVersion": "1.0.5.0"
           }
         }
       },
-      "Entia/1.0.4.0": {
+      "Entia/1.0.5.0": {
         "runtime": {
           "Entia.dll": {
-            "assemblyVersion": "1.0.4.0",
-            "fileVersion": "1.0.4.0"
+            "assemblyVersion": "1.0.5.0",
+            "fileVersion": "1.0.5.0"
           }
         }
       }
@@ -1464,12 +1464,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Entia.Core/1.0.4.0": {
+    "Entia.Core/1.0.5.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
     },
-    "Entia/1.0.4.0": {
+    "Entia/1.0.5.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

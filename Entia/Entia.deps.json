@@ -7,9 +7,9 @@
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "Entia/1.0.4": {
+      "Entia/1.0.5": {
         "dependencies": {
-          "Entia.Core": "1.0.4",
+          "Entia.Core": "1.0.5",
           "NETStandard.Library": "2.0.3"
         },
         "runtime": {
@@ -22,7 +22,7 @@
           "Microsoft.NETCore.Platforms": "1.1.0"
         }
       },
-      "Entia.Core/1.0.4": {
+      "Entia.Core/1.0.5": {
         "runtime": {
           "Entia.Core.dll": {}
         }
@@ -30,7 +30,7 @@
     }
   },
   "libraries": {
-    "Entia/1.0.4": {
+    "Entia/1.0.5": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -49,7 +49,7 @@
       "path": "netstandard.library/2.0.3",
       "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
     },
-    "Entia.Core/1.0.4": {
+    "Entia.Core/1.0.5": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

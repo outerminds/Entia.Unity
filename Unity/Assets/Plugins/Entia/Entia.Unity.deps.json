@@ -10,8 +10,8 @@
       "Entia.Unity/1.1.1": {
         "dependencies": {
           "NETStandard.Library": "2.0.3",
-          "Entia.Core": "1.0.4.0",
-          "Entia": "1.0.4.0"
+          "Entia.Core": "1.0.5.0",
+          "Entia": "1.0.5.0"
         },
         "runtime": {
           "Entia.Unity.dll": {}
@@ -23,19 +23,19 @@
           "Microsoft.NETCore.Platforms": "1.1.0"
         }
       },
-      "Entia.Core/1.0.4.0": {
+      "Entia.Core/1.0.5.0": {
         "runtime": {
           "Entia.Core.dll": {
-            "assemblyVersion": "1.0.4.0",
-            "fileVersion": "1.0.4.0"
+            "assemblyVersion": "1.0.5.0",
+            "fileVersion": "1.0.5.0"
           }
         }
       },
-      "Entia/1.0.4.0": {
+      "Entia/1.0.5.0": {
         "runtime": {
           "Entia.dll": {
-            "assemblyVersion": "1.0.4.0",
-            "fileVersion": "1.0.4.0"
+            "assemblyVersion": "1.0.5.0",
+            "fileVersion": "1.0.5.0"
           }
         }
       }
@@ -61,12 +61,12 @@
       "path": "netstandard.library/2.0.3",
       "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
     },
-    "Entia.Core/1.0.4.0": {
+    "Entia.Core/1.0.5.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
     },
-    "Entia/1.0.4.0": {
+    "Entia/1.0.5.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
