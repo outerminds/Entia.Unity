@@ -21,7 +21,7 @@ namespace Entia.Unity
         Entity Entity { get; }
 
         void PreInitialize();
-        void Initialize(World world, bool propagate = true);
+        void Initialize(World world);
         void PostInitialize();
 
         void PreDispose();
@@ -106,7 +106,7 @@ namespace Entia.Unity
                         instance.name = name;
                         instance.SetActive(true);
 
-                        using (var list = _components.Use())
+                        using (var list = PoolUtility.Cache<Component>.Lists.Use())
                         {
                             instance.GetComponents(list.Instance);
                             return new Instance
@@ -153,7 +153,7 @@ namespace Entia.Unity
                 stripped.name = "Template";
                 template.SetActive(active);
 
-                using (var list = _components.Use())
+                using (var list = PoolUtility.Cache<Component>.Lists.Use())
                 {
                     stripped.GetComponents(list.Instance);
                     foreach (var unity in list.Instance) if (unity is IComponentReference) UnityEngine.Object.DestroyImmediate(unity);
@@ -185,13 +185,6 @@ namespace Entia.Unity
             }
         }
 
-        static readonly Pool<List<IEntityReference>> _entities = new Pool<List<IEntityReference>>(
-            () => new List<IEntityReference>(),
-            dispose: instance => instance.Clear());
-        static readonly Pool<List<Component>> _components = new Pool<List<Component>>(
-            () => new List<Component>(),
-            dispose: instance => instance.Clear());
-
         public World World { get; private set; }
         public Entity Entity { get; private set; }
         public string Name => _name ?? (_name = name);
@@ -207,40 +200,32 @@ namespace Entia.Unity
         {
             if (gameObject.TryWorld(out var world))
             {
-                PreInitialize();
-                Initialize(world, true);
-                PostInitialize();
+                using (var list = PoolUtility.Cache<IEntityReference>.Lists.Use())
+                {
+                    GetComponentsInChildren(true, list.Instance);
+                    foreach (var entity in list.Instance) entity.PreInitialize();
+                    foreach (var entity in list.Instance) entity.Initialize(world);
+                    foreach (var entity in list.Instance) entity.PostInitialize();
+                }
             }
         }
 
         void OnDestroy()
         {
+            // NOTE: no need to dispose the hierarchy since 'OnDestroy' will be called on the children for sure
             PreDispose();
             Dispose();
             PostDispose();
         }
 
-        void PreInitialize()
-        {
-            _initialized.Change(_initialized | States.Pre);
-        }
+        void PreInitialize() => _initialized.Change(_initialized | States.Pre);
 
-        void Initialize(World world, bool propagate = true)
+        void Initialize(World world)
         {
             if (_initialized.Change(_initialized | States.Current))
             {
                 World = world;
                 Entity = World.Entities().Create();
-                World.Components().Set(Entity, new Components.Unity<EntityReference> { Value = this });
-
-                if (propagate)
-                {
-                    using (var list = _entities.Use())
-                    {
-                        GetComponentsInChildren(list.Instance);
-                        foreach (var entity in list.Instance) entity.Initialize(world, false);
-                    }
-                }
             }
         }
 
@@ -253,9 +238,10 @@ namespace Entia.Unity
                 var delegates = World.Delegates();
 
                 if (UnityEngine.Debug.isDebugBuild) components.Set(Entity, new Components.Debug { Name = Name });
+                components.Set(Entity, new Components.Unity<EntityReference> { Value = this });
                 components.Set(Entity, new Components.Unity<UnityEngine.GameObject> { Value = gameObject });
 
-                using (var list = _components.Use())
+                using (var list = PoolUtility.Cache<Component>.Lists.Use())
                 {
                     GetComponents(list.Instance);
                     foreach (var component in list.Instance)
@@ -282,7 +268,7 @@ namespace Entia.Unity
                 var components = World.Components();
                 var delegates = World.Delegates();
 
-                using (var list = _components.Use())
+                using (var list = PoolUtility.Cache<Component>.Lists.Use())
                 {
                     GetComponents(list.Instance);
                     foreach (var component in list.Instance)
@@ -297,6 +283,7 @@ namespace Entia.Unity
                 }
 
                 components.Remove<Components.Unity<UnityEngine.GameObject>>(Entity);
+                components.Remove<Components.Unity<EntityReference>>(Entity);
             }
         }
 
@@ -305,7 +292,6 @@ namespace Entia.Unity
             if (World == null || Entity == Entity.Zero) return;
             if (_initialized == States.All && _disposed.Change(_disposed | States.Current))
             {
-                World.Components().Remove<Components.Unity<EntityReference>>(Entity);
                 World.Entities().Destroy(Entity);
                 Entity = Entity.Zero;
                 World = null;
@@ -322,7 +308,7 @@ namespace Entia.Unity
         }
 
         void IEntityReference.PreInitialize() => PreInitialize();
-        void IEntityReference.Initialize(World world, bool propagate) => Initialize(world, propagate);
+        void IEntityReference.Initialize(World world) => Initialize(world);
         void IEntityReference.PostInitialize() => PostInitialize();
         void IEntityReference.PreDispose() => PreDispose();
         void IEntityReference.Dispose() => Dispose();

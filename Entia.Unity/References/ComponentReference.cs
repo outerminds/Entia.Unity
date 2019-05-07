@@ -80,6 +80,7 @@ namespace Entia.Unity
             if (GetComponent<IEntityReference>() is IEntityReference reference && reference.Entity && reference.World is World world)
                 Initialize(reference.Entity, world);
         }
+
         void OnDestroy() => Dispose();
 
         void Initialize(Entity entity, World world)

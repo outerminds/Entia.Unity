@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Entia.Core;
 using Entia.Modules;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Entia.Unity
 {
-    public static class WorldExtensions
+    public static class UnityExtensions
     {
         public static bool TryWorld(this GameObject gameObject, out World world) => gameObject.scene.TryWorld(out world);
         public static bool TryWorld(this Component component, out World world) => component.gameObject.TryWorld(out world);

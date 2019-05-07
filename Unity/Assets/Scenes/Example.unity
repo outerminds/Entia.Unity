@@ -401,7 +401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   World: {fileID: 1237143317}
-  Entity: {fileID: 881704527}
+  Entity: {fileID: 794816267}
 --- !u!1 &1299045419
 GameObject:
   m_ObjectHideFlags: 0
