@@ -38,7 +38,6 @@ namespace Entia.Unity
             world.Builders().Set<Profile>(new Builders.Profile());
             world.Builders().Set<Parallel>(new Builders.Parallel());
             world.Analyzers().Set(new Analyzers.Parallel());
-            world.Templaters().Set<UnityEngine.Object>(new Templaters.Object(), true);
 
             var resources = world.Resources();
             if (UnityEngine.Debug.isDebugBuild) resources.Set(new Resources.Debug { Name = $"{{ Name: {name}, Scene: {gameObject.scene.name} }}" });

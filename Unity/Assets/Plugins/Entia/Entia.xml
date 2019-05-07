@@ -109,13 +109,6 @@
       <param name="world">The world.</param>
       <returns>The module.</returns>
     </member>
-    <member name="M:Entia.Modules.WorldExtensions.Templaters(Entia.World)">
-      <summary>
-            Gets or create the <see cref="T:Entia.Modules.Templaters" /> module.
-            </summary>
-      <param name="world">The world.</param>
-      <returns>The module.</returns>
-    </member>
     <member name="T:Entia.Modules.Build.IBuildable">
       <summary>
             Tag interface that all buildables must implement.
@@ -1048,10 +1041,6 @@
       <summary>
             Tag interface that all modules must implement.
             </summary>
-    </member>
-    <member>
-      <summary>Returns an enumerator that iterates through the collection.</summary>
-      <returns>An enumerator that can be used to iterate through the collection.</returns>
     </member>
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>
@@ -2345,7 +2334,6 @@
             Represents a world-unique identifier used to logically group components.
             </summary>
       <seealso cref="T:Entia.Queryables.IQueryable" />
-      <seealso cref="T:Entia.Templateables.ITemplateable" />
       <seealso cref="T:Entia.Dependables.IDependable" />
     </member>
     <member name="F:Entia.Entity.Zero">
