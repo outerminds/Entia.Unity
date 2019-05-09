@@ -8,7 +8,6 @@ namespace Entia.Components
 {
     public struct IsDisabled : IComponent { }
 
-    [Plain]
     public struct Unity<T> : IComponent, IDelegable<Delegates.Unity<T>>, IDependable<Dependers.Unity<T>> where T : UnityEngine.Object
     {
         public T Value;

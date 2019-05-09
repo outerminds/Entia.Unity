@@ -19,7 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Entia.Unity\Entia.Unity.csproj" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="*" />
   </ItemGroup>
@@ -28,5 +28,5 @@
     <Reference Include="Entia"> <HintPath>..\Entia\Entia.dll</HintPath> </Reference>
     <Reference Include="Entia.Core"> <HintPath>..\Entia\Entia.Core.dll</HintPath> </Reference>
   </ItemGroup>
-  
+
 </Project>

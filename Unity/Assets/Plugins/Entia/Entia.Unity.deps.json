@@ -7,7 +7,7 @@
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "Entia.Unity/1.1.1": {
+      "Entia.Unity/1.1.2": {
         "dependencies": {
           "NETStandard.Library": "2.0.3",
           "Entia.Core": "1.0.5.0",
@@ -42,7 +42,7 @@
     }
   },
   "libraries": {
-    "Entia.Unity/1.1.1": {
+    "Entia.Unity/1.1.2": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

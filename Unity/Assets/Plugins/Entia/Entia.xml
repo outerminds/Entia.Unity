@@ -2319,6 +2319,55 @@
       <summary>Returns an enumerator that iterates through the collection.</summary>
       <returns>An enumerator that can be used to iterate through the collection.</returns>
     </member>
+    <member name="M:Entia.Injectables.AllResources.Read.TryGet``1(``0@)">
+      <inheritdoc cref="M:Entia.Modules.Resources.TryGet``1(``0@)" />
+    </member>
+    <member name="M:Entia.Injectables.AllResources.Read.TryGet(System.Type,Entia.IResource@)">
+      <inheritdoc cref="M:Entia.Modules.Resources.TryGet(System.Type,Entia.IResource@)" />
+    </member>
+    <member name="M:Entia.Injectables.AllResources.Read.Has``1">
+      <inheritdoc cref="M:Entia.Modules.Resources.Has``1" />
+    </member>
+    <member name="M:Entia.Injectables.AllResources.Read.Has(System.Type)">
+      <inheritdoc cref="M:Entia.Modules.Resources.Has(System.Type)" />
+    </member>
+    <member name="M:Entia.Injectables.AllResources.TryGet``1(``0@)">
+      <inheritdoc cref="M:Entia.Modules.Resources.TryGet``1(``0@)" />
+    </member>
+    <member name="M:Entia.Injectables.AllResources.TryGet(System.Type,Entia.IResource@)">
+      <inheritdoc cref="M:Entia.Modules.Resources.TryGet(System.Type,Entia.IResource@)" />
+    </member>
+    <member name="M:Entia.Injectables.AllResources.Get``1">
+      <inheritdoc cref="M:Entia.Modules.Resources.Get``1" />
+    </member>
+    <member name="M:Entia.Injectables.AllResources.Get(System.Type)">
+      <inheritdoc cref="M:Entia.Modules.Resources.Get(System.Type)" />
+    </member>
+    <member name="M:Entia.Injectables.AllResources.Set``1(``0@)">
+      <inheritdoc cref="M:Entia.Modules.Resources.Set``1(``0@)" />
+    </member>
+    <member name="M:Entia.Injectables.AllResources.Set(Entia.IResource)">
+      <inheritdoc cref="M:Entia.Modules.Resources.Set(Entia.IResource)" />
+    </member>
+    <member name="M:Entia.Injectables.AllResources.Has``1">
+      <inheritdoc cref="M:Entia.Modules.Resources.Has``1" />
+    </member>
+    <member name="M:Entia.Injectables.AllResources.Has(System.Type)">
+      <inheritdoc cref="M:Entia.Modules.Resources.Has(System.Type)" />
+    </member>
+    <member name="M:Entia.Injectables.AllResources.Remove``1">
+      <inheritdoc cref="M:Entia.Modules.Resources.Remove``1" />
+    </member>
+    <member name="M:Entia.Injectables.AllResources.Remove(System.Type)">
+      <inheritdoc cref="M:Entia.Modules.Resources.Remove(System.Type)" />
+    </member>
+    <member name="M:Entia.Injectables.AllResources.Clear">
+      <inheritdoc cref="M:Entia.Modules.Resources.Clear" />
+    </member>
+    <member>
+      <summary>Returns an enumerator that iterates through the collection.</summary>
+      <returns>An enumerator that can be used to iterate through the collection.</returns>
+    </member>
     <member name="T:Entia.Nodes.INode">
       <summary>
             Tag interface that all nodes must implement.
