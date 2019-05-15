@@ -52,11 +52,9 @@ namespace Entia.Unity.Editor
 
         public static Disposable Component<T>(SerializedObject serialized, IEnumerable<T> references, out SerializedProperty property) where T : IComponentReference
         {
-            if (EditorApplication.isPlaying)
-            {
-                foreach (var reference in references) reference.Raw = reference.Value;
-                EditorGUI.BeginChangeCheck();
-            }
+            var instances = references.Where(reference => reference.Entity && reference.World is World).ToArray();
+            foreach (var instance in instances) instance.Raw = instance.Value;
+            EditorGUI.BeginChangeCheck();
 
             var first = references.First();
             using (LayoutUtility.Horizontal())
@@ -83,18 +81,15 @@ namespace Entia.Unity.Editor
             {
                 apply.Dispose();
                 disable.Dispose();
-                if (EditorApplication.isPlaying && EditorGUI.EndChangeCheck())
-                    foreach (var reference in references) reference.Value = reference.Raw;
+                if (EditorGUI.EndChangeCheck()) foreach (var instance in instances) instance.Value = instance.Raw;
             });
         }
 
         public static Disposable Resource<T>(SerializedObject serialized, IEnumerable<T> references, out SerializedProperty property) where T : IResourceReference
         {
-            if (EditorApplication.isPlaying)
-            {
-                foreach (var reference in references) reference.Raw = reference.Value;
-                EditorGUI.BeginChangeCheck();
-            }
+            var instances = references.Where(reference => reference.World is World).ToArray();
+            foreach (var instance in instances) instance.Raw = instance.Value;
+            EditorGUI.BeginChangeCheck();
 
             var first = references.First();
             property = Script(serialized);
@@ -105,8 +100,7 @@ namespace Entia.Unity.Editor
             {
                 apply.Dispose();
                 disable.Dispose();
-                if (EditorApplication.isPlaying && EditorGUI.EndChangeCheck())
-                    foreach (var reference in references) reference.Value = reference.Raw;
+                if (EditorGUI.EndChangeCheck()) foreach (var instance in instances) instance.Value = instance.Raw;
             });
         }
     }

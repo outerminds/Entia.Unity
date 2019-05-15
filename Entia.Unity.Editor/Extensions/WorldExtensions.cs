@@ -174,6 +174,13 @@ namespace Entia.Unity.Editor
             }
         }
 
+        public static void ShowGroups(this World world, Modules.Groups module) =>
+            LayoutUtility.ChunksFoldout(
+                nameof(Modules.Groups),
+                module.ToArray(),
+                (group, index) => world.ShowGroup(group.Type.Format(), group, nameof(Modules.Groups), index.ToString()),
+                module.GetType());
+
         public static void ShowGroup(this World world, string label, IGroup group, params string[] path) =>
             world.ShowEntities(label, group.Entities, path);
 

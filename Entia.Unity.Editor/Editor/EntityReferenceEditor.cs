@@ -7,12 +7,13 @@ namespace Entia.Unity.Editor
     public class EntityReferenceEditor : UnityEditor.Editor
     {
         public IEntityReference Target => target as IEntityReference;
-        public World World => Target?.World;
 
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            World?.ShowEntity(Target.Entity.ToString(World), Target.Entity, nameof(EntityReferenceEditor), Target.Entity.ToString());
+
+            if (Target.World is World world)
+                world.ShowEntity(Target.Entity.ToString(world), Target.Entity, nameof(EntityReferenceEditor), Target.Entity.ToString());
         }
     }
 }

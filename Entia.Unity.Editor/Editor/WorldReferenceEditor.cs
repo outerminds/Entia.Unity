@@ -20,7 +20,6 @@ namespace Entia.Unity.Editor
         static bool _details;
 
         public WorldReference Target => target as WorldReference;
-        public World World => Target?.World;
 
         readonly Dictionary<IRunner, TimeSpan> _elapsed = new Dictionary<IRunner, TimeSpan>();
         Receiver<OnProfile> _onProfile;
@@ -28,24 +27,24 @@ namespace Entia.Unity.Editor
         public override void OnInspectorGUI()
         {
             using (LayoutUtility.Disable(EditorApplication.isPlayingOrWillChangePlaymode)) base.OnInspectorGUI();
-            if (World != null) ShowModules();
+            if (Target.World is World world) ShowModules(world);
         }
 
         void OnEnable()
         {
-            if (World != null)
+            if (Target.World is World world)
             {
-                _onProfile = World.Messages().Receiver<OnProfile>();
+                _onProfile = world.Messages().Receiver<OnProfile>();
                 EditorApplication.update += Update;
             }
         }
 
         void OnDisable()
         {
-            if (World != null)
+            if (Target.World is World world)
             {
                 EditorApplication.update -= Update;
-                World.Messages().Remove(_onProfile);
+                world.Messages().Remove(_onProfile);
             }
         }
 
@@ -58,28 +57,28 @@ namespace Entia.Unity.Editor
             }
         }
 
-        void ShowModules()
+        void ShowModules(World world)
         {
             using (LayoutUtility.Horizontal())
             {
                 EditorGUILayout.LabelField(nameof(Modules), LayoutUtility.BoldLabel);
                 _all = LayoutUtility.Toggle("All", _all);
             }
-            using (LayoutUtility.Indent()) foreach (var module in World) ShowModule(module);
+            using (LayoutUtility.Indent()) foreach (var module in world) ShowModule(module, world);
             Repaint();
         }
 
-        void ShowModule(IModule module)
+        void ShowModule(IModule module, World world)
         {
             var label = module.GetType().Name;
             switch (module)
             {
-                case Modules.Entities entities: World.ShowEntities(label, entities, label); break;
-                case Modules.Components components: World.ShowComponents(label, World.Entities(), label); break;
-                case Modules.Resources resources: World.ShowResources(label, World.Resources(), label); break;
-                case Modules.Messages messages: World.ShowEmitters(label, messages, label); break;
-                case Modules.Groups groups: ShowGroups(groups); break;
-                case Modules.Controllers controllers: ShowControllers(controllers); break;
+                case Modules.Entities entities: world.ShowEntities(label, entities, label); break;
+                case Modules.Components components: world.ShowComponents(label, world.Entities(), label); break;
+                case Modules.Resources resources: world.ShowResources(label, world.Resources(), label); break;
+                case Modules.Messages messages: world.ShowEmitters(label, messages, label); break;
+                case Modules.Groups groups: world.ShowGroups(groups); break;
+                case Modules.Controllers controllers: ShowControllers(controllers, world); break;
                 default:
                     if (_all)
                     {
@@ -105,18 +104,11 @@ namespace Entia.Unity.Editor
             Repaint();
         }
 
-        void ShowGroups(Modules.Groups module) =>
-            LayoutUtility.ChunksFoldout(
-                nameof(Modules.Groups),
-                module.ToArray(),
-                (group, index) => World.ShowGroup(group.Type.Format(), group, nameof(Modules.Groups), index.ToString()),
-                module.GetType());
-
-        void ShowControllers(Modules.Controllers module) =>
+        void ShowControllers(Modules.Controllers module, World world) =>
             LayoutUtility.ChunksFoldout(
                 nameof(Modules.Controllers),
                 module.ToArray(),
-                (controller, index) => World.ShowController(controller, _elapsed, _details, nameof(Modules.Controllers), index.ToString()),
+                (controller, index) => world.ShowController(controller, _elapsed, _details, nameof(Modules.Controllers), index.ToString()),
                 module.GetType(),
                 foldout: data =>
                 {
