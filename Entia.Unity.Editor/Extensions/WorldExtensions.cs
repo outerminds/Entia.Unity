@@ -1,10 +1,10 @@
-﻿using Entia.Core;
+﻿using Entia.Components;
+using Entia.Core;
 using Entia.Dependencies;
 using Entia.Injectables;
 using Entia.Modules;
 using Entia.Modules.Build;
 using Entia.Modules.Component;
-using Entia.Modules.Control;
 using Entia.Modules.Group;
 using Entia.Modules.Message;
 using Entia.Modules.Query;
@@ -167,6 +167,18 @@ namespace Entia.Unity.Editor
                     EditorGUI.BeginChangeCheck();
                     component = LayoutUtility.Object(label, component, type, path.Append(type.FullName, entity.ToString()).ToArray()) as IComponent;
                     if (EditorGUI.EndChangeCheck() && component is IComponent current) world.Components().Set(entity, current);
+                }
+
+                if (!type.Is<IEnabled>())
+                {
+                    EditorGUI.BeginChangeCheck();
+                    var state = world.Components().State(entity, type);
+                    var enabled = LayoutUtility.Toggle(state == States.Enabled);
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        if (enabled) world.Components().Enable(entity, type);
+                        else world.Components().Disable(entity, type);
+                    }
                 }
 
                 if (LayoutUtility.MinusButton())

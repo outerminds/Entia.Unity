@@ -1,3 +1,4 @@
+using Entia;
 using Entia.Injectables;
 using Entia.Queryables;
 using Entia.Systems;

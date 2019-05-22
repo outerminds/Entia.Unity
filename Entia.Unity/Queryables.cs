@@ -15,9 +15,9 @@ namespace Entia.Queryables
     {
         sealed class Querier : Querier<Unity<T>>
         {
-            public override bool TryQuery(Segment segment, World world, out Query<Unity<T>> query)
+            public override bool TryQuery(in Context context, out Query<Unity<T>> query)
             {
-                if (world.Queriers().TryQuery<Read<Components.Unity<T>>>(segment, out var read))
+                if (context.World.Queriers().TryQuery<Read<Components.Unity<T>>>(context, out var read))
                 {
                     query = new Query<Unity<T>>(index => new Unity<T>(read.Get(index)), read.Types);
                     return true;

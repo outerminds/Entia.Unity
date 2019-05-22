@@ -58,7 +58,7 @@ namespace Entia.Delegates
 
     public sealed class Reference<T> : Delegate<ComponentReference<T>> where T : struct, IComponent
     {
-        public override Metadata Type => ComponentUtility.Concrete<T>.Data;
+        public override Metadata Type => ComponentUtility.Cache<T>.Data;
 
         public override bool TryCreate(ComponentReference<T> value, out IComponent component)
         {
@@ -84,7 +84,7 @@ namespace Entia.Delegates
 
     public sealed class Unity<T> : Delegate<T> where T : UnityEngine.Object
     {
-        public override Metadata Type => ComponentUtility.Concrete<Components.Unity<T>>.Data;
+        public override Metadata Type => ComponentUtility.Cache<Components.Unity<T>>.Data;
 
         public override bool TryCreate(T value, out IComponent component)
         {

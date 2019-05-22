@@ -109,7 +109,7 @@ namespace Entia.Unity.Editor
                 alignment = TextAnchor.MiddleCenter,
                 fontSize = 12,
                 fontStyle = FontStyle.Bold,
-                clipping = TextClipping.Overflow,
+                clipping = TextClipping.Overflow
             },
             GUILayout.Height(16),
             GUILayout.Width(16));
@@ -137,6 +137,12 @@ namespace Entia.Unity.Editor
                 EditorGUI.LabelField(area, content, style);
             }
             return value;
+        }
+
+        public static bool Toggle(bool value)
+        {
+            using (LayoutUtility.NoIndent())
+                return EditorGUILayout.Toggle(GUIContent.none, value, GUILayout.Width(15f), GUILayout.Height(15f));
         }
 
         public static void Label(string label, GUIStyle style = null)

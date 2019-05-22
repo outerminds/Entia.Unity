@@ -127,6 +127,137 @@
       <summary>
             Module that stores and manages components.
             </summary>
+      <summary>
+            Module that stores and manages components.
+            </summary>
+      <summary>
+            Module that stores and manages components.
+            </summary>
+      <summary>
+            Module that stores and manages components.
+            </summary>
+      <summary>
+            Module that stores and manages components.
+            </summary>
+      <summary>
+            Module that stores and manages components.
+            </summary>
+      <summary>
+            Module that stores and manages components.
+            </summary>
+      <summary>
+            Module that stores and manages components.
+            </summary>
+      <summary>
+            Module that stores and manages components.
+            </summary>
+      <summary>
+            Module that stores and manages components.
+            </summary>
+      <summary>
+            Module that stores and manages components.
+            </summary>
+      <summary>
+            Module that stores and manages components.
+            </summary>
+      <summary>
+            Module that stores and manages components.
+            </summary>
+      <summary>
+            Module that stores and manages components.
+            </summary>
+      <summary>
+            Module that stores and manages components.
+            </summary>
+    </member>
+    <member name="M:Entia.Modules.Components.Clear``1(Entia.States)">
+      <summary>
+            Clears all components of type <typeparamref name="T" />.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>Returns <c>true</c> if components were cleared; otherwise, <c>false</c>.</returns>
+    </member>
+    <member name="M:Entia.Modules.Components.Clear(System.Type,Entia.States)">
+      <summary>
+            Clears all components of provided <paramref name="type" />.
+            </summary>
+      <param name="type">The component type.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>Returns <c>true</c> if components were cleared; otherwise, <c>false</c>.</returns>
+    </member>
+    <member name="M:Entia.Modules.Components.Clear(Entia.Entity,Entia.States)">
+      <summary>
+            Clears all components associated with the <paramref name="entity" />.
+            </summary>
+      <param name="entity">The entity.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>Returns <c>true</c> if components were cleared; otherwise, <c>false</c>.</returns>
+    </member>
+    <member name="M:Entia.Modules.Components.Clear(Entia.States)">
+      <summary>
+            Clears all components.
+            </summary>
+      <returns>Returns <c>true</c> if components were cleared; otherwise, <c>false</c>.</returns>
+    </member>
+    <member name="M:Entia.Modules.Components.Copy``1(Entia.Entity,Entia.Entity,Entia.States)">
+      <summary>
+            Copies components of type <typeparamref name="T" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <param name="source">The source entity.</param>
+      <param name="target">The target entity.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
+    </member>
+    <member name="M:Entia.Modules.Components.Copy(Entia.Entity,Entia.Entity,System.Type,Entia.States)">
+      <summary>
+            Copies components of provided <paramref name="type" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
+            </summary>
+      <param name="source">The source entity.</param>
+      <param name="target">The target entity.</param>
+      <param name="type">The component type.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
+    </member>
+    <member name="M:Entia.Modules.Components.Copy(Entia.Entity,Entia.Entity,Entia.States)">
+      <summary>
+            Copies all the components from the <paramref name="source" /> and sets them on the <paramref name="target" />.
+            </summary>
+      <param name="source">The source entity.</param>
+      <param name="target">The target entity.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
+    </member>
+    <member name="M:Entia.Modules.Components.Count(Entia.Entity,Entia.States)">
+      <summary>
+            Counts the components associated with the <paramref name="entity" />.
+            </summary>
+      <param name="entity">The entity.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>The number of components.</returns>
+    </member>
+    <member name="M:Entia.Modules.Components.Count``1(Entia.States)">
+      <summary>
+            Counts all the components of type <typeparamref name="T" />.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <returns>The number of components.</returns>
+    </member>
+    <member name="M:Entia.Modules.Components.Count(System.Type,Entia.States)">
+      <summary>
+            Counts all the components of provided <paramref name="type" />.
+            </summary>
+      <param name="type">The component type.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>The number of components.</returns>
+    </member>
+    <member name="M:Entia.Modules.Components.Count(Entia.States)">
+      <summary>
+            Counts all the components.
+            </summary>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>The number of components.</returns>
     </member>
     <member name="P:Entia.Modules.Components.Segments">
       <summary>
@@ -140,6 +271,18 @@
       <summary>
             Initializes a new instance of the <see cref="T:Entia.Modules.Components" /> class.
             </summary>
+    </member>
+    <member name="M:Entia.Modules.Components.TrySegment(Entia.Entity,System.ValueTuple{Entia.Modules.Component.Segment,System.Int32}@)">
+      <summary>
+            Tries the get segment associated with the <paramref name="entity" />.
+            </summary>
+      <param name="entity">The entity.</param>
+      <param name="pair">The segment and the index of the entity within it.</param>
+      <returns>Returns <c>true</c> if the segment was found; otherwise, <c>false</c>.</returns>
+    </member>
+    <member>
+      <summary>Returns an enumerator that iterates through the collection.</summary>
+      <returns>An enumerator that can be used to iterate through the collection.</returns>
     </member>
     <member name="M:Entia.Modules.Components.Default``1">
       <summary>
@@ -157,16 +300,17 @@
       <param name="component">The default component.</param>
       <returns>Returns <c>true</c> if a valid component was created; otherwise, <c>false</c>.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.Get``1(Entia.Entity)">
+    <member name="M:Entia.Modules.Components.Get``1(Entia.Entity,Entia.States)">
       <summary>
             Gets a component of type <typeref name="T" /> associated with the entity <paramref name="entity" />.
             If the component is missing, a <see cref="T:Entia.Messages.OnException" /> message will be emitted.
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
       <param name="entity">The entity associated with the component.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.GetOrDummy``1(Entia.Entity,System.Boolean@)">
+    <member name="M:Entia.Modules.Components.GetOrDummy``1(Entia.Entity,System.Boolean@,Entia.States)">
       <summary>
             Gets a component of type <typeref name="T" /> associated with the <paramref name="entity" />.
             If the component is missing, a dummy reference will be returned.
@@ -174,6 +318,7 @@
       <typeparam name="T">The concrete component type.</typeparam>
       <param name="entity">The entity associated with the component.</param>
       <param name="success">Is <c>true</c> if the component was found; otherwise, <c>false</c>.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
     </member>
     <member name="M:Entia.Modules.Components.GetOrAdd``1(Entia.Entity,System.Func{``0})">
@@ -187,90 +332,94 @@
       <param name="create">A function that creates a component of type <typeparamref name="T" />.</param>
       <returns>The existing or added component reference.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.TryGet``1(Entia.Entity,``0@)">
+    <member name="M:Entia.Modules.Components.TryGet``1(Entia.Entity,``0@,Entia.States)">
       <summary>
             Tries to get a component of type <typeparamref name="T" /> associated with the <paramref name="entity" />.
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
       <param name="entity">The entity.</param>
       <param name="component">The component.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.TryGet(Entia.Entity,System.Type,Entia.IComponent@)">
+    <member name="M:Entia.Modules.Components.TryGet(Entia.Entity,System.Type,Entia.IComponent@,Entia.States)">
       <summary>
             Tries to get a component of provided <paramref name="type" /> associated with the <paramref name="entity" />.
             </summary>
       <param name="entity">The entity.</param>
-      <param name="type">The concrete component type.</param>
+      <param name="type">The component type.</param>
       <param name="component">The component.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.Get(Entia.Entity,System.Type)">
+    <member name="M:Entia.Modules.Components.Get(Entia.Entity,System.Type,Entia.States)">
       <summary>
             Gets a component of provided <paramref name="type" /> associated with the entity <paramref name="entity" />.
             If the component is missing, a <see cref="T:Entia.Messages.OnException" /> message will be emitted.
             </summary>
       <param name="entity">The entity associated with the component.</param>
-      <param name="type">The concrete component type.</param>
+      <param name="type">The component type.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The component or null if the component is missing.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.Get(Entia.Entity)">
+    <member name="M:Entia.Modules.Components.Get(Entia.Entity,Entia.States)">
       <summary>
             Gets all the components associated with the <paramref name="entity" />.
             </summary>
       <param name="entity">The entity associated with the components.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The components.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.Get``1">
+    <member name="M:Entia.Modules.Components.Get``1(Entia.States)">
       <summary>
             Gets all entity-component pairs that have a component of type <typeparamref name="T" />.
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
       <returns>The entity-component pairs.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.Get(System.Type)">
+    <member name="M:Entia.Modules.Components.Get(System.Type,Entia.States)">
       <summary>
             Gets all entity-component pairs that have a component of provided <paramref name="type" />.
             </summary>
-      <param name="type">The concrete component type.</param>
+      <param name="type">The component type.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The entity-component pairs.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.Has``1(Entia.Entity)">
+    <member name="M:Entia.Modules.Components.Has``1(Entia.Entity,Entia.States)">
       <summary>
             Determines whether the <paramref name="entity" /> has a component of type <typeparamref name="T" />.
             </summary>
       <typeparam name="T">The component type.</typeparam>
       <param name="entity">The entity.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.Has(Entia.Entity,System.Type)">
+    <member name="M:Entia.Modules.Components.Has(Entia.Entity,System.Type,Entia.States)">
       <summary>
             Determines whether the <paramref name="entity" /> has a component of provided <paramref name="type" />.
             </summary>
       <param name="entity">The entity.</param>
       <param name="type">The component type.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.Count(Entia.Entity)">
+    <member name="M:Entia.Modules.Components.Remove``1(Entia.Entity,Entia.States)">
       <summary>
-            Counts the components associated with the <paramref name="entity" />.
-            </summary>
-      <param name="entity">The entity.</param>
-      <returns>The number of components.</returns>
-    </member>
-    <member name="M:Entia.Modules.Components.Count``1">
-      <summary>
-            Counts all the components of type <typeparamref name="T" />.
+            Removes components of type <typeparamref name="T" /> associated with the <paramref name="entity" />.
             </summary>
       <typeparam name="T">The component type.</typeparam>
-      <returns>The number of components.</returns>
+      <param name="entity">The entity.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>Returns <c>true</c> if the component was removed; otherwise, <c>false</c>.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.Count(System.Type)">
+    <member name="M:Entia.Modules.Components.Remove(Entia.Entity,System.Type,Entia.States)">
       <summary>
-            Counts all the components of provided <paramref name="type" />.
+            Removes components of provided <paramref name="type" /> associated with the <paramref name="entity" />.
             </summary>
+      <param name="entity">The entity.</param>
       <param name="type">The component type.</param>
-      <returns>The number of components.</returns>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>Returns <c>true</c> if the component was removed; otherwise, <c>false</c>.</returns>
     </member>
     <member name="M:Entia.Modules.Components.Set``1(Entia.Entity)">
       <summary>
@@ -309,50 +458,7 @@
       <param name="component">The component.</param>
       <returns>Returns <c>true</c> if the component was added; otherwise, <c>false</c>.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.Remove``1(Entia.Entity)">
-      <summary>
-            Removes components of type <typeparamref name="T" /> associated with the <paramref name="entity" />.
-            </summary>
-      <typeparam name="T">The component type.</typeparam>
-      <param name="entity">The entity.</param>
-      <returns>Returns <c>true</c> if the component was removed; otherwise, <c>false</c>.</returns>
-    </member>
-    <member name="M:Entia.Modules.Components.Remove(Entia.Entity,System.Type)">
-      <summary>
-            Removes components of provided <paramref name="type" /> associated with the <paramref name="entity" />.
-            </summary>
-      <param name="entity">The entity.</param>
-      <param name="type">The component type.</param>
-      <returns>Returns <c>true</c> if the component was removed; otherwise, <c>false</c>.</returns>
-    </member>
-    <member name="M:Entia.Modules.Components.Clear``1">
-      <summary>
-            Clears all components of type <typeparamref name="T" />.
-            </summary>
-      <typeparam name="T">The component type.</typeparam>
-      <returns>Returns <c>true</c> if components were cleared; otherwise, <c>false</c>.</returns>
-    </member>
-    <member name="M:Entia.Modules.Components.Clear(System.Type)">
-      <summary>
-            Clears all components of provided <paramref name="type" />.
-            </summary>
-      <param name="type">The component type.</param>
-      <returns>Returns <c>true</c> if components were cleared; otherwise, <c>false</c>.</returns>
-    </member>
-    <member name="M:Entia.Modules.Components.Clear(Entia.Entity)">
-      <summary>
-            Clears all components associated with the <paramref name="entity" />.
-            </summary>
-      <param name="entity">The entity.</param>
-      <returns>Returns <c>true</c> if components were cleared; otherwise, <c>false</c>.</returns>
-    </member>
-    <member name="M:Entia.Modules.Components.Clear">
-      <summary>
-            Clears all components.
-            </summary>
-      <returns>Returns <c>true</c> if components were cleared; otherwise, <c>false</c>.</returns>
-    </member>
-    <member name="M:Entia.Modules.Components.TryStore``1(Entia.Entity,``0[]@,System.Int32@)">
+    <member name="M:Entia.Modules.Components.TryStore``1(Entia.Entity,``0[]@,System.Int32@,Entia.States)">
       <summary>
             Tries to get the component store of type <typeparamref name="T" /> associated with the <paramref name="entity" />.
             </summary>
@@ -360,9 +466,10 @@
       <param name="entity">The entity.</param>
       <param name="store">The store.</param>
       <param name="index">The index in the store where the component is.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the store was found; otherwise, <c>false</c>.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.TryStore(Entia.Entity,System.Type,System.Array@,System.Int32@)">
+    <member name="M:Entia.Modules.Components.TryStore(Entia.Entity,System.Type,System.Array@,System.Int32@,Entia.States)">
       <summary>
             Tries to get the component store of provided <paramref name="type" /> associated with the <paramref name="entity" />.
             </summary>
@@ -370,53 +477,17 @@
       <param name="type">The concrete component type.</param>
       <param name="store">The store.</param>
       <param name="index">The index in the store where the component is.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the store was found; otherwise, <c>false</c>.</returns>
     </member>
-    <member name="M:Entia.Modules.Components.TrySegment(Entia.Entity,System.ValueTuple{Entia.Modules.Component.Segment,System.Int32}@)">
-      <summary>
-            Tries the get segment associated with the <paramref name="entity" />.
-            </summary>
-      <param name="entity">The entity.</param>
-      <param name="pair">The segment and the index of the entity within it.</param>
-      <returns>Returns <c>true</c> if the segment was found; otherwise, <c>false</c>.</returns>
-    </member>
-    <member name="M:Entia.Modules.Components.Copy``1(Entia.Entity,Entia.Entity)">
-      <summary>
-            Copies components of type <typeparamref name="T" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
-            </summary>
-      <typeparam name="T">The component type.</typeparam>
-      <param name="source">The source entity.</param>
-      <param name="target">The target entity.</param>
-      <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
-    </member>
-    <member name="M:Entia.Modules.Components.Copy(Entia.Entity,Entia.Entity,System.Type)">
-      <summary>
-            Copies components of provided <paramref name="type" /> from the <paramref name="source" /> and sets them on the <paramref name="target" />.
-            </summary>
-      <param name="source">The source entity.</param>
-      <param name="target">The target entity.</param>
-      <param name="type">The component type.</param>
-      <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
-    </member>
-    <member name="M:Entia.Modules.Components.Copy(Entia.Entity,Entia.Entity)">
-      <summary>
-            Copies all the components from the <paramref name="source" /> and sets them on the <paramref name="target" />.
-            </summary>
-      <param name="source">The source entity.</param>
-      <param name="target">The target entity.</param>
-      <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
-    </member>
-    <member name="M:Entia.Modules.Components.Trim(Entia.Entity,Entia.Entity)">
+    <member name="M:Entia.Modules.Components.Trim(Entia.Entity,Entia.Entity,Entia.States)">
       <summary>
             Removes the components on the <paramref name="target" /> that the <paramref name="source" /> does not have.
             </summary>
       <param name="source">The source entity.</param>
       <param name="target">The target entity.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if a component was removed; otherwise, <c>false</c>.</returns>
-    </member>
-    <member>
-      <summary>Returns an enumerator that iterates through the collection.</summary>
-      <returns>An enumerator that can be used to iterate through the collection.</returns>
     </member>
     <member name="T:Entia.Modules.Component.Metadata">
       <summary>
@@ -452,6 +523,11 @@
     <member name="F:Entia.Modules.Component.Metadata.Index">
       <summary>
             The component index.
+            </summary>
+    </member>
+    <member name="F:Entia.Modules.Component.Metadata.Kind">
+      <summary>
+            The component kind.
             </summary>
     </member>
     <member name="M:Entia.Modules.Component.Metadata.#ctor(Entia.Core.TypeData,System.Int32)">
@@ -505,38 +581,21 @@
             Initializes a new instance of the <see cref="T:Entia.Modules.Component.Segment" /> class.
             </summary>
     </member>
-    <member name="M:Entia.Modules.Component.Segment.TryStore``1(``0[]@)">
+    <member name="M:Entia.Modules.Component.Segment.TryStore(Entia.Modules.Component.Metadata@,System.Array@)">
       <summary>
-            Tries the get the component store of type <typeparamref name="T" />.
+            Tries the get the component store of provided component <paramref name="type" />.
             </summary>
-      <typeparam name="T">The component type.</typeparam>
-      <param name="store">The store.</param>
-      <returns>Returns <c>true</c> if a component store was found; otherwise, <c>false</c>.</returns>
-    </member>
-    <member name="M:Entia.Modules.Component.Segment.TryStore(System.Int32,System.Array@)">
-      <summary>
-            Tries the get the component store of provided component type <paramref name="index" />.
-            </summary>
-      <param name="index">The component type index.</param>
+      <param name="type">The component type.</param>
       <param name="store">The component store.</param>
       <returns>Returns <c>true</c> if a component store was found; otherwise, <c>false</c>.</returns>
     </member>
-    <member name="M:Entia.Modules.Component.Segment.Store``1">
+    <member name="M:Entia.Modules.Component.Segment.Store(Entia.Modules.Component.Metadata@)">
       <summary>
-            Gets the component store of type <typeparamref name="T" />.
+            Gets the component store of provided component <paramref name="type" />.
             If the store doesn't exist, an <see cref="T:System.IndexOutOfRangeException" /> may be thrown or a <c>null</c> will be returned.
-            Use <see cref="M:Entia.Modules.Component.Segment.TryStore``1(``0[]@)" /> if you are unsure if the store exists.
+            Use <see cref="M:Entia.Modules.Component.Segment.TryStore(Entia.Modules.Component.Metadata@,System.Array@)" /> if you are unsure if the store exists.
             </summary>
-      <typeparam name="T">The component type.</typeparam>
-      <returns>The component store.</returns>
-    </member>
-    <member name="M:Entia.Modules.Component.Segment.Store(System.Int32)">
-      <summary>
-            Gets the component store of provided component type <paramref name="index" />.
-            If the store doesn't exist, an <see cref="T:System.IndexOutOfRangeException" /> may be thrown or a <c>null</c> will be returned.
-            Use <see cref="M:Entia.Modules.Component.Segment.TryStore(System.Int32,System.Array@)" /> if you are unsure if the store exists.
-            </summary>
-      <param name="index">The component type index.</param>
+      <param name="type">The component type.</param>
       <returns>The component store.</returns>
     </member>
     <member name="M:Entia.Modules.Component.Segment.Ensure">
@@ -911,19 +970,18 @@
     </member>
     <member>
       <summary>
-            Gets the component store of type <typeparamref name="T" />.
+            Gets the component store of provided component <paramref name="type" />.
             If the store doesn't exist, an <see cref="T:System.IndexOutOfRangeException" /> may be thrown or a <c>null</c> will be returned.
-            Use <see cref="M:Entia.Modules.Component.Segment.TryStore``1(``0[]@)" /> if you are unsure if the store exists.
+            Use <see cref="M:Entia.Modules.Component.Segment.TryStore(Entia.Modules.Component.Metadata@,System.Array@)" /> if you are unsure if the store exists.
             </summary>
-      <typeparam name="T">The component type.</typeparam>
+      <param name="type">The component type.</param>
       <returns>The component store.</returns>
     </member>
     <member>
       <summary>
-            Tries the get the component store of type <typeparamref name="T" />.
+            Tries the get the component store of provided component <paramref name="type" />.
             </summary>
-      <typeparam name="T">The component type.</typeparam>
-      <param name="store">The store.</param>
+      <param name="store">The component store.</param>
       <returns>Returns <c>true</c> if a component store was found; otherwise, <c>false</c>.</returns>
     </member>
     <member>
@@ -1074,9 +1132,21 @@
             The component type that was added.
             </summary>
     </member>
+    <member name="T:Entia.Messages.OnAdd`1">
+      <summary>
+            Message emitted after a component of type <typeparamref name="T" /> has been added to an entity.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.OnAdd`1.Entity">
+      <summary>
+            The entity that gained a component of type <typeparamref name="T" />.
+            </summary>
+    </member>
     <member name="T:Entia.Messages.OnRemove">
       <summary>
-            Message emitted after a component has been removed to an entity.
+            Message emitted after a component has been removed from an entity.
             </summary>
       <seealso cref="T:Entia.IMessage" />
     </member>
@@ -1090,28 +1160,72 @@
             The component type that was removed.
             </summary>
     </member>
-    <member name="T:Entia.Messages.OnAdd`1">
-      <summary>
-            Message emitted after a component of type <typeparamref name="T" /> has been added to an entity.
-            </summary>
-      <typeparam name="T">The component type.</typeparam>
-      <seealso cref="T:Entia.IMessage" />
-    </member>
-    <member name="F:Entia.Messages.OnAdd`1.Entity">
-      <summary>
-            The entity that gained a component.
-            </summary>
-    </member>
     <member name="T:Entia.Messages.OnRemove`1">
       <summary>
-            Message emitted after a component of type <typeparamref name="T" /> has been removed to an entity.
+            Message emitted after a component of type <typeparamref name="T" /> has been removed from an entity.
             </summary>
       <typeparam name="T">The component type.</typeparam>
       <seealso cref="T:Entia.IMessage" />
     </member>
     <member name="F:Entia.Messages.OnRemove`1.Entity">
       <summary>
-            The entity that lost a component.
+            The entity that lost a component of type <typeparamref name="T" />.
+            </summary>
+    </member>
+    <member name="T:Entia.Messages.OnEnable">
+      <summary>
+            Message emitted after a component has been enabled.
+            </summary>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.OnEnable.Entity">
+      <summary>
+            The entity that had a component enabled.
+            </summary>
+    </member>
+    <member name="F:Entia.Messages.OnEnable.Component">
+      <summary>
+            The component type that was enabled.
+            </summary>
+    </member>
+    <member name="T:Entia.Messages.OnEnable`1">
+      <summary>
+            Message emitted after a component of type <typeparamref name="T" /> has been enabled.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.OnEnable`1.Entity">
+      <summary>
+            The entity that had a component of type <typeparamref name="T" /> enabled.
+            </summary>
+    </member>
+    <member name="T:Entia.Messages.OnDisable">
+      <summary>
+            Message emitted after a component has been disabled.
+            </summary>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.OnDisable.Entity">
+      <summary>
+            The entity that had a component disabled.
+            </summary>
+    </member>
+    <member name="F:Entia.Messages.OnDisable.Component">
+      <summary>
+            The component type that was disabled.
+            </summary>
+    </member>
+    <member name="T:Entia.Messages.OnDisable`1">
+      <summary>
+            Message emitted after a component of type <typeparamref name="T" /> has been disabled.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.OnDisable`1.Entity">
+      <summary>
+            The entity that had a component of type <typeparamref name="T" /> disabled.
             </summary>
     </member>
     <member name="T:Entia.Messages.OnException">
@@ -1227,7 +1341,7 @@
             If the component is missing, a <see cref="T:Entia.Messages.OnException" /> message will be emitted.
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
-      <param name="entity">The entity associated with the component.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
     </member>
     <member>
@@ -1237,6 +1351,7 @@
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
       <param name="success">Is <c>true</c> if the component was found; otherwise, <c>false</c>.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
     </member>
     <member>
@@ -1245,21 +1360,23 @@
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
       <param name="component">The component.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
     </member>
     <member>
       <summary>
             Tries to get a component of provided <paramref name="type" /> associated with the <paramref name="entity" />.
             </summary>
-      <param name="type">The concrete component type.</param>
+      <param name="type">The component type.</param>
       <param name="component">The component.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
     </member>
     <member>
       <summary>
             Gets all the components associated with the <paramref name="entity" />.
             </summary>
-      <param name="entity">The entity associated with the components.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The components.</returns>
     </member>
     <member>
@@ -1273,7 +1390,7 @@
       <summary>
             Gets all entity-component pairs that have a component of provided <paramref name="type" />.
             </summary>
-      <param name="type">The concrete component type.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The entity-component pairs.</returns>
     </member>
     <member>
@@ -1281,7 +1398,7 @@
             Determines whether the <paramref name="entity" /> has a component of type <typeparamref name="T" />.
             </summary>
       <typeparam name="T">The component type.</typeparam>
-      <param name="entity">The entity.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
     </member>
     <member>
@@ -1289,7 +1406,42 @@
             Determines whether the <paramref name="entity" /> has a component of provided <paramref name="type" />.
             </summary>
       <param name="type">The component type.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
+    </member>
+    <member>
+      <summary>
+            Counts the components associated with the <paramref name="entity" />.
+            </summary>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>The number of components.</returns>
+    </member>
+    <member>
+      <summary>
+            Counts all the components of type <typeparamref name="T" />.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <returns>The number of components.</returns>
+    </member>
+    <member>
+      <summary>
+            Counts all the components of provided <paramref name="type" />.
+            </summary>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>The number of components.</returns>
+    </member>
+    <member>
+      <summary>
+            Counts all the components.
+            </summary>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>The number of components.</returns>
+    </member>
+    <member name="M:Entia.Injectables.AllComponents.Write.State``1(Entia.Entity)">
+      <inheritdoc cref="M:Entia.Modules.Components.State``1(Entia.Entity)" />
+    </member>
+    <member name="M:Entia.Injectables.AllComponents.Write.State(Entia.Entity,System.Type)">
+      <inheritdoc cref="M:Entia.Modules.Components.State(Entia.Entity,System.Type)" />
     </member>
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>
@@ -1322,7 +1474,7 @@
             If the component is missing, a <see cref="T:Entia.Messages.OnException" /> message will be emitted.
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
-      <param name="entity">The entity associated with the component.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
     </member>
     <member>
@@ -1332,6 +1484,7 @@
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
       <param name="success">Is <c>true</c> if the component was found; otherwise, <c>false</c>.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
     </member>
     <member>
@@ -1340,21 +1493,23 @@
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
       <param name="component">The component.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
     </member>
     <member>
       <summary>
             Tries to get a component of provided <paramref name="type" /> associated with the <paramref name="entity" />.
             </summary>
-      <param name="type">The concrete component type.</param>
+      <param name="type">The component type.</param>
       <param name="component">The component.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
     </member>
     <member>
       <summary>
             Gets all the components associated with the <paramref name="entity" />.
             </summary>
-      <param name="entity">The entity associated with the components.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The components.</returns>
     </member>
     <member>
@@ -1368,7 +1523,7 @@
       <summary>
             Gets all entity-component pairs that have a component of provided <paramref name="type" />.
             </summary>
-      <param name="type">The concrete component type.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The entity-component pairs.</returns>
     </member>
     <member>
@@ -1376,7 +1531,7 @@
             Determines whether the <paramref name="entity" /> has a component of type <typeparamref name="T" />.
             </summary>
       <typeparam name="T">The component type.</typeparam>
-      <param name="entity">The entity.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
     </member>
     <member>
@@ -1384,7 +1539,42 @@
             Determines whether the <paramref name="entity" /> has a component of provided <paramref name="type" />.
             </summary>
       <param name="type">The component type.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
+    </member>
+    <member>
+      <summary>
+            Counts the components associated with the <paramref name="entity" />.
+            </summary>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>The number of components.</returns>
+    </member>
+    <member>
+      <summary>
+            Counts all the components of type <typeparamref name="T" />.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <returns>The number of components.</returns>
+    </member>
+    <member>
+      <summary>
+            Counts all the components of provided <paramref name="type" />.
+            </summary>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>The number of components.</returns>
+    </member>
+    <member>
+      <summary>
+            Counts all the components.
+            </summary>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>The number of components.</returns>
+    </member>
+    <member name="M:Entia.Injectables.AllComponents.Read.State``1(Entia.Entity)">
+      <inheritdoc cref="M:Entia.Modules.Components.State``1(Entia.Entity)" />
+    </member>
+    <member name="M:Entia.Injectables.AllComponents.Read.State(Entia.Entity,System.Type)">
+      <inheritdoc cref="M:Entia.Modules.Components.State(Entia.Entity,System.Type)" />
     </member>
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>
@@ -1417,7 +1607,7 @@
             If the component is missing, a <see cref="T:Entia.Messages.OnException" /> message will be emitted.
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
-      <param name="entity">The entity associated with the component.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
     </member>
     <member>
@@ -1437,6 +1627,7 @@
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
       <param name="success">Is <c>true</c> if the component was found; otherwise, <c>false</c>.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
     </member>
     <member>
@@ -1445,21 +1636,23 @@
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
       <param name="component">The component.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
     </member>
     <member>
       <summary>
             Tries to get a component of provided <paramref name="type" /> associated with the <paramref name="entity" />.
             </summary>
-      <param name="type">The concrete component type.</param>
+      <param name="type">The component type.</param>
       <param name="component">The component.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
     </member>
     <member>
       <summary>
             Gets all the components associated with the <paramref name="entity" />.
             </summary>
-      <param name="entity">The entity associated with the components.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The components.</returns>
     </member>
     <member>
@@ -1473,8 +1666,58 @@
       <summary>
             Gets all entity-component pairs that have a component of provided <paramref name="type" />.
             </summary>
-      <param name="type">The concrete component type.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The entity-component pairs.</returns>
+    </member>
+    <member>
+      <summary>
+            Determines whether the <paramref name="entity" /> has a component of type <typeparamref name="T" />.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
+    </member>
+    <member>
+      <summary>
+            Determines whether the <paramref name="entity" /> has a component of provided <paramref name="type" />.
+            </summary>
+      <param name="type">The component type.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
+    </member>
+    <member>
+      <summary>
+            Counts the components associated with the <paramref name="entity" />.
+            </summary>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>The number of components.</returns>
+    </member>
+    <member>
+      <summary>
+            Counts all the components of type <typeparamref name="T" />.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <returns>The number of components.</returns>
+    </member>
+    <member>
+      <summary>
+            Counts all the components of provided <paramref name="type" />.
+            </summary>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>The number of components.</returns>
+    </member>
+    <member>
+      <summary>
+            Counts all the components.
+            </summary>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>The number of components.</returns>
+    </member>
+    <member name="M:Entia.Injectables.AllComponents.State``1(Entia.Entity)">
+      <inheritdoc cref="M:Entia.Modules.Components.State``1(Entia.Entity)" />
+    </member>
+    <member name="M:Entia.Injectables.AllComponents.State(Entia.Entity,System.Type)">
+      <inheritdoc cref="M:Entia.Modules.Components.State(Entia.Entity,System.Type)" />
     </member>
     <member>
       <summary>
@@ -1512,25 +1755,10 @@
     </member>
     <member>
       <summary>
-            Determines whether the <paramref name="entity" /> has a component of type <typeparamref name="T" />.
-            </summary>
-      <typeparam name="T">The component type.</typeparam>
-      <param name="entity">The entity.</param>
-      <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
-    </member>
-    <member>
-      <summary>
-            Determines whether the <paramref name="entity" /> has a component of provided <paramref name="type" />.
-            </summary>
-      <param name="type">The component type.</param>
-      <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
-    </member>
-    <member>
-      <summary>
             Removes components of type <typeparamref name="T" /> associated with the <paramref name="entity" />.
             </summary>
       <typeparam name="T">The component type.</typeparam>
-      <param name="entity">The entity.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was removed; otherwise, <c>false</c>.</returns>
     </member>
     <member>
@@ -1538,6 +1766,7 @@
             Removes components of provided <paramref name="type" /> associated with the <paramref name="entity" />.
             </summary>
       <param name="type">The component type.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was removed; otherwise, <c>false</c>.</returns>
     </member>
     <member>
@@ -1545,20 +1774,21 @@
             Clears all components of type <typeparamref name="T" />.
             </summary>
       <typeparam name="T">The component type.</typeparam>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if components were cleared; otherwise, <c>false</c>.</returns>
     </member>
     <member>
       <summary>
             Clears all components of provided <paramref name="type" />.
             </summary>
-      <param name="type">The component type.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if components were cleared; otherwise, <c>false</c>.</returns>
     </member>
     <member>
       <summary>
             Clears all components associated with the <paramref name="entity" />.
             </summary>
-      <param name="entity">The entity.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if components were cleared; otherwise, <c>false</c>.</returns>
     </member>
     <member>
@@ -1573,6 +1803,7 @@
             </summary>
       <typeparam name="T">The component type.</typeparam>
       <param name="target">The target entity.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
     </member>
     <member>
@@ -1581,6 +1812,7 @@
             </summary>
       <param name="target">The target entity.</param>
       <param name="type">The component type.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
     </member>
     <member>
@@ -1588,6 +1820,7 @@
             Copies all the components from the <paramref name="source" /> and sets them on the <paramref name="target" />.
             </summary>
       <param name="target">The target entity.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
     </member>
     <member>
@@ -1595,7 +1828,26 @@
             Removes the components on the <paramref name="target" /> that the <paramref name="source" /> does not have.
             </summary>
       <param name="target">The target entity.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if a component was removed; otherwise, <c>false</c>.</returns>
+    </member>
+    <member name="M:Entia.Injectables.AllComponents.Enable``1(Entia.Entity)">
+      <inheritdoc cref="M:Entia.Modules.Components.Enable``1(Entia.Entity)" />
+    </member>
+    <member name="M:Entia.Injectables.AllComponents.Enable(Entia.Entity,System.Type)">
+      <inheritdoc cref="M:Entia.Modules.Components.Enable(Entia.Entity,System.Type)" />
+    </member>
+    <member name="M:Entia.Injectables.AllComponents.Enable(Entia.Entity)">
+      <inheritdoc cref="M:Entia.Modules.Components.Enable(Entia.Entity)" />
+    </member>
+    <member name="M:Entia.Injectables.AllComponents.Disable``1(Entia.Entity)">
+      <inheritdoc cref="M:Entia.Modules.Components.Disable``1(Entia.Entity)" />
+    </member>
+    <member name="M:Entia.Injectables.AllComponents.Disable(Entia.Entity,System.Type)">
+      <inheritdoc cref="M:Entia.Modules.Components.Disable(Entia.Entity,System.Type)" />
+    </member>
+    <member name="M:Entia.Injectables.AllComponents.Disable(Entia.Entity)">
+      <inheritdoc cref="M:Entia.Modules.Components.Disable(Entia.Entity)" />
     </member>
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>
@@ -1631,6 +1883,7 @@
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
       <param name="success">Is <c>true</c> if the component was found; otherwise, <c>false</c>.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
     </member>
     <member>
@@ -1639,6 +1892,7 @@
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
       <param name="component">The component.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
     </member>
     <member>
@@ -1647,7 +1901,7 @@
             If the component is missing, a <see cref="T:Entia.Messages.OnException" /> message will be emitted.
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
-      <param name="entity">The entity associated with the component.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
     </member>
     <member>
@@ -1655,8 +1909,18 @@
             Determines whether the <paramref name="entity" /> has a component of type <typeparamref name="T" />.
             </summary>
       <typeparam name="T">The component type.</typeparam>
-      <param name="entity">The entity.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
+    </member>
+    <member>
+      <summary>
+            Counts all the components of type <typeparamref name="T" />.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <returns>The number of components.</returns>
+    </member>
+    <member name="M:Entia.Injectables.Components`1.Write.State(Entia.Entity)">
+      <inheritdoc cref="M:Entia.Modules.Components.State``1(Entia.Entity)" />
     </member>
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>
@@ -1687,6 +1951,7 @@
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
       <param name="success">Is <c>true</c> if the component was found; otherwise, <c>false</c>.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
     </member>
     <member>
@@ -1695,6 +1960,7 @@
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
       <param name="component">The component.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
     </member>
     <member>
@@ -1703,7 +1969,7 @@
             If the component is missing, a <see cref="T:Entia.Messages.OnException" /> message will be emitted.
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
-      <param name="entity">The entity associated with the component.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
     </member>
     <member>
@@ -1711,8 +1977,18 @@
             Determines whether the <paramref name="entity" /> has a component of type <typeparamref name="T" />.
             </summary>
       <typeparam name="T">The component type.</typeparam>
-      <param name="entity">The entity.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
+    </member>
+    <member>
+      <summary>
+            Counts all the components of type <typeparamref name="T" />.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <returns>The number of components.</returns>
+    </member>
+    <member name="M:Entia.Injectables.Components`1.Read.State(Entia.Entity)">
+      <inheritdoc cref="M:Entia.Modules.Components.State``1(Entia.Entity)" />
     </member>
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>
@@ -1748,6 +2024,7 @@
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
       <param name="success">Is <c>true</c> if the component was found; otherwise, <c>false</c>.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
     </member>
     <member>
@@ -1756,6 +2033,7 @@
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
       <param name="component">The component.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
     </member>
     <member>
@@ -1764,8 +2042,26 @@
             If the component is missing, a <see cref="T:Entia.Messages.OnException" /> message will be emitted.
             </summary>
       <typeparam name="T">The concrete component type.</typeparam>
-      <param name="entity">The entity associated with the component.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>The component reference or <see cref="F:Entia.Core.Dummy`1.Value" /> if the component is missing.</returns>
+    </member>
+    <member>
+      <summary>
+            Determines whether the <paramref name="entity" /> has a component of type <typeparamref name="T" />.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
+    </member>
+    <member>
+      <summary>
+            Counts all the components of type <typeparamref name="T" />.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <returns>The number of components.</returns>
+    </member>
+    <member name="M:Entia.Injectables.Components`1.State(Entia.Entity)">
+      <inheritdoc cref="M:Entia.Modules.Components.State``1(Entia.Entity)" />
     </member>
     <member>
       <summary>
@@ -1787,18 +2083,10 @@
     </member>
     <member>
       <summary>
-            Determines whether the <paramref name="entity" /> has a component of type <typeparamref name="T" />.
-            </summary>
-      <typeparam name="T">The component type.</typeparam>
-      <param name="entity">The entity.</param>
-      <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
-    </member>
-    <member>
-      <summary>
             Removes components of type <typeparamref name="T" /> associated with the <paramref name="entity" />.
             </summary>
       <typeparam name="T">The component type.</typeparam>
-      <param name="entity">The entity.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was removed; otherwise, <c>false</c>.</returns>
     </member>
     <member>
@@ -1806,6 +2094,7 @@
             Clears all components of type <typeparamref name="T" />.
             </summary>
       <typeparam name="T">The component type.</typeparam>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if components were cleared; otherwise, <c>false</c>.</returns>
     </member>
     <member>
@@ -1814,7 +2103,14 @@
             </summary>
       <typeparam name="T">The component type.</typeparam>
       <param name="target">The target entity.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the cloning was successful; otherwise, <c>false</c>.</returns>
+    </member>
+    <member name="M:Entia.Injectables.Components`1.Enable(Entia.Entity)">
+      <inheritdoc cref="M:Entia.Modules.Components.Enable``1(Entia.Entity)" />
+    </member>
+    <member name="M:Entia.Injectables.Components`1.Disable(Entia.Entity)">
+      <inheritdoc cref="M:Entia.Modules.Components.Disable``1(Entia.Entity)" />
     </member>
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>

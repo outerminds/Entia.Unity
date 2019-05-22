@@ -53,7 +53,7 @@ namespace Entia.Unity
         }
         IComponent IComponentReference.Raw { get => Raw; set => Raw = value is T component ? component : default; }
         Type IComponentReference.Type => typeof(T);
-        Metadata IComponentReference.Metadata => ComponentUtility.Concrete<T>.Data;
+        Metadata IComponentReference.Metadata => ComponentUtility.Cache<T>.Data;
 
         bool _initialized;
         bool _disposed;
@@ -75,13 +75,15 @@ namespace Entia.Unity
             else member = value;
         }
 
-        void Awake()
+        protected virtual void Awake()
         {
             if (GetComponent<IEntityReference>() is IEntityReference reference && reference.Entity && reference.World is World world)
                 Initialize(reference.Entity, world);
         }
 
-        void OnDestroy() => Dispose();
+        protected virtual void OnDestroy() => Dispose();
+        protected virtual void OnEnable() => World?.Components().Enable<T>(Entity);
+        protected virtual void OnDisable() => World?.Components().Disable<T>(Entity);
 
         void Initialize(Entity entity, World world)
         {
@@ -91,6 +93,9 @@ namespace Entia.Unity
                 World = world;
                 Entity = entity;
                 World.Components().Set(Entity, Raw);
+
+                if (enabled && gameObject.activeInHierarchy) OnEnable();
+                else OnDisable();
             }
         }
 
