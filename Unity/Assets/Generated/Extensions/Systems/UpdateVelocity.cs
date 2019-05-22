@@ -15,6 +15,5 @@ namespace Systems
 		public static ref readonly global::Components.Physics Physics(in this global::Systems.UpdateVelocity.Query item, out global::Entia.States state) => ref item.Mass.Get(out state);
 		public static ref readonly global::Components.Input Input(in this global::Systems.UpdateVelocity.Query item) => ref item.Input.Value;
 		public static ref readonly global::Components.Input Input(in this global::Systems.UpdateVelocity.Query item, out global::Entia.States state) => ref item.Input.Get(out state);
-		public static ref readonly global::Entia.Components.Debug Debug(in this global::Systems.UpdateVelocity.Query item) => ref item.Debug.Value;
 	}
 }

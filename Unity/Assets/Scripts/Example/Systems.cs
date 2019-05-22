@@ -44,7 +44,6 @@ namespace Systems
             public readonly Read<Components.Motion> Motion;
             public readonly Read<Components.Physics> Mass;
             public readonly Read<Components.Input> Input;
-            public readonly Read<Entia.Components.Debug> Debug;
         }
 
         public readonly Group<Query> Group;
