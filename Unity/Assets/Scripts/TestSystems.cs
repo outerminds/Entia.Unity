@@ -83,6 +83,11 @@ namespace Systems
             public Write<Components.Inner.Component7> Component14;
             public Maybe<Read<Components.Inner.Component3>> Component31;
             public Maybe<Read<Components.Inner.Component4>> Component41;
+            public Maybe<Unity<Transform>> Transform1;
+            public Unity<Transform> Transform2;
+            public Unity<GameObject> GameObject;
+            public Maybe<Read<Entia.Components.Debug>> Debug1;
+            public Read<Entia.Components.Debug> Debug2;
         }
 
         public Resource<Resources.Prefabs> Prefabs;
@@ -102,7 +107,7 @@ namespace Systems
                 {
                     ref var c0 = ref item.Component1();
                     ref var c1 = ref item.Component7();
-                    ref readonly var c2 = ref item.Component2(out var s1);
+                    ref readonly var c2 = ref item.Component2(out var s1, out var st1);
                     ref var c3 = ref item.Component3(out var s2);
                     ref readonly var c4 = ref item.Component5(out var s3);
                     Debug.Log(c0.X + c1.I + c2.G + c3.A + c4.C);

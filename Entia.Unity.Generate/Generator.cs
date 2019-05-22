@@ -1,4 +1,5 @@
-﻿using Entia.Core;
+﻿using Entia.Components;
+using Entia.Core;
 using Entia.Dependencies;
 using Entia.Modules.Group;
 using Entia.Modules.Query;
@@ -39,6 +40,8 @@ namespace Entia.Unity
         public readonly INamedTypeSymbol IQueryable;
         public readonly INamedTypeSymbol ISystem;
         public readonly INamedTypeSymbol IPhase;
+        public readonly INamedTypeSymbol IEnabled;
+        public readonly INamedTypeSymbol States;
 
         public readonly INamedTypeSymbol[] Groups;
         public readonly INamedTypeSymbol Write;
@@ -87,6 +90,8 @@ namespace Entia.Unity
             IQueryable = Global.Type<Entia.Queryables.IQueryable>();
             ISystem = Global.Type<ISystem>();
             IPhase = Global.Type<IPhase>();
+            IEnabled = Global.Type<IEnabled>();
+            States = Global.Type<States>();
 
             Groups = Global.Types(typeof(Injectables.Group<>)).OrderBy(type => type.TypeParameters.Length).ToArray();
             Unity = Global.Type(true, nameof(Entia), nameof(Queryables), nameof(Unity));
@@ -128,15 +133,16 @@ namespace Entia.Unity
         public IEnumerable<string> Accesses = Array.Empty<string>();
         public bool Ref;
         public bool Readonly;
+        public bool State;
         public int? Try;
 
         public bool Equals(Extension other) =>
             this == other ? true :
             other == null ? false :
-            (Outer, Inner, Ref, Readonly, Try) == (other.Outer, other.Inner, other.Ref, other.Readonly, other.Try) &&
+            (Outer, Inner, Ref, Readonly, State, Try) == (other.Outer, other.Inner, other.Ref, other.Readonly, other.State, other.Try) &&
             Accesses.SequenceEqual(other.Accesses);
         public override bool Equals(object obj) => obj is Extension extension && Equals(extension);
-        public override int GetHashCode() => (Outer, Inner, Ref, Readonly, Try).GetHashCode() ^ ArrayUtility.GetHashCode(Accesses.ToArray());
+        public override int GetHashCode() => (Outer, Inner, Ref, Readonly, State, Try).GetHashCode() ^ ArrayUtility.GetHashCode(Accesses.ToArray());
     }
 
     public static class Generator
@@ -452,6 +458,7 @@ $@"{proxy}
                             Outer = named,
                             Inner = named.TypeArguments[0],
                             Accesses = new string[] { nameof(Write<Void>.Value) },
+                            State = !named.TypeArguments[0].Implements(context.IEnabled),
                             Ref = true
                         };
                     else if (context.Read == definition)
@@ -460,6 +467,7 @@ $@"{proxy}
                             Outer = named,
                             Inner = named.TypeArguments[0],
                             Accesses = new string[] { nameof(Read<Void>.Value) },
+                            State = !named.TypeArguments[0].Implements(context.IEnabled),
                             Ref = true,
                             Readonly = true
                         };
@@ -508,9 +516,11 @@ $@"{proxy}
 
         static IEnumerable<(string @return, string signature, string body)> FormatQueryExtensions(int indent, ITypeSymbol query, HashSet<ITypeSymbol> set, Context context)
         {
-            const string item = "item";
-            const string value = "value";
-            const string success = "success";
+            const string item = nameof(item);
+            const string value = nameof(value);
+            const string success = nameof(success);
+            const string state = nameof(state);
+            var states = FormatPath(context.States);
             var indentation = Indentation(indent);
             if (set.Add(query))
             {
@@ -520,45 +530,31 @@ $@"{proxy}
                     var name = FormatExtensionName(extension.Inner);
                     var outerName = FormatGenericPath(extension.Outer);
                     var innerName = FormatGenericPath(extension.Inner);
-                    var access = string.Join(".", extension.Accesses.Prepend(item));
                     var accessModifier = extension.Ref ? "ref " : "";
                     var returnModifier = extension.Ref ? extension.Readonly ? "ref readonly " : "ref " : "";
 
-                    if (extension.Try.HasValue)
+                    if (extension.Try is int @try)
                     {
-                        var @try = extension.Try.Value;
-                        var maybeValue = string.Join(".", extension.Accesses.Take(@try).Prepend(item).Append(nameof(Maybe<Void>.Value)));
-                        var maybeHas = string.Join(".", extension.Accesses.Take(@try).Prepend(item).Append(nameof(Maybe<Void>.Has)));
-                        var (accessSuffix, returnName, returnHas) =
-                            extension.Outer.OriginalDefinition == context.Unity ?
-                            ($".Value", innerName, $"{value} != null") :
-                            ("", outerName, "true");
+                        var maybe = string.Join(".", extension.Accesses.Take(@try).Prepend(item));
+                        var returnName = extension.Outer.OriginalDefinition == context.Unity ? innerName : outerName;
 
-                        yield return ($"{indentation}public static bool ", $"Try{name}(in this {queryName} {item}, out {returnName} {value})", $@"
-{indentation}{{
-{indentation}	if ({maybeHas})
-{indentation}	{{
-{indentation}		{value} = {maybeValue}{accessSuffix};
-{indentation}		return {returnHas};
-{indentation}	}}
-{indentation}
-{indentation}	{value} = default;
-{indentation}	return false;
-{indentation}}}");
+                        yield return ($"{indentation}public static bool ", $"Try{name}(in this {queryName} {item}, out {returnName} {value})", $@" => {maybe}.TryGet(out {value});");
+                        yield return ($"{indentation}public static {returnModifier}{innerName} ", $"{name}(in this {queryName} {item}, out bool {success})", $@" => {accessModifier}{maybe}.Get(out {success});");
 
-                        if (extension.Ref)
-                            yield return ($"{indentation}public static {returnModifier}{innerName} ", $"{name}(in this {queryName} {item}, out bool {success})", $@"
-{indentation}{{
-{indentation}	if ({success} = {maybeHas}) return {accessModifier}{access};
-{indentation}	return {accessModifier}global::Entia.Core.Dummy<{innerName}>.Value;
-{indentation}}}");
+                        if (extension.State)
+                            yield return ($"{indentation}public static {returnModifier}{innerName} ", $"{name}(in this {queryName} {item}, out bool {success}, out {states} {state})", $@" => {accessModifier}{maybe}.Get(out {success}, out {state});");
                     }
                     else
                     {
-                        yield return ($"{indentation}public static {returnModifier}{innerName} ", $"{name}(in this {queryName} {item})", $" => {accessModifier}{access};");
+                        var access = string.Join(".", extension.Accesses.SkipLast().Prepend(item));
+                        var accessValue = string.Join(".", extension.Accesses.Prepend(item));
+                        yield return ($"{indentation}public static {returnModifier}{innerName} ", $"{name}(in this {queryName} {item})", $" => {accessModifier}{accessValue};");
+
+                        if (extension.State)
+                            yield return ($"{indentation}public static {returnModifier}{innerName} ", $"{name}(in this {queryName} {item}, out {states} {state})", $" => {accessModifier}{access}.Get(out {state});");
 
                         if (extension.Ref && !extension.Readonly)
-                            yield return ($"{indentation}public static void ", $"{name}(in this {queryName} {item}, in {innerName} {value})", $" => {access} = {value};");
+                            yield return ($"{indentation}public static void ", $"{name}(in this {queryName} {item}, in {innerName} {value})", $" => {accessValue} = {value};");
                     }
                 }
             }
@@ -584,7 +580,10 @@ $@"{proxy}
                     .DistinctBy(extension => extension.signature)
                     .Select(extension => $"{extension.@return}{extension.signature}{extension.body}"));
             var content =
-$@"{indentation}{FormatGenerated(system, context)}
+$@"{indentation}using {nameof(Entia)}.{nameof(Entia.Queryables)};
+{indentation}using {nameof(Entia)}.{nameof(Entia.Unity)};
+
+{indentation}{FormatGenerated(system, context)}
 {indentation}public static class {system.Name}Extensions
 {indentation}{{
 {extensions}
