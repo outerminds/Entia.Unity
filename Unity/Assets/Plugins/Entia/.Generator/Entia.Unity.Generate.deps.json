@@ -1,37 +1,37 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "7503a85963b94e04c7a8e2609cb4042437e654f1"
+    "signature": "7e56cace05d3bf3f29a95e74b52a32f89d463acc"
   },
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v2.1": {
-      "Entia.Unity.Generate/1.1.2": {
+      "Entia.Unity.Generate/1.2.0": {
         "dependencies": {
-          "Entia.Unity": "1.1.2",
-          "Microsoft.CodeAnalysis.CSharp": "3.0.0",
-          "Entia.Core": "1.0.5.0",
-          "Entia": "1.0.5.0"
+          "Entia.Unity": "1.2.0",
+          "Microsoft.CodeAnalysis.CSharp": "3.1.0",
+          "Entia.Core": "1.1.0.0",
+          "Entia": "1.1.0.0"
         },
         "runtime": {
           "Entia.Unity.Generate.dll": {}
         }
       },
       "Microsoft.CodeAnalysis.Analyzers/2.6.2-beta2": {},
-      "Microsoft.CodeAnalysis.Common/3.0.0": {
+      "Microsoft.CodeAnalysis.Common/3.1.0": {
         "dependencies": {
           "Microsoft.CodeAnalysis.Analyzers": "2.6.2-beta2",
           "System.Collections.Immutable": "1.5.0",
-          "System.Memory": "4.5.1",
+          "System.Memory": "4.5.2",
           "System.Reflection.Metadata": "1.6.0",
-          "System.Runtime.CompilerServices.Unsafe": "4.5.0",
-          "System.Text.Encoding.CodePages": "4.5.0",
-          "System.Threading.Tasks.Extensions": "4.5.0"
+          "System.Runtime.CompilerServices.Unsafe": "4.5.2",
+          "System.Text.Encoding.CodePages": "4.5.1",
+          "System.Threading.Tasks.Extensions": "4.5.2"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.CodeAnalysis.dll": {
-            "assemblyVersion": "3.0.0.0",
-            "fileVersion": "3.0.19.17001"
+            "assemblyVersion": "3.1.0.0",
+            "fileVersion": "3.100.19.26603"
           }
         },
         "resources": {
@@ -76,14 +76,14 @@
           }
         }
       },
-      "Microsoft.CodeAnalysis.CSharp/3.0.0": {
+      "Microsoft.CodeAnalysis.CSharp/3.1.0": {
         "dependencies": {
-          "Microsoft.CodeAnalysis.Common": "3.0.0"
+          "Microsoft.CodeAnalysis.Common": "3.1.0"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.CodeAnalysis.CSharp.dll": {
-            "assemblyVersion": "3.0.0.0",
-            "fileVersion": "3.0.19.17001"
+            "assemblyVersion": "3.1.0.0",
+            "fileVersion": "3.100.19.26603"
           }
         },
         "resources": {
@@ -128,25 +128,27 @@
           }
         }
       },
+      "Microsoft.NETCore.Platforms/2.1.2": {},
       "System.Collections.Immutable/1.5.0": {},
-      "System.Memory/4.5.1": {},
+      "System.Memory/4.5.2": {},
       "System.Reflection.Metadata/1.6.0": {},
-      "System.Runtime.CompilerServices.Unsafe/4.5.0": {
+      "System.Runtime.CompilerServices.Unsafe/4.5.2": {
         "runtime": {
           "lib/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.dll": {
-            "assemblyVersion": "4.0.4.0",
-            "fileVersion": "0.0.0.0"
+            "assemblyVersion": "4.0.4.1",
+            "fileVersion": "4.6.26919.2"
           }
         }
       },
-      "System.Text.Encoding.CodePages/4.5.0": {
+      "System.Text.Encoding.CodePages/4.5.1": {
         "dependencies": {
-          "System.Runtime.CompilerServices.Unsafe": "4.5.0"
+          "Microsoft.NETCore.Platforms": "2.1.2",
+          "System.Runtime.CompilerServices.Unsafe": "4.5.2"
         },
         "runtime": {
           "lib/netstandard2.0/System.Text.Encoding.CodePages.dll": {
             "assemblyVersion": "4.1.1.0",
-            "fileVersion": "4.6.26515.6"
+            "fileVersion": "4.6.27129.4"
           }
         },
         "runtimeTargets": {
@@ -154,36 +156,36 @@
             "rid": "win",
             "assetType": "runtime",
             "assemblyVersion": "4.1.1.0",
-            "fileVersion": "4.6.26515.6"
+            "fileVersion": "4.6.27129.4"
           }
         }
       },
-      "System.Threading.Tasks.Extensions/4.5.0": {},
-      "Entia.Unity/1.1.2": {
+      "System.Threading.Tasks.Extensions/4.5.2": {},
+      "Entia.Unity/1.2.0": {
         "runtime": {
           "Entia.Unity.dll": {}
         }
       },
-      "Entia.Core/1.0.5.0": {
+      "Entia.Core/1.1.0.0": {
         "runtime": {
           "Entia.Core.dll": {
-            "assemblyVersion": "1.0.5.0",
-            "fileVersion": "1.0.5.0"
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.0.0"
           }
         }
       },
-      "Entia/1.0.5.0": {
+      "Entia/1.1.0.0": {
         "runtime": {
           "Entia.dll": {
-            "assemblyVersion": "1.0.5.0",
-            "fileVersion": "1.0.5.0"
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.0.0"
           }
         }
       }
     }
   },
   "libraries": {
-    "Entia.Unity.Generate/1.1.2": {
+    "Entia.Unity.Generate/1.2.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -195,19 +197,26 @@
       "path": "microsoft.codeanalysis.analyzers/2.6.2-beta2",
       "hashPath": "microsoft.codeanalysis.analyzers.2.6.2-beta2.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.Common/3.0.0": {
+    "Microsoft.CodeAnalysis.Common/3.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-HEnLZ9Op5IoXeuokhfSLIXstXfEyPzXhQ/xsnvUmxzb+7YpwuLk57txArzGs/Wne5bWmU7Uey4Q1jUZ3++heqg==",
-      "path": "microsoft.codeanalysis.common/3.0.0",
-      "hashPath": "microsoft.codeanalysis.common.3.0.0.nupkg.sha512"
+      "sha512": "sha512-G86i5RfF/dUyn/xA4P5Y3+G6srLX+3YBGoDBVzP8J+z/Wm17i1HHY9VpOMXJaR7GRz+rhKsy4fJnbSz4JtdE6g==",
+      "path": "microsoft.codeanalysis.common/3.1.0",
+      "hashPath": "microsoft.codeanalysis.common.3.1.0.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.CSharp/3.0.0": {
+    "Microsoft.CodeAnalysis.CSharp/3.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-hWFUxc0iUbVvIKWJODErOeOa5GiqZuEcetxaCfHqZ04zHy0ZCLx3v4/TdF/6Erx1mXPHfoT2Tiz5rZCQZ6OyxQ==",
-      "path": "microsoft.codeanalysis.csharp/3.0.0",
-      "hashPath": "microsoft.codeanalysis.csharp.3.0.0.nupkg.sha512"
+      "sha512": "sha512-XA4igWS2ZMkfWV+kBe5ekLj14svm1ekx3Nw3Rrf9FA/vt7dKljUDcS02HPieHeSWVYnKKashQKkpWyr8xrdHSA==",
+      "path": "microsoft.codeanalysis.csharp/3.1.0",
+      "hashPath": "microsoft.codeanalysis.csharp.3.1.0.nupkg.sha512"
+    },
+    "Microsoft.NETCore.Platforms/2.1.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-7J7veIH7Mu6zc4llWnM7YRgTv9+Ew+JWkkDj0K7cEe8wuFA6HRt6STtwux2g+qjpDXeYeWsK0UQ3uIgRiTYHIg==",
+      "path": "microsoft.netcore.platforms/2.1.2",
+      "hashPath": "microsoft.netcore.platforms.2.1.2.nupkg.sha512"
     },
     "System.Collections.Immutable/1.5.0": {
       "type": "package",
@@ -216,12 +225,12 @@
       "path": "system.collections.immutable/1.5.0",
       "hashPath": "system.collections.immutable.1.5.0.nupkg.sha512"
     },
-    "System.Memory/4.5.1": {
+    "System.Memory/4.5.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-sDJYJpGtTgx+23Ayu5euxG5mAXWdkDb4+b0rD0Cab0M1oQS9H0HXGPriKcqpXuiJDTV7fTp/d+fMDJmnr6sNvA==",
-      "path": "system.memory/4.5.1",
-      "hashPath": "system.memory.4.5.1.nupkg.sha512"
+      "sha512": "sha512-fvq1GNmUFwbKv+aLVYYdgu/+gc8Nu9oFujOxIjPrsf+meis9JBzTPDL6aP/eeGOz9yPj6rRLUbOjKMpsMEWpNg==",
+      "path": "system.memory/4.5.2",
+      "hashPath": "system.memory.4.5.2.nupkg.sha512"
     },
     "System.Reflection.Metadata/1.6.0": {
       "type": "package",
@@ -230,38 +239,38 @@
       "path": "system.reflection.metadata/1.6.0",
       "hashPath": "system.reflection.metadata.1.6.0.nupkg.sha512"
     },
-    "System.Runtime.CompilerServices.Unsafe/4.5.0": {
+    "System.Runtime.CompilerServices.Unsafe/4.5.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-6zBxkHYemB0kQiHP3vGXGRXejZVoNVuMn2paUuqKKi5Wyjkxfkp+D0rd0c3VrGwotidRINt6KpOi2smL4VkJKw==",
-      "path": "system.runtime.compilerservices.unsafe/4.5.0",
-      "hashPath": "system.runtime.compilerservices.unsafe.4.5.0.nupkg.sha512"
+      "sha512": "sha512-k3rsGIl3aG0AJVIxs8z2mTvF4BSFJtkHSYbnhgcdZX9L80Hr5U8/VYHlci26mJz3gZSFX1JjRyEQZhbDnBb4tw==",
+      "path": "system.runtime.compilerservices.unsafe/4.5.2",
+      "hashPath": "system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512"
     },
-    "System.Text.Encoding.CodePages/4.5.0": {
+    "System.Text.Encoding.CodePages/4.5.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-S0wEUiKcLvRlkFUXca8uio1UQ5bYQzYgOmOKtCqaBQC3GR9AJjh43otcM32IGsAyvadFTaAMw9Irm6dS4Evfng==",
-      "path": "system.text.encoding.codepages/4.5.0",
-      "hashPath": "system.text.encoding.codepages.4.5.0.nupkg.sha512"
+      "sha512": "sha512-4J2JQXbftjPMppIHJ7IC+VXQ9XfEagN92vZZNoG12i+zReYlim5dMoXFC1Zzg7tsnKDM7JPo5bYfFK4Jheq44w==",
+      "path": "system.text.encoding.codepages/4.5.1",
+      "hashPath": "system.text.encoding.codepages.4.5.1.nupkg.sha512"
     },
-    "System.Threading.Tasks.Extensions/4.5.0": {
+    "System.Threading.Tasks.Extensions/4.5.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-cWndlAQKAhHfsS6rZbYEE07HXJI9dPdyMAPOXXnVUO+hm+3G6qneMIqLDesoNBiVAPsKErsUVa2N/FRSKi+SeA==",
-      "path": "system.threading.tasks.extensions/4.5.0",
-      "hashPath": "system.threading.tasks.extensions.4.5.0.nupkg.sha512"
+      "sha512": "sha512-BG/TNxDFv0svAzx8OiMXDlsHfGw623BZ8tCXw4YLhDFDvDhNUEV58jKYMGRnkbJNm7c3JNNJDiN7JBMzxRBR2w==",
+      "path": "system.threading.tasks.extensions/4.5.2",
+      "hashPath": "system.threading.tasks.extensions.4.5.2.nupkg.sha512"
     },
-    "Entia.Unity/1.1.2": {
+    "Entia.Unity/1.2.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Entia.Core/1.0.5.0": {
+    "Entia.Core/1.1.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
     },
-    "Entia/1.0.5.0": {
+    "Entia/1.1.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
