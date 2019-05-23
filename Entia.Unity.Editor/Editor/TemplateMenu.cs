@@ -73,7 +73,8 @@ namespace Resources
 {
 	public struct #NAME# : IResource
 	{
-		
+		[Default]
+		static #NAME# Default => new #NAME# { };
 	}
 }");
 
@@ -90,7 +91,8 @@ namespace Components
 {
 	public struct #NAME# : IComponent
 	{
-		
+		[Default]
+		static #NAME# Default => new #NAME# { };
 	}
 }");
 
@@ -106,7 +108,7 @@ namespace Messages
 {
 	public struct #NAME# : IMessage
 	{
-		
+
 	}
 }");
 
