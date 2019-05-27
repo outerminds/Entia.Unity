@@ -403,6 +403,21 @@
       <param name="include">A filter that includes only the components that correspond to the provided states.</param>
       <returns>Returns <c>true</c> if the component was found; otherwise, <c>false</c>.</returns>
     </member>
+    <member name="M:Entia.Modules.Components.Has``1(Entia.States)">
+      <summary>
+            Determines whether at least one entity has a component of type <typeparamref name="T" />.
+            </summary>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>Returns <c>true</c> if a component was found; otherwise, <c>false</c>.</returns>
+    </member>
+    <member name="M:Entia.Modules.Components.Has(System.Type,Entia.States)">
+      <summary>
+            Determines whether at least one entity has a component of provided <paramref name="type" />.
+            </summary>
+      <param name="type">The component type.</param>
+      <param name="include">A filter that includes only the components that correspond to the provided states.</param>
+      <returns>Returns <c>true</c> if a component was found; otherwise, <c>false</c>.</returns>
+    </member>
     <member name="M:Entia.Modules.Components.Remove``1(Entia.Entity,Entia.States)">
       <summary>
             Removes components of type <typeparamref name="T" /> associated with the <paramref name="entity" />.
@@ -1068,20 +1083,25 @@
       <param name="querier">The querier.</param>
       <returns>The group.</returns>
     </member>
+    <member name="M:Entia.Modules.Groups.Get``1">
+      <summary>
+            Gets or creates a group associated with the provided query of type <typeparamref name="T" />.
+            </summary>
+      <typeparam name="T">The query type.</typeparam>
+      <returns>The group.</returns>
+    </member>
     <member name="M:Entia.Modules.Groups.Has(Entia.Modules.Group.IGroup)">
       <summary>
             Determines whether the provided <paramref name="group" /> already exists.
             </summary>
       <param name="group">The group.</param>
-      <returns>
-        <c>true</c> if [has] [the specified group]; otherwise, <c>false</c>.
-            </returns>
+      <returns>Returns <c>true</c> if the group was found; otherwise, <c>false</c>. </returns>
     </member>
     <member name="M:Entia.Modules.Groups.Clear">
       <summary>
             Clears all existing groups.
             </summary>
-      <returns></returns>
+      <returns>Returns <c>true</c> if at least one group was cleared; otherwise, <c>false</c>. </returns>
     </member>
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>

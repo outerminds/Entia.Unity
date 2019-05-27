@@ -141,7 +141,7 @@ Make sure a proper path is defined in the '{nameof(GeneratorSettings)}' asset.",
                 return process;
             }
 
-            var input = string.Join(" ", Arguments(tool, settings, true));
+            var input = string.Join(" ", Arguments(tool, settings));
             try
             {
                 process = Process.Start(new ProcessStartInfo
@@ -198,26 +198,33 @@ This may happen because the .Net Core Runtime is not installed on this machine.
             return false;
         }
 
-        static IEnumerable<string> Arguments(string tool, GeneratorSettings settings, bool watch)
+        static IEnumerable<string> Arguments(string tool, GeneratorSettings settings)
         {
-            yield return "--inputs";
-            yield return string.Join(";", settings.Inputs.Select(input => input.Quote()));
-            yield return "--output";
-            yield return settings.Output.Quote();
-            yield return "--suffix";
-            yield return settings.Suffix.Quote();
-            yield return "--assemblies";
-            yield return string.Join(";", settings.Assemblies.Select(assembly => assembly.Quote()));
-            yield return "--log";
-            yield return settings.Log.Quote();
+            IEnumerable<string> Separated(string option, params string[] values)
+            {
+                if (values == null || values.Length == 0) yield break;
+                yield return option;
+                yield return string.Join(";", values.Select(value => value.Quote()));
+            }
+
+            IEnumerable<string> Quoted(string option, string value)
+            {
+                if (string.IsNullOrEmpty(value)) yield break;
+                yield return option;
+                yield return value.Quote();
+            }
+
+            foreach (var value in Separated("--inputs", settings.Inputs)) yield return value;
+            foreach (var value in Quoted("--output", settings.Output)) yield return value;
+            foreach (var value in Quoted("--suffix", settings.Suffix)) yield return value;
+            foreach (var value in Separated("--assemblies", settings.Assemblies)) yield return value;
+            foreach (var value in Quoted("--log", settings.Log)) yield return value;
+
             yield return "--timeout";
             yield return settings.Timeout.ToString();
 
-            if (watch)
-            {
-                yield return "--watch";
-                yield return $@"{SerializeProcess(Process.GetCurrentProcess())};{settings.Watch};{tool.Quote()}";
-            }
+            var process = SerializeProcess(Process.GetCurrentProcess());
+            foreach (var value in Separated("--watch", process, settings.Watch.ToString(), tool.Quote())) yield return value;
         }
 
         static string SerializeProcess(Process process) => $"{process.Id};{process.StartTime.Ticks}";
