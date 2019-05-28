@@ -1090,6 +1090,14 @@
       <typeparam name="T">The query type.</typeparam>
       <returns>The group.</returns>
     </member>
+    <member name="M:Entia.Modules.Groups.Get``1(System.Reflection.MemberInfo)">
+      <summary>
+            Gets or creates a group associated with the provided query of type <typeparamref name="T" />.
+            </summary>
+      <typeparam name="T">The query type.</typeparam>
+      <param name="member">The member that holds the group.</param>
+      <returns>The group.</returns>
+    </member>
     <member name="M:Entia.Modules.Groups.Has(Entia.Modules.Group.IGroup)">
       <summary>
             Determines whether the provided <paramref name="group" /> already exists.

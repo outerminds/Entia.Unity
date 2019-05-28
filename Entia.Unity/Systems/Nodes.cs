@@ -6,7 +6,7 @@ namespace Entia.Unity
     public static class Nodes
     {
         public static readonly Node Default =
-            Sequence("Unity",
+            Sequence(nameof(Unity),
                 System<Systems.LogException>(),
                 System<Systems.SynchronizeEntityReference>(),
                 System<Systems.UpdateTime>()

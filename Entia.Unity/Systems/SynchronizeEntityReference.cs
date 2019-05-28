@@ -14,7 +14,7 @@ namespace Entia.Unity.Systems
 
         void IReact<OnRemove<Unity<EntityReference>>>.React(in OnRemove<Unity<EntityReference>> message)
         {
-            if (References.TryUnity(message.Entity, out var reference))
+            if (References.TryUnity(message.Entity, out var reference) && reference)
                 Object.Destroy(reference.gameObject);
         }
     }

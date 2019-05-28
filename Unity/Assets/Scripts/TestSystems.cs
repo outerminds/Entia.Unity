@@ -53,12 +53,12 @@ namespace Systems
 
         public void Run()
         {
-            foreach (var item in OnlyUnity)
+            foreach (ref readonly var item in OnlyUnity)
             {
                 var entity = item.Entity();
             }
 
-            foreach (var item in Ambiguous)
+            foreach (ref readonly var item in Ambiguous)
             {
                 var ambiguous = item.Ambiguous();
 
@@ -66,28 +66,32 @@ namespace Systems
         }
     }
 
-    public struct Spawner : IRun
+    public unsafe struct Spawner : IRun
     {
         [All(typeof(Entia.Components.Unity<>))]
         public struct Query : IQueryable
         {
+            public Components.Inner.Component4* Pointer1;
             public Maybe<Read<Components.Inner.Component7>> Component2;
             public Write<Components.Component1> Component10;
             public Entity Entity;
             public Write<Components.Component1> Component11;
+            public Components.Inner.Component5* Pointer2;
             public Maybe<Read<Components.Inner.Component2>> Component3;
             public Write<Components.Component1> Component12;
             public Any<Write<Components.Inner.Component3>, Read<Components.Inner.Component4>> Component4;
             public Write<Components.Component1> Component13;
+            public Components.Inner.Component3* Pointer3;
             public Maybe<Read<Components.Inner.Component5>> Component5;
             public Write<Components.Inner.Component7> Component14;
             public Maybe<Read<Components.Inner.Component3>> Component31;
             public Maybe<Read<Components.Inner.Component4>> Component41;
             public Maybe<Unity<Transform>> Transform1;
+            public Components.Inner.Component7* Pointer4;
             public Unity<Transform> Transform2;
             public Unity<GameObject> GameObject;
             public Maybe<Read<Entia.Components.Debug>> Debug1;
-            public Read<Entia.Components.Debug> Debug2;
+            public Components.Inner.Component2* Pointer5;
         }
 
         public Resource<Resources.Prefabs> Prefabs;
@@ -99,11 +103,16 @@ namespace Systems
 
         public void Run()
         {
-            if (Input.GetKey(KeyCode.K)) Object.Instantiate(Prefabs.Value.Prefab);
+            if (Input.GetKey(KeyCode.K))
+            {
+                Debug.Log(nameof(KeyCode.K));
+                Object.Instantiate(Prefabs.Value.Prefab);
+            }
 
             if (Input.GetKey(KeyCode.L))
             {
-                foreach (var item in Group1)
+                Debug.Log($"{nameof(KeyCode.L)} | {Group1.Count}");
+                foreach (ref readonly var item in Group1)
                 {
                     ref var c0 = ref item.Component1();
                     ref var c1 = ref item.Component7();
@@ -111,14 +120,17 @@ namespace Systems
                     ref var c3 = ref item.Component3(out var s2);
                     ref readonly var c4 = ref item.Component5(out var s3);
                     Debug.Log(c0.X + c1.I + c2.G + c3.A + c4.C);
-                    Entities.Destroy(item.Entity);
+                    Debug.Log($"{item.Pointer1->A++} | {item.Pointer2->A++} | {item.Pointer3->A++} | {item.Pointer4->A++} | {item.Pointer5->A++}");
+                    Debug.Log($"{s1}, {s2}, {s3}");
+                    // Entities.Destroy(item.Entity);
                     break;
                 }
             }
 
             if (Input.GetKey(KeyCode.J))
             {
-                foreach (var item in Group2)
+                Debug.Log($"{nameof(KeyCode.J)} | {Group2.Count}");
+                foreach (ref readonly var item in Group2)
                 {
                     Entities.Destroy(item.Entity());
                     break;

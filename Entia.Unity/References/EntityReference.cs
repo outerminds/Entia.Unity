@@ -90,7 +90,6 @@ namespace Entia.Unity
                 var delegates = World.Delegates();
 
                 if (UnityEngine.Debug.isDebugBuild) components.Set(Entity, new Components.Debug { Name = Name });
-                components.Set(Entity, new Components.Unity<EntityReference> { Value = this });
                 components.Set(Entity, new Components.Unity<UnityEngine.GameObject> { Value = gameObject });
 
                 using (var list = PoolUtility.Cache<Component>.Lists.Use())
@@ -100,7 +99,6 @@ namespace Entia.Unity
                     {
                         switch (component)
                         {
-                            case IEntityReference _: break;
                             case IComponentReference reference: reference.Initialize(Entity, World); break;
                             default: delegates.Get(component.GetType()).Set(component, Entity, World); break;
                         }
@@ -127,7 +125,6 @@ namespace Entia.Unity
                     {
                         switch (component)
                         {
-                            case IEntityReference _: break;
                             case IComponentReference reference: reference.Dispose(); break;
                             default: delegates.Get(component.GetType()).Remove(component, Entity, World); break;
                         }
@@ -135,7 +132,6 @@ namespace Entia.Unity
                 }
 
                 components.Remove<Components.Unity<UnityEngine.GameObject>>(Entity);
-                components.Remove<Components.Unity<EntityReference>>(Entity);
             }
         }
 
