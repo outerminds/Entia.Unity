@@ -10,7 +10,7 @@ namespace Entia.Unity.Systems
 {
     public readonly struct SynchronizeEntityReference : IReact<OnRemove<Unity<EntityReference>>>
     {
-        public readonly Components<Unity<EntityReference>> References;
+        public readonly Components<Unity<EntityReference>>.Read References;
 
         void IReact<OnRemove<Unity<EntityReference>>>.React(in OnRemove<Unity<EntityReference>> message)
         {
