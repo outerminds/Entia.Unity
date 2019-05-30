@@ -1174,7 +1174,7 @@
     </member>
     <member name="T:Entia.Messages.OnRemove">
       <summary>
-            Message emitted after a component has been removed from an entity.
+            Message emitted before a component will be removed from an entity.
             </summary>
       <seealso cref="T:Entia.IMessage" />
     </member>
@@ -1190,7 +1190,7 @@
     </member>
     <member name="T:Entia.Messages.OnRemove`1">
       <summary>
-            Message emitted after a component of type <typeparamref name="T" /> has been removed from an entity.
+            Message emitted before a component of type <typeparamref name="T" /> will be removed from an entity.
             </summary>
       <typeparam name="T">The component type.</typeparam>
       <seealso cref="T:Entia.IMessage" />
@@ -2254,7 +2254,7 @@
     </member>
     <member name="M:Entia.Injectables.Group`1.#ctor(Entia.Modules.Group.Group{`0})">
       <summary>
-            Initializes a new instance of the <see cref="T:Entia.Injectables.Group`1" /> struct.
+            Initializes a new instance of the <see cref="T:Entia.Injectables.Group`1" /> class.
             </summary>
       <param name="group">The group.</param>
     </member>
@@ -2314,7 +2314,7 @@
     </member>
     <member name="M:Entia.Injectables.Group`2.#ctor(Entia.Modules.Group.Group{Entia.Queryables.All{`0,`1}})">
       <summary>
-            Initializes a new instance of the <see cref="T:Entia.Injectables.Group`2" /> struct.
+            Initializes a new instance of the <see cref="T:Entia.Injectables.Group`2" /> class.
             </summary>
       <param name="group">The group.</param>
     </member>
@@ -2374,7 +2374,7 @@
     </member>
     <member name="M:Entia.Injectables.Group`3.#ctor(Entia.Modules.Group.Group{Entia.Queryables.All{`0,`1,`2}})">
       <summary>
-            Initializes a new instance of the <see cref="T:Entia.Injectables.Group`3" /> struct.
+            Initializes a new instance of the <see cref="T:Entia.Injectables.Group`3" /> class.
             </summary>
       <param name="group">The group.</param>
     </member>
@@ -2434,7 +2434,7 @@
     </member>
     <member name="M:Entia.Injectables.Group`4.#ctor(Entia.Modules.Group.Group{Entia.Queryables.All{`0,`1,`2,`3}})">
       <summary>
-            Initializes a new instance of the <see cref="T:Entia.Injectables.Group`4" /> struct.
+            Initializes a new instance of the <see cref="T:Entia.Injectables.Group`4" /> class.
             </summary>
       <param name="group">The group.</param>
     </member>
@@ -2494,7 +2494,7 @@
     </member>
     <member name="M:Entia.Injectables.Group`5.#ctor(Entia.Modules.Group.Group{Entia.Queryables.All{`0,`1,`2,`3,`4}})">
       <summary>
-            Initializes a new instance of the <see cref="T:Entia.Injectables.Group`5" /> struct.
+            Initializes a new instance of the <see cref="T:Entia.Injectables.Group`5" /> class.
             </summary>
       <param name="group">The group.</param>
     </member>
@@ -2554,7 +2554,7 @@
     </member>
     <member name="M:Entia.Injectables.Group`6.#ctor(Entia.Modules.Group.Group{Entia.Queryables.All{`0,`1,`2,`3,`4,`5}})">
       <summary>
-            Initializes a new instance of the <see cref="T:Entia.Injectables.Group`6" /> struct.
+            Initializes a new instance of the <see cref="T:Entia.Injectables.Group`6" /> class.
             </summary>
       <param name="group">The group.</param>
     </member>
@@ -2614,7 +2614,7 @@
     </member>
     <member name="M:Entia.Injectables.Group`7.#ctor(Entia.Modules.Group.Group{Entia.Queryables.All{`0,`1,`2,`3,`4,`5,`6}})">
       <summary>
-            Initializes a new instance of the <see cref="T:Entia.Injectables.Group`7" /> struct.
+            Initializes a new instance of the <see cref="T:Entia.Injectables.Group`7" /> class.
             </summary>
       <param name="group">The group.</param>
     </member>
