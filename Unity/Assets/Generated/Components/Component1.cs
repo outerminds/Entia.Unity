@@ -11,12 +11,12 @@ namespace Components.Generated
 		new public global::Entia.Unity.EntityReference Entity
 		{
 			get => base.Get((ref global::Components.Component1 data, global::Entia.World world) => data.Entity.FromEntia(world), this._Entity);
-			set => base.Set((ref global::Components.Component1 data, in global::Entia.Unity.EntityReference state, global::Entia.World _) => data.Entity = state.ToEntia(), value, ref this._Entity);
+			set => base.Set((ref global::Components.Component1 data, global::Entia.Unity.EntityReference state, global::Entia.World _) => data.Entity = state.ToEntia(), value, ref this._Entity);
 		}
 		new public global::Entia.Unity.EntityReference World
 		{
 			get => base.Get((ref global::Components.Component1 data, global::Entia.World world) => data.World.FromEntia(world), this._World);
-			set => base.Set((ref global::Components.Component1 data, in global::Entia.Unity.EntityReference state, global::Entia.World _) => data.World = state.ToEntia(), value, ref this._World);
+			set => base.Set((ref global::Components.Component1 data, global::Entia.Unity.EntityReference state, global::Entia.World _) => data.World = state.ToEntia(), value, ref this._World);
 		}
 		public ref global::System.Int32 Component => ref base.Get((ref global::Components.Component1 data) => ref data.Component, ref this._Component);
 		public ref global::UnityEngine.BoxCollider2D Collider => ref base.Get((ref global::Components.Component1 data) => ref data.Collider, ref this._Collider);

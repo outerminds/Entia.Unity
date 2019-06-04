@@ -23,7 +23,7 @@ namespace Entia.Unity
     {
         protected delegate ref TMember Mapper<TMember>(ref T resource);
         protected delegate TMember From<TMember>(ref T resource, World world);
-        protected delegate void To<TMember>(ref T resource, in TMember value, World world);
+        protected delegate void To<TMember>(ref T resource, TMember value, World world);
 
         public World World { get; private set; }
 
@@ -57,11 +57,11 @@ namespace Entia.Unity
             World is World world && world.Resources().Has<T>() ?
             ref map(ref world.Resources().Get<T>()) : ref member;
 
-        protected TMember Get<TMember>(From<TMember> from, in TMember member) =>
+        protected TMember Get<TMember>(From<TMember> from, TMember member) =>
             World is World world && world.Resources().Has<T>() ?
             from(ref world.Resources().Get<T>(), world) : member;
 
-        protected void Set<TMember>(To<TMember> set, in TMember value, ref TMember member)
+        protected void Set<TMember>(To<TMember> set, TMember value, ref TMember member)
         {
             if (World is World world && world.Resources().Has<T>())
                 set(ref world.Resources().Get<T>(), value, world);
