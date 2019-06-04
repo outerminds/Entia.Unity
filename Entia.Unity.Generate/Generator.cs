@@ -335,7 +335,7 @@ $@"{indentation}{attributes}
 $@"{indentation}{@new}public {type} {field.Name}
 {indentation}{{
 {indentation}	get => base.Get((ref {data} data, {world} world) => data.{field.Name}{string.Format(from, "world")}, {name});
-{indentation}	set => base.Set((ref {data} data, in {type} state, {world} _) => data.{field.Name} = state{string.Format(to, "")}, value, ref {name});
+{indentation}	set => base.Set((ref {data} data, {type} state, {world} _) => data.{field.Name} = state{string.Format(to, "")}, value, ref {name});
 {indentation}}}";
         }
 
