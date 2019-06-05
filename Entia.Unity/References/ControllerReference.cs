@@ -27,6 +27,7 @@ namespace Entia.Unity
 
         bool _initialized;
         bool _disposed;
+        string _log = "-> No details available.";
 
         protected virtual Result<Controller> Create(World world) => world.Controllers().Control(Debug.isDebugBuild ? Node.Profile() : Node);
 
@@ -37,31 +38,28 @@ namespace Entia.Unity
 
         void OnDestroy() => Dispose();
 
-        protected virtual void OnEnable() => Controller?.Enable();
-        protected virtual void OnDisable() => Controller?.Disable();
-        protected virtual void Update() => Controller?.Run<Run>();
-        protected virtual void FixedUpdate() => Controller?.Run<RunFixed>();
-        protected virtual void LateUpdate() => Controller?.Run<RunLate>();
+        protected virtual void OnEnable() => Enable();
+        protected virtual void OnDisable() => Disable();
+        protected virtual void Update() => Run<Run>();
+        protected virtual void FixedUpdate() => Run<RunFixed>();
+        protected virtual void LateUpdate() => Run<RunLate>();
 
         void Initialize(World world)
         {
             if (_initialized.Change(true))
             {
-                var result = Create(world);
+                var result = Result.Try(() => Create(world)).Flatten();
                 if (result.TryMessages(out var messages))
                 {
-                    var log = string.Join(
-                        Environment.NewLine,
-                        messages
-                            .Distinct()
-                            .Select(message => $"-> {message}")
-                            .Prepend($"Failed to create controller '{GetType().Format()}'. See details below."));
-                    Debug.LogError(log);
+                    _log = string.Join(Environment.NewLine, messages.Distinct().Select(message => $"-> {message}"));
+                    Debug.LogError(
+$@"Failed to create controller '{GetType().Format()}' for node {Node}. See details below.
+{_log}");
                 }
 
-                Controller = result.Or(default(Controller));
-                Controller?.Run<Initialize>();
-                Controller?.Run<React.Initialize>();
+                Controller = result.OrDefault();
+                Run<Initialize>();
+                Run<React.Initialize>();
             }
         }
 
@@ -69,11 +67,44 @@ namespace Entia.Unity
         {
             if (_initialized && _disposed.Change(true))
             {
-                Controller?.Run<React.Dispose>();
-                Controller?.Run<Dispose>();
+                Run<React.Dispose>();
+                Run<Dispose>();
                 _initialized = false;
                 _disposed = false;
             }
+        }
+
+        void Enable()
+        {
+            if (Controller == null)
+            {
+                if (_initialized) Debug.LogError(
+$@"Failed to enable 'null' controller. See details below.
+{_log}");
+            }
+            else Controller.Enable();
+        }
+
+        void Disable()
+        {
+            if (Controller == null)
+            {
+                if (_initialized) Debug.LogError(
+$@"Failed to disable 'null' controller. See details below.
+{_log}");
+            }
+            else Controller.Disable();
+        }
+
+        void Run<T>() where T : struct, IPhase
+        {
+            if (Controller == null)
+            {
+                Debug.LogError(
+$@"Failed to run phase of type '{typeof(T).Format()}' since the controller is 'null'. See details below.
+{_log}");
+            }
+            else Controller.Run<T>();
         }
 
         void IControllerReference.Initialize(World world) => Initialize(world);
