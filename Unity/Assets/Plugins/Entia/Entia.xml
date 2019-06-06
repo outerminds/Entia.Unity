@@ -2779,6 +2779,12 @@
       <summary>Returns an enumerator that iterates through the collection.</summary>
       <returns>An enumerator that can be used to iterate through the collection.</returns>
     </member>
+    <member name="M:Entia.Injectables.AllResources.Read.Get``1">
+      <inheritdoc cref="M:Entia.Modules.Resources.Get``1" />
+    </member>
+    <member name="M:Entia.Injectables.AllResources.Read.Get(System.Type)">
+      <inheritdoc cref="M:Entia.Modules.Resources.Get(System.Type)" />
+    </member>
     <member name="M:Entia.Injectables.AllResources.Read.TryGet``1(``0@)">
       <inheritdoc cref="M:Entia.Modules.Resources.TryGet``1(``0@)" />
     </member>
@@ -2814,15 +2820,6 @@
     </member>
     <member name="M:Entia.Injectables.AllResources.Has(System.Type)">
       <inheritdoc cref="M:Entia.Modules.Resources.Has(System.Type)" />
-    </member>
-    <member name="M:Entia.Injectables.AllResources.Remove``1">
-      <inheritdoc cref="M:Entia.Modules.Resources.Remove``1" />
-    </member>
-    <member name="M:Entia.Injectables.AllResources.Remove(System.Type)">
-      <inheritdoc cref="M:Entia.Modules.Resources.Remove(System.Type)" />
-    </member>
-    <member name="M:Entia.Injectables.AllResources.Clear">
-      <inheritdoc cref="M:Entia.Modules.Resources.Clear" />
     </member>
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>
