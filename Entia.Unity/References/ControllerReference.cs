@@ -13,6 +13,7 @@ namespace Entia.Unity
         World World { get; }
         Controller Controller { get; }
         Node Node { get; }
+        INodeModifier[] Modifiers { get; }
 
         void Initialize(World world);
         void Dispose();
@@ -24,12 +25,20 @@ namespace Entia.Unity
         public World World => Controller?.World;
         public Controller Controller { get; private set; }
         public abstract Node Node { get; }
+        public INodeModifier[] Modifiers => _modifiers;
 
+        [SerializeField]
+        NodeModifier[] _modifiers = { };
         bool _initialized;
         bool _disposed;
         string _log = "-> No details available.";
 
-        protected virtual Result<Controller> Create(World world) => world.Controllers().Control(Debug.isDebugBuild ? Node.Profile() : Node);
+        protected virtual Result<Controller> Create(World world)
+        {
+            var node = Node;
+            foreach (var modifier in _modifiers) node = modifier?.Modify(node) ?? node;
+            return world.Controllers().Control(node);
+        }
 
         void Awake()
         {
@@ -43,6 +52,7 @@ namespace Entia.Unity
         protected virtual void Update() => Run<Run>();
         protected virtual void FixedUpdate() => Run<RunFixed>();
         protected virtual void LateUpdate() => Run<RunLate>();
+        protected virtual void Reset() => _modifiers = new[] { ScriptableObject.CreateInstance<ProfileModifier>() };
 
         void Initialize(World world)
         {

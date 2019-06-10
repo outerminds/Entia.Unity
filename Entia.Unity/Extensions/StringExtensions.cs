@@ -57,6 +57,15 @@ namespace Entia.Unity
 
         public static string Extension(this string path) => Path.GetExtension(path);
         public static string Directory(this string path) => new DirectoryInfo(path).Exists ? path : Path.GetDirectoryName(path);
+        public static IEnumerable<string> Directories(this string path)
+        {
+            var directory = new DirectoryInfo(path.Directory());
+            while (directory.Exists)
+            {
+                yield return directory.Name;
+                directory = directory.Parent;
+            }
+        }
         public static string File(this string path, bool extension = true) => extension ? Path.GetFileName(path) : Path.GetFileNameWithoutExtension(path);
         public static string ChangeExtension(this string path, string extension) => Path.ChangeExtension(path, extension);
         public static string ChangeFileName(this string path, string name) => Path.Combine(path.Directory(), name) + path.Extension();

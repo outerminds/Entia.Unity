@@ -225,7 +225,7 @@
             The segments.
             </value>
     </member>
-    <member name="M:Entia.Modules.Components.#ctor(Entia.Modules.Entities,Entia.Modules.Messages)">
+    <member name="M:Entia.Modules.Components.#ctor(Entia.Modules.Entities,Entia.Modules.Messages,System.Int32)">
       <summary>
             Initializes a new instance of the <see cref="T:Entia.Modules.Components" /> class.
             </summary>

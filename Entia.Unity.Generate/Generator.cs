@@ -645,7 +645,15 @@ namespace {@namespace}
             path = generator?.NamedArguments
                 .Where(argument => argument.Key == nameof(GeneratorAttribute.Path))
                 .Select(argument => argument.Value.Values.Select(value => value.Value).OfType<string>().ToArray())
-                .FirstOrDefault() ?? type.Path().ToArray();
+                .FirstOrDefault();
+
+            if (path == null)
+            {
+                path = type.Path().ToArray();
+                var file = type.File()?.Relative(context.Root);
+                if (file?.Contains("Editor") is true) path = path.Prepend("Editor").ToArray();
+                if (file?.Contains("Plugins") is true) path = path.Prepend("Plugins").ToArray();
+            }
 
             return true;
         }
@@ -656,7 +664,7 @@ namespace {@namespace}
             foreach (var (type, path) in types)
             {
                 if (type.Implements(context.ISystem))
-                    yield return (type.Path().Prepend("Extensions").ToArray(), FormatExtensions(type, set, context));
+                    yield return (path.Prepend("Extensions").ToArray(), FormatExtensions(type, set, context));
             }
         }
 
@@ -703,6 +711,7 @@ namespace {@namespace}
             var referencesTask = Task.Run(() => new[]
                 {
                     typeof(Entity).Assembly.Location,
+                    typeof(IDrawGizmo).Assembly.Location,
                     typeof(PreserveAttribute).Assembly.Location,
                     typeof(RequireAttribute).Assembly.Location,
                 }

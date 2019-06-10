@@ -7,8 +7,10 @@
   </PropertyGroup>
 
   <Target Name="Copy" AfterTargets="Publish">
-    <Exec Command="del /s /q &quot;$(PublishDir)Microsoft.CodeAnalysis*resources*&quot;" />
+    <!-- <Exec Command="del /s /q &quot;$(PublishDir)Microsoft.CodeAnalysis*resources*&quot;" /> -->
     <Exec Command="del /s /q &quot;$(PublishDir)*.xml&quot;" />
+    <Exec Command="del /s /q &quot;$(PublishDir)*.pdb&quot;" />
+    <Exec Command="del /s /q &quot;$(PublishDir)Microsoft.CodeAnalysis*.resources.dll&quot;" />
     <Exec Command="xcopy /y /q /s &quot;$(PublishDir)*&quot; &quot;$(SolutionDir)Unity\Assets\Plugins\Entia\.Generator\&quot;" />
   </Target>
 
@@ -18,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Entia.Unity\Entia.Unity.csproj" />
+    <ProjectReference Include="..\Entia.Unity.Editor\Entia.Unity.Editor.csproj" />
   </ItemGroup>
 
   <ItemGroup>

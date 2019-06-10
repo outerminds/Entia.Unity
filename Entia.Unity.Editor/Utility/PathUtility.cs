@@ -24,6 +24,7 @@ namespace Entia.Unity.Editor
             .Replace("{Assets.Scripts}", Path.Combine("{Assets}", "Scripts"))
             .Replace("{Assets}", Application.dataPath)
             .Replace("{Entia.Generator}", Path.Combine("{Entia}", ".Generator"))
+            .Replace("{Entia.Editor}", Path.Combine("{Entia}", "Editor"))
             .Replace("{Entia}", typeof(Entity).Assembly.Location.Directory())
             .Replace("{DotNet}", typeof(object).Assembly.Location.Directory())
             .ReplacePatterns()
