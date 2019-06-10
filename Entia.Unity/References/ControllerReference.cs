@@ -13,6 +13,7 @@ namespace Entia.Unity
         World World { get; }
         Controller Controller { get; }
         Node Node { get; }
+        Node Modified { get; }
         INodeModifier[] Modifiers { get; }
 
         void Initialize(World world);
@@ -25,6 +26,7 @@ namespace Entia.Unity
         public World World => Controller?.World;
         public Controller Controller { get; private set; }
         public abstract Node Node { get; }
+        public Node Modified => Modifiers.Aggregate(Node, (node, modifier) => modifier?.Modify(node) ?? node);
         public INodeModifier[] Modifiers => _modifiers;
 
         [SerializeField]
@@ -33,12 +35,7 @@ namespace Entia.Unity
         bool _disposed;
         string _log = "-> No details available.";
 
-        protected virtual Result<Controller> Create(World world)
-        {
-            var node = Node;
-            foreach (var modifier in _modifiers) node = modifier?.Modify(node) ?? node;
-            return world.Controllers().Control(node);
-        }
+        protected virtual Result<Controller> Create(World world) => world.Controllers().Control(Modified);
 
         void Awake()
         {

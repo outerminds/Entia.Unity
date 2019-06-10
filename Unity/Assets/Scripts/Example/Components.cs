@@ -34,10 +34,10 @@ namespace Components
     public struct Motion : IComponent
     {
         [Default]
-        public static Motion Default => new Motion { Acceleration = 2f, MaximumSpeed = 0.25f, JumpForce = 0.75f };
+        public static Motion Default => new Motion { Acceleration = 2f, Speed = 0.25f, Jump = 0.75f };
 
         public float Acceleration;
-        public float MaximumSpeed;
-        public float JumpForce;
+        public float Speed;
+        public float Jump;
     }
 }

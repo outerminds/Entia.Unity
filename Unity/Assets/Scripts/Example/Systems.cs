@@ -71,14 +71,14 @@ namespace Systems
                 var move = (input.Direction * motion.Acceleration) / physics.Mass;
                 velocity.X += move * time.Delta;
 
-                if (input.Jump) velocity.Y += motion.JumpForce / physics.Mass;
+                if (input.Jump) velocity.Y += motion.Jump / physics.Mass;
                 velocity.Y += physics.Gravity * time.Delta;
 
                 // Clamp horizontal velocity.
-                if (velocity.X < -motion.MaximumSpeed)
-                    velocity.X = -motion.MaximumSpeed;
-                if (velocity.X > motion.MaximumSpeed)
-                    velocity.X = motion.MaximumSpeed;
+                if (velocity.X < -motion.Speed)
+                    velocity.X = -motion.Speed;
+                if (velocity.X > motion.Speed)
+                    velocity.X = motion.Speed;
             }
         }
     }
