@@ -1,14 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Entia.Unity.Systems;
-using Entia.Systems;
 using Entia.Injectables;
 using Entia.Queryables;
+using Entia.Systems;
 using UnityEditor;
+using UnityEngine;
 
 namespace Systems
 {
+    // 'IDrawGizmo' systems are called at draw gizmo time, thus the 'Gizmos' api can be used
     public struct DrawVelocity : IDrawGizmo
     {
         public Group<Unity<Transform>, Read<Components.Velocity>> Group;

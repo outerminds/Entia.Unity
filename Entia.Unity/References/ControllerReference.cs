@@ -12,30 +12,47 @@ namespace Entia.Unity
     {
         World World { get; }
         Controller Controller { get; }
-        Node Node { get; }
-        Node Modified { get; }
-        INodeModifier[] Modifiers { get; }
+        INodeReference[] Nodes { get; }
 
         void Initialize(World world);
         void Dispose();
     }
 
     [RequireComponent(typeof(WorldReference))]
-    public abstract class ControllerReference : MonoBehaviour, IControllerReference
+    public sealed class ControllerReference : MonoBehaviour, IControllerReference
     {
         public World World => Controller?.World;
         public Controller Controller { get; private set; }
-        public abstract Node Node { get; }
-        public Node Modified => Modifiers.Aggregate(Node, (node, modifier) => modifier?.Modify(node) ?? node);
-        public INodeModifier[] Modifiers => _modifiers;
+        public INodeReference[] Nodes => _nodes;
 
         [SerializeField]
-        NodeModifier[] _modifiers = { };
+        NodeReference[] _nodes = { };
+        [NonSerialized]
         bool _initialized;
+        [NonSerialized]
         bool _disposed;
+        [NonSerialized]
         string _log = "-> No details available.";
 
-        protected virtual Result<Controller> Create(World world) => world.Controllers().Control(Modified);
+        public Node Create()
+        {
+            var children = _nodes
+                .Select(reference =>
+                {
+                    if (reference == null) return default;
+                    var child = reference.Node;
+                    return
+                        string.IsNullOrWhiteSpace(child.Name) ?
+                            string.IsNullOrWhiteSpace(reference.name) ?
+                                child.With(reference.GetType().Format()) : child.With(reference.name) :
+                        child;
+                })
+                .Some()
+                .ToArray();
+            var node = Node.Sequence(name, children);
+            if (Debug.isDebugBuild) node = node.Profile();
+            return node;
+        }
 
         void Awake()
         {
@@ -44,29 +61,34 @@ namespace Entia.Unity
 
         void OnDestroy() => Dispose();
 
-        protected virtual void OnEnable() => Enable();
-        protected virtual void OnDisable() => Disable();
-        protected virtual void Update() => Run<Run>();
-        protected virtual void FixedUpdate() => Run<RunFixed>();
-        protected virtual void LateUpdate() => Run<RunLate>();
-        protected virtual void Reset() => _modifiers = new[] { ScriptableObject.CreateInstance<ProfileModifier>() };
+        void OnEnable() => Enable();
+        void OnDisable() => Disable();
+        void Update() => Run<Run>();
+        void FixedUpdate() => Run<RunFixed>();
+        void LateUpdate() => Run<RunLate>();
 
         void Initialize(World world)
         {
-            if (_initialized.Change(true))
+            if (world == null) return;
+            if (!Application.isPlaying || _initialized.Change(true))
             {
-                var result = Result.Try(() => Create(world)).Flatten();
+                var node = Create();
+                var result = world.Controllers().Control(node);
                 if (result.TryMessages(out var messages))
                 {
                     _log = string.Join(Environment.NewLine, messages.Distinct().Select(message => $"-> {message}"));
                     Debug.LogError(
-$@"Failed to create controller '{GetType().Format()}' for node {Node}. See details below.
+$@"Failed to create controller for node '{node}'. See details below.
 {_log}");
                 }
 
                 Controller = result.OrDefault();
-                Run<Initialize>();
-                Run<React.Initialize>();
+
+                if (Application.isPlaying)
+                {
+                    Run<Initialize>();
+                    Run<React.Initialize>();
+                }
             }
         }
 

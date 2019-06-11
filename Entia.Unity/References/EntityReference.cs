@@ -41,8 +41,11 @@ namespace Entia.Unity
         public Entity Entity { get; private set; }
         public string Name => _name ?? (_name = name);
 
+        [NonSerialized]
         States _initialized;
+        [NonSerialized]
         States _disposed;
+        [NonSerialized]
         string _name;
 
         void OnEnable() => World?.Components().Remove<IsDisabled>(Entity);
@@ -74,7 +77,8 @@ namespace Entia.Unity
 
         void Initialize(World world)
         {
-            if (_initialized.Change(_initialized | States.Current))
+            if (world == null) return;
+            if (!Application.isPlaying || _initialized.Change(_initialized | States.Current))
             {
                 World = world;
                 Entity = World.Entities().Create();
@@ -84,7 +88,7 @@ namespace Entia.Unity
         void PostInitialize()
         {
             if (World == null || Entity == Entity.Zero) return;
-            if (_initialized.Change(_initialized | States.Post))
+            if (!Application.isPlaying || _initialized.Change(_initialized | States.Post))
             {
                 var components = World.Components();
                 var delegates = World.Delegates();

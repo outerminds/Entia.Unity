@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Entia.Unity.Editor
 {
-    public static class TemplateMenu
+    public static class TemplateUtility
     {
         sealed class OnAssetNamed : EndNameEditAction
         {
@@ -19,23 +19,23 @@ namespace Entia.Unity.Editor
                 var path = pathName.Absolute();
                 File.WriteAllText(path, format);
                 AssetDatabase.ImportAsset(pathName);
-                var script = AssetDatabase.LoadAssetAtPath(pathName, typeof(UnityEngine.Object));
+                var script = AssetDatabase.LoadAssetAtPath<MonoScript>(pathName);
                 ProjectWindowUtil.ShowCreatedAsset(script);
             }
         }
 
         static void CreateScript(string name, string template)
         {
-            var directory =
-                Selection.activeObject == null ? Application.dataPath.Directory() :
-                AssetDatabase.GetAssetPath(Selection.activeObject).Directory();
-            var path = Path.Combine(directory, name).ChangeExtension(".cs");
+            var asset = Selection.activeObject == null ? "" : AssetDatabase.GetAssetPath(Selection.activeObject);
+            var directory = string.IsNullOrWhiteSpace(asset) ? Application.dataPath.Directory() : asset.Directory();
+            var path = Path.Combine(directory, name).ChangeExtension(".cs").Relative(Application.dataPath);
             var texture = EditorGUIUtility.IconContent("cs Script Icon").image as Texture2D;
-            ProjectWindowUtil.StartNameEditingIfProjectWindowExists(0, ScriptableObject.CreateInstance<OnAssetNamed>(), path, texture, template);
+            var action = ScriptableObject.CreateInstance<OnAssetNamed>();
+            ProjectWindowUtil.StartNameEditingIfProjectWindowExists(0, action, path, texture, template);
         }
 
         [MenuItem("Assets/Create/Entia/System", priority = 50)]
-        static void CreateSystem() => CreateScript("System",
+        public static void CreateSystem() => CreateScript("System",
 @"using Entia;
 using Entia.Core;
 using Entia.Systems;
@@ -62,7 +62,7 @@ namespace Systems
 }");
 
         [MenuItem("Assets/Create/Entia/Resource", priority = 51)]
-        static void CreateResource() => CreateScript("Resource",
+        public static void CreateResource() => CreateScript("Resource",
 @"using Entia;
 using Entia.Core;
 using Entia.Unity;
@@ -79,7 +79,7 @@ namespace Resources
 }");
 
         [MenuItem("Assets/Create/Entia/Component", priority = 52)]
-        static void CreateComponent() => CreateScript("Component",
+        public static void CreateComponent() => CreateScript("Component",
 @"using Entia;
 using Entia.Core;
 using Entia.Unity;
@@ -97,7 +97,7 @@ namespace Components
 }");
 
         [MenuItem("Assets/Create/Entia/Message", priority = 53)]
-        static void CreateMessage() => CreateScript("Message",
+        public static void CreateMessage() => CreateScript("Message",
 @"using Entia;
 using Entia.Core;
 using Entia.Unity;
@@ -112,8 +112,8 @@ namespace Messages
 	}
 }");
 
-        [MenuItem("Assets/Create/Entia/Controller", priority = 54)]
-        static void CreateController() => CreateScript("Controller",
+        // [MenuItem("Assets/Create/Entia/Controller", priority = 54)]
+        public static void CreateController() => CreateScript("Controller",
 @"using Entia;
 using Entia.Core;
 using Entia.Nodes;
@@ -131,6 +131,43 @@ namespace Controllers
 				Nodes.Default
 				// Insert systems here using System<T>() where 'T' is your system type.
 			);
+	}
+}");
+
+        [MenuItem("Assets/Create/Entia/Node", priority = 54)]
+        public static void CreateNode() => CreateScript("Node",
+@"using Entia;
+using Entia.Core;
+using Entia.Nodes;
+using Entia.Unity;
+using static Entia.Nodes.Node;
+using static Entia.Unity.Nodes;
+
+namespace Nodes
+{
+	public sealed class #NAME# : NodeReference
+	{
+		public override Node Node => Sequence(nameof(#NAME#),
+			Default
+			// Insert systems here using System<T>() where 'T' is your system type.
+		);
+	}
+}");
+
+        [MenuItem("Assets/Create/Entia/Modifier", priority = 55)]
+        public static void CreateModifier() => CreateScript("Modifier",
+@"using Entia;
+using Entia.Core;
+using Entia.Modules;
+using Entia.Unity;
+
+namespace Entia.Modifiers
+{
+	public sealed class #NAME# : WorldModifier
+	{
+		public override void Modify(World world)
+		{
+		}
 	}
 }");
     }

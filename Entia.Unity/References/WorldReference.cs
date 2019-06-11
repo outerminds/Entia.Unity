@@ -26,7 +26,9 @@ namespace Entia.Unity
 
         [SerializeField]
         WorldModifier[] _modifiers = { };
+        [NonSerialized]
         bool _initialized;
+        [NonSerialized]
         bool _disposed;
 
         void Awake() => Initialize();
@@ -49,7 +51,7 @@ namespace Entia.Unity
 
         public void Initialize()
         {
-            if (_initialized.Change(true))
+            if (!Application.isPlaying || _initialized.Change(true))
             {
                 World = Create();
                 World.TryScene(out var scene);
@@ -67,6 +69,7 @@ namespace Entia.Unity
                 foreach (var entity in entities) entity.PreInitialize();
                 foreach (var entity in entities) entity.Initialize(World);
                 foreach (var entity in entities) entity.PostInitialize();
+                World.Resolve();
             }
         }
 
@@ -75,7 +78,7 @@ namespace Entia.Unity
             if (World == null) return;
 
             var resources = World.Resources();
-            if (resources.TryScene(out var scene) && _initialized && _disposed.Change(true))
+            if (_initialized && resources.TryScene(out var scene) && _disposed.Change(true))
             {
                 var roots = scene.GetRootGameObjects();
                 var entities = roots.SelectMany(root => root.GetComponentsInChildren<IEntityReference>()).ToArray();

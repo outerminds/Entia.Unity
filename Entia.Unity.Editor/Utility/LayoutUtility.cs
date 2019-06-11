@@ -2,15 +2,24 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace Entia.Unity.Editor
 {
     public static class LayoutUtility
     {
+        static class Cache<T>
+        {
+            public static Type[] Types = TypeUtility.AllTypes
+                .Where(type => !type.IsAbstract && !type.IsGenericType && type.Is<T>())
+                .ToArray();
+        }
+
         class Comparer : IEqualityComparer<(Type type, string[] path)>
         {
             public bool Equals((Type type, string[] path) x, (Type type, string[] path) y) => x.type == y.type && x.path.SequenceEqual(y.path);
@@ -34,8 +43,8 @@ namespace Entia.Unity.Editor
 
         public static Disposable Apply(params SerializedObject[] serialized)
         {
-            serialized.Iterate(current => current.Update());
-            return new Disposable(() => serialized.Iterate(current => current.ApplyModifiedProperties()));
+            serialized.Some().Iterate(current => current.Update());
+            return new Disposable(() => serialized.Some().Iterate(current => current.ApplyModifiedProperties()));
         }
 
         public static Disposable Box()
@@ -102,36 +111,103 @@ namespace Entia.Unity.Editor
             return new Disposable(() => GUI.color = background);
         }
 
+        public static void ScriptableList<T>(SerializedProperty property, ref ReorderableList list, Action create = null) where T : ScriptableObject
+        {
+            void Add(T instance)
+            {
+                using (Apply(property.serializedObject))
+                {
+                    var index = property.arraySize;
+                    property.InsertArrayElementAtIndex(index);
+                    property.GetArrayElementAtIndex(index).objectReferenceValue = instance;
+                    Changed();
+                }
+            }
+
+            void Changed()
+            {
+                UnityEditor.EditorUtility.SetDirty(property.serializedObject.targetObject);
+                GUI.changed = true;
+            }
+
+            var types = Cache<T>.Types;
+            list = list ?? new ReorderableList(property.serializedObject, property, true, true, true, true)
+            {
+                drawNoneElementCallback = area => { if (create != null && GUI.Button(area, "Create")) create(); },
+                drawHeaderCallback = area => EditorGUI.LabelField(area, property.displayName),
+                drawElementCallback = (area, index, _, __) =>
+                    EditorGUI.PropertyField(area, property.GetArrayElementAtIndex(index), GUIContent.none, true),
+                onReorderCallbackWithDetails = (current, source, target) =>
+                {
+                    using (Apply(property.serializedObject))
+                    {
+                        property.MoveArrayElement(source, target);
+                        property.MoveArrayElement(source, target);
+                        Changed();
+                    }
+                },
+                onRemoveCallback = current =>
+                {
+                    using (Apply(property.serializedObject))
+                    {
+                        property.GetArrayElementAtIndex(current.index).objectReferenceValue = null;
+                        property.DeleteArrayElementAtIndex(current.index);
+                        Changed();
+                    }
+                },
+                onAddDropdownCallback = (_, __) =>
+                {
+                    var menu = new GenericMenu();
+                    if (create != null) menu.AddItem(new GUIContent("Create"), false, () => create());
+                    menu.AddItem(new GUIContent("Empty"), false, () => Add(default));
+                    menu.AddSeparator("");
+                    foreach (var type in types)
+                    {
+                        var path = type.FullFormat().Replace('.', '/');
+                        menu.AddItem(new GUIContent(path), false, () => Add(ScriptableObject.CreateInstance(type) as T));
+                    }
+                    menu.ShowAsContext();
+                }
+            };
+            list.DoLayoutList();
+        }
+
         public static bool PlusButton() => GUILayout.Button(
             "+",
             new GUIStyle(GUI.skin.button)
             {
                 alignment = TextAnchor.MiddleCenter,
-                fontSize = 12,
+                fontSize = 13,
                 fontStyle = FontStyle.Bold,
-                clipping = TextClipping.Overflow
+                clipping = TextClipping.Overflow,
+                contentOffset = new Vector2(1f, -1f)
             },
-            GUILayout.Height(16),
-            GUILayout.Width(16));
+            GUILayout.Height(15),
+            GUILayout.Width(15));
 
         public static bool MinusButton() => GUILayout.Button(
             "-",
             new GUIStyle(GUI.skin.button)
             {
                 alignment = TextAnchor.MiddleCenter,
-                fontSize = 16,
+                fontSize = 13,
                 fontStyle = FontStyle.Bold,
-                clipping = TextClipping.Overflow
+                clipping = TextClipping.Overflow,
+                contentOffset = new Vector2(0f, -1f)
             },
-            GUILayout.Height(16),
-            GUILayout.Width(16));
+            GUILayout.Height(15),
+            GUILayout.Width(15));
 
         public static bool Toggle(string label, bool value)
         {
-            using (LayoutUtility.NoIndent())
+            using (NoIndent())
             {
                 var content = new GUIContent(label);
-                var style = new GUIStyle(EditorStyles.miniLabel) { alignment = TextAnchor.MiddleCenter };
+                var style = new GUIStyle(EditorStyles.miniLabel)
+                {
+                    alignment = TextAnchor.MiddleCenter,
+                    contentOffset = new Vector2(0f, -2f)
+                };
                 value = EditorGUILayout.Toggle(GUIContent.none, value, EditorStyles.miniButton, GUILayout.Width(style.CalcSize(content).x + 10));
                 var area = GUILayoutUtility.GetLastRect();
                 EditorGUI.LabelField(area, content, style);
@@ -214,6 +290,30 @@ namespace Entia.Unity.Editor
             }
         }
 
+        public static bool PingFoldout(string label, UnityEngine.Object @object, Type foldout, params string[] path)
+        {
+            var expanded = false;
+            var area = EditorGUI.IndentedRect(EditorGUILayout.BeginVertical());
+            {
+                if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && area.Contains(Event.current.mousePosition))
+                {
+                    if (Event.current.clickCount == 1) EditorGUIUtility.PingObject(@object);
+                    else if (Event.current.clickCount == 2)
+                    {
+                        AssetDatabase.OpenAsset(@object);
+                        GUIUtility.ExitGUI();
+                        Event.current.Use();
+                    }
+                }
+
+                var content = EditorGUIUtility.ObjectContent(@object, @object?.GetType() ?? typeof(MonoScript));
+                content.text = label;
+                using (IconSize(new Vector2(12f, 12f))) expanded = Foldout(content, foldout, path);
+            }
+            EditorGUILayout.EndVertical();
+            return expanded;
+        }
+
         public static void Field(FieldInfo field, object instance, params string[] path) =>
             Field(field, instance, value => Object(field.Name, value, field.FieldType, path.Append(field.Name).ToArray()));
 
@@ -234,7 +334,9 @@ namespace Entia.Unity.Editor
             }
         }
 
-        public static bool IsDisabled(MemberInfo member) => member.GetCustomAttributes<DisableAttribute>(true).Any() || member.DeclaringType.GetCustomAttributes<DisableAttribute>().Any();
+        public static bool IsDisabled(MemberInfo member) =>
+            member.GetCustomAttributes<DisableAttribute>(true).Any() ||
+            member.DeclaringType.GetCustomAttributes<DisableAttribute>().Any();
 
         public static object Object(string label, object value, Type type, params string[] path)
         {

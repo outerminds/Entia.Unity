@@ -1,17 +1,14 @@
 using Entia.Nodes;
 using Entia.Unity;
-using Systems;
 using UnityEngine;
 using static Entia.Nodes.Node;
 
-namespace Controllers
+namespace Nodes
 {
-    [CreateAssetMenu(menuName = "Entia/Node Modifiers/Draw")]
-    public sealed class Draw : NodeModifier
+    public sealed class Draw : NodeReference
     {
-        public override Node Modify(Node node) => Sequence(node.Name,
-            node,
-            System<DrawVelocity>()
-        ).Flatten(false);
+        public override Node Node => Sequence(
+            System<Systems.DrawVelocity>()
+        );
     }
 }

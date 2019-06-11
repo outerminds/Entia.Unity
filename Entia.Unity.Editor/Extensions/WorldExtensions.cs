@@ -103,21 +103,26 @@ namespace Entia.Unity.Editor
                     {
                         using (LayoutUtility.Horizontal())
                         {
-                            var expanded = LayoutUtility.Foldout(data.label, data.type, data.path);
-                            if (LayoutUtility.PlusButton())
+                            var expanded = world.Components().TryGet<Unity<EntityReference>>(entity, out var component) ?
+                                LayoutUtility.PingFoldout(data.label, component.Value, data.type, data.path) :
+                                LayoutUtility.Foldout(data.label, data.type, data.path);
+                            using (LayoutUtility.Disable(!EditorApplication.isPlaying))
                             {
-                                var menu = new GenericMenu();
-                                foreach (var type in Concretes)
+                                if (LayoutUtility.PlusButton())
                                 {
-                                    var content = new GUIContent(string.Join("/", type.Path().SkipLast().Append(type.Format())));
-                                    if (world.Components().Has(entity, type)) menu.AddDisabledItem(content, false);
-                                    else menu.AddItem(content, false, () => world.Components().Set(entity, type));
+                                    var menu = new GenericMenu();
+                                    foreach (var type in Concretes)
+                                    {
+                                        var content = new GUIContent(string.Join("/", type.Path().SkipLast().Append(type.Format())));
+                                        if (world.Components().Has(entity, type)) menu.AddDisabledItem(content, false);
+                                        else menu.AddItem(content, false, () => world.Components().Set(entity, type));
+                                    }
+                                    menu.ShowAsContext();
                                 }
-                                menu.ShowAsContext();
-                            }
 
-                            if (LayoutUtility.MinusButton()) world.Entities().Destroy(entity);
-                            return expanded;
+                                if (LayoutUtility.MinusButton()) world.Entities().Destroy(entity);
+                                return expanded;
+                            }
                         }
                     });
             }
@@ -159,10 +164,10 @@ namespace Entia.Unity.Editor
         {
             var type = component.GetType();
 
+            using (LayoutUtility.Disable(!EditorApplication.isPlaying))
             using (LayoutUtility.Horizontal())
             {
                 using (LayoutUtility.Vertical())
-                using (LayoutUtility.Disable(type.GetCustomAttributes(true).OfType<DisableAttribute>().Any()))
                 {
                     EditorGUI.BeginChangeCheck();
                     component = LayoutUtility.Object(label, component, type, path.Append(type.FullName, entity.ToString()).ToArray()) as IComponent;
@@ -181,8 +186,7 @@ namespace Entia.Unity.Editor
                     }
                 }
 
-                if (LayoutUtility.MinusButton())
-                    world.Components().Remove(entity, type);
+                if (LayoutUtility.MinusButton()) world.Components().Remove(entity, type);
             }
         }
 
@@ -199,9 +203,12 @@ namespace Entia.Unity.Editor
         public static void ShowResource(this World world, string label, IResource resource, params string[] path)
         {
             var type = resource.GetType();
-            EditorGUI.BeginChangeCheck();
-            resource = LayoutUtility.Object(label, resource, type, path) as IResource;
-            if (EditorGUI.EndChangeCheck() && resource is IResource current) world.Resources().Set(current);
+            using (LayoutUtility.Disable(!EditorApplication.isPlaying))
+            {
+                EditorGUI.BeginChangeCheck();
+                resource = LayoutUtility.Object(label, resource, type, path) as IResource;
+                if (EditorGUI.EndChangeCheck() && resource is IResource current) world.Resources().Set(current);
+            }
         }
 
         public static void ShowEmitters(this World world, string label, IEnumerable<IEmitter> emitters, params string[] path) =>
@@ -222,7 +229,7 @@ namespace Entia.Unity.Editor
 
         public static void ShowEmitter(this World _, string label, IEmitter emitter)
         {
-            var receivers = string.Join(", ", emitter.Receivers.Select(receiver => receiver.Count));
+            var receivers = string.Join(", ", emitter.Select(receiver => receiver.Count));
             LayoutUtility.Label($"{label} [{emitter.Reaction.Count()}] [{receivers}]");
         }
 
@@ -266,14 +273,17 @@ namespace Entia.Unity.Editor
                                 new GUIStyle(EditorStyles.label) { alignment = TextAnchor.MiddleRight },
                                 GUILayout.Width(milliseconds.Length * 8f), GUILayout.Height(EditorGUIUtility.singleLineHeight));
 
-                            if (enabled.HasValue)
+                            using (LayoutUtility.Disable(!EditorApplication.isPlaying))
                             {
-                                EditorGUI.BeginChangeCheck();
-                                enabled = EditorGUILayout.Toggle(GUIContent.none, enabled.Value, GUILayout.Width(16f));
-                                if (EditorGUI.EndChangeCheck())
+                                if (enabled.HasValue)
                                 {
-                                    if (enabled.Value) controller.Enable(state);
-                                    else controller.Disable(state);
+                                    EditorGUI.BeginChangeCheck();
+                                    enabled = EditorGUILayout.Toggle(GUIContent.none, enabled.Value, GUILayout.Width(16f));
+                                    if (EditorGUI.EndChangeCheck())
+                                    {
+                                        if (enabled.Value) controller.Enable(state);
+                                        else controller.Disable(state);
+                                    }
                                 }
                             }
                         }
@@ -337,7 +347,7 @@ namespace Entia.Unity.Editor
             Node(controller.Root.node, null, null, path);
         }
 
-        public static void ShowNode(this World world, Node node, Dictionary<Node, Result<(IDependency[] dependencies, IRunner runner)>> cache, bool details, params string[] path)
+        public static void ShowNode(this World world, Node node, bool skip, Dictionary<Node, Result<(IDependency[] dependencies, IRunner runner)>> cache, bool details, params string[] path)
         {
             void Next(Node currentNode, params string[] currentPath)
             {
@@ -394,27 +404,7 @@ namespace Entia.Unity.Editor
                     else
                     {
                         if (script == null) expanded = LayoutUtility.Foldout(label, foldout, currentPath);
-                        else
-                        {
-                            var area = EditorGUI.IndentedRect(EditorGUILayout.BeginVertical());
-                            {
-                                if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && area.Contains(Event.current.mousePosition))
-                                {
-                                    if (Event.current.clickCount == 1) EditorGUIUtility.PingObject(script);
-                                    else if (Event.current.clickCount == 2)
-                                    {
-                                        AssetDatabase.OpenAsset(script);
-                                        GUIUtility.ExitGUI();
-                                        Event.current.Use();
-                                    }
-                                }
-
-                                var content = EditorGUIUtility.ObjectContent(script, typeof(MonoScript));
-                                content.text = label;
-                                using (LayoutUtility.IconSize(new Vector2(12f, 12f))) expanded = LayoutUtility.Foldout(content, foldout, currentPath);
-                            }
-                            EditorGUILayout.EndVertical();
-                        }
+                        else expanded = LayoutUtility.PingFoldout(label, script, foldout, currentPath);
                     }
                     return expanded;
                 }
@@ -426,6 +416,7 @@ namespace Entia.Unity.Editor
                         using (LayoutUtility.Indent()) Descend();
                         break;
                     case IWrapper _: Descend(); break;
+                    case INode _ when skip && !details: skip = false; Descend(); break;
                     case Entia.Nodes.System system:
                         using (LayoutUtility.Box())
                         {

@@ -53,9 +53,11 @@ namespace Entia.Unity
         }
         IComponent IComponentReference.Raw { get => Raw; set => Raw = value is T component ? component : default; }
         Type IComponentReference.Type => typeof(T);
-        Metadata IComponentReference.Metadata => ComponentUtility.Cache<T>.Data;
+        Metadata IComponentReference.Metadata => ComponentUtility.Concrete<T>.Data;
 
+        [NonSerialized]
         bool _initialized;
+        [NonSerialized]
         bool _disposed;
 
         protected ComponentReference() { Raw = DefaultUtility.Default<T>(); }
@@ -88,7 +90,7 @@ namespace Entia.Unity
         void Initialize(Entity entity, World world)
         {
             if (entity == Entia.Entity.Zero || world == null) return;
-            if (_initialized.Change(true))
+            if (!Application.isPlaying || _initialized.Change(true))
             {
                 World = world;
                 Entity = entity;

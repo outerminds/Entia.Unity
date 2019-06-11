@@ -1,15 +1,16 @@
 ﻿using Entia.Core;
 using Entia.Nodes;
 using Entia.Unity;
+using static Entia.Unity.Nodes;
 using static Entia.Nodes.Node;
 
-namespace Controllers
+namespace Nodes
 {
-    public class TestController : ControllerReference
+    public sealed class TestNode : NodeReference
     {
         public override Node Node =>
             Sequence("TestController",
-                Nodes.Default,
+                Default,
                 System<Systems.Move>(),
                 // System<Systems.Emitter>(),
                 // System<Systems.EmitterA>(),

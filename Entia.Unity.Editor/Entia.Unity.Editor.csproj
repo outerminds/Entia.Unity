@@ -27,6 +27,7 @@
     <Reference Include="UnityEngine"> <HintPath>..\Unity\DLLs\UnityEngine.dll</HintPath> <Private>false</Private> </Reference>
     <Reference Include="UnityEngine.CoreModule"> <HintPath>..\Unity\DLLs\UnityEngine.CoreModule.dll</HintPath> <Private>false</Private> </Reference>
     <Reference Include="UnityEngine.IMGUIModule"> <HintPath>..\Unity\DLLs\UnityEngine.IMGUIModule.dll</HintPath> <Private>false</Private> </Reference>
+    <Reference Include="UnityEngine.UIElementsModule"> <HintPath>..\Unity\DLLs\UnityEngine.UIElementsModule.dll</HintPath> <Private>false</Private> </Reference>
     <Reference Include="UnityEngine.TextRenderingModule"> <HintPath>..\Unity\DLLs\UnityEngine.TextRenderingModule.dll</HintPath> <Private>false</Private> </Reference>
   </ItemGroup>
 </Project>

@@ -48,7 +48,9 @@ namespace Entia.Unity
         IResource IResourceReference.Raw { get => Raw; set => Raw = value is T resource ? resource : default; }
         Type IResourceReference.Type => typeof(T);
 
+        [NonSerialized]
         bool _initialized;
+        [NonSerialized]
         bool _disposed;
 
         protected ResourceReference() { Raw = DefaultUtility.Default<T>(); }
@@ -77,7 +79,8 @@ namespace Entia.Unity
 
         void Initialize(World world)
         {
-            if (_initialized.Change(true))
+            if (world == null) return;
+            if (!Application.isPlaying || _initialized.Change(true))
             {
                 World = world;
                 World.Resources().Set(Raw);

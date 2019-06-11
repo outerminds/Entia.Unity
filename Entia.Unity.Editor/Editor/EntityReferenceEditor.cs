@@ -11,9 +11,7 @@ namespace Entia.Unity.Editor
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-
-            if (Target.World is World world)
-                world.ShowEntity(Target.Entity.ToString(world), Target.Entity, nameof(EntityReferenceEditor), Target.Entity.ToString());
+            using (ReferenceUtility.Entity(Target)) { }
         }
     }
 }

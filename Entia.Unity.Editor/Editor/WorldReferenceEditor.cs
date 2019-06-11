@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace Entia.Unity.Editor
@@ -22,39 +23,34 @@ namespace Entia.Unity.Editor
         public WorldReference Target => target as WorldReference;
 
         readonly Dictionary<IRunner, TimeSpan> _elapsed = new Dictionary<IRunner, TimeSpan>();
+        ReorderableList _modifiers;
         Receiver<OnProfile> _onProfile;
 
         public override void OnInspectorGUI()
         {
-            using (LayoutUtility.Disable(EditorApplication.isPlayingOrWillChangePlaymode)) base.OnInspectorGUI();
-            if (Target.World is World world) ShowModules(world);
-        }
-
-        void OnEnable()
-        {
-            if (Target.World is World world)
+            using (ReferenceUtility.World(serializedObject, Target, ref _modifiers))
             {
-                _onProfile = world.Messages().Receiver<OnProfile>();
-                EditorApplication.update += Update;
+                if (Target.World is World world)
+                {
+                    UpdateProfile(world);
+                    ShowModules(world);
+                }
             }
         }
 
-        void OnDisable()
+        void UpdateProfile(World world)
         {
-            if (Target.World is World world)
+            var messages = world.Messages();
+            if (_onProfile != null)
             {
-                EditorApplication.update -= Update;
-                world.Messages().Remove(_onProfile);
+                while (_onProfile.TryPop(out var message))
+                {
+                    _elapsed[message.Runner] = message.Elapsed;
+                    Repaint();
+                }
+                messages.Remove(_onProfile);
             }
-        }
-
-        void Update()
-        {
-            while (_onProfile.TryPop(out var message))
-            {
-                _elapsed[message.Runner] = message.Elapsed;
-                Repaint();
-            }
+            _onProfile = messages.Receiver<OnProfile>();
         }
 
         void ShowModules(World world)
@@ -65,7 +61,6 @@ namespace Entia.Unity.Editor
                 _all = LayoutUtility.Toggle("All", _all);
             }
             using (LayoutUtility.Indent()) foreach (var module in world) ShowModule(module, world);
-            Repaint();
         }
 
         void ShowModule(IModule module, World world)
@@ -100,8 +95,6 @@ namespace Entia.Unity.Editor
                     }
                     break;
             }
-
-            Repaint();
         }
 
         void ShowControllers(Modules.Controllers module, World world) =>
