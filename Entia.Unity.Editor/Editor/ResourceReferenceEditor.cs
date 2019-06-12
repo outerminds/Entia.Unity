@@ -6,6 +6,8 @@ namespace Entia.Unity.Editor
 {
     public abstract class ResourceReferenceEditor<T> : DataReferenceEditor<T> where T : class, IResourceReference
     {
+        protected virtual void OnDestroy() => ReferenceUtility.Update();
+
         public override void OnInspectorGUI()
         {
             using (ReferenceUtility.Resource(serializedObject, Targets, out var property))

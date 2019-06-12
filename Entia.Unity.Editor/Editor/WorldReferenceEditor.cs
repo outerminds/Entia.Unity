@@ -27,6 +27,7 @@ namespace Entia.Unity.Editor
         Receiver<OnProfile> _onProfile;
 
         protected virtual void OnEnable() => ReferenceUtility.Update();
+        protected virtual void OnDestroy() => ReferenceUtility.Update();
 
         public override void OnInspectorGUI()
         {

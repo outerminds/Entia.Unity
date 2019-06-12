@@ -11,6 +11,7 @@ using UnityEngine.Profiling;
 
 namespace Entia.Unity.Editor
 {
+    [InitializeOnLoad]
     public static class ReferenceUtility
     {
         static readonly Dictionary<Type, string> _typeToLink = TypeUtility.AllTypes
@@ -22,6 +23,8 @@ namespace Entia.Unity.Editor
                 .SelectMany(pair => new[] { (Type: type, pair.Link), pair }))
             .DistinctBy(pair => pair.Type)
             .ToDictionary(pair => pair.Type, pair => pair.Link);
+
+        static ReferenceUtility() => EditorUtility.Delayed(Update);
 
         public static SerializedProperty Script(SerializedObject serialized)
         {
