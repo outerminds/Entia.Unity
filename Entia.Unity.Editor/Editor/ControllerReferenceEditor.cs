@@ -10,7 +10,7 @@ using UnityEditorInternal;
 namespace Entia.Unity.Editor
 {
     [CustomEditor(typeof(ControllerReference), true, isFallback = true)]
-    public sealed class ControllerReferenceEditor : UnityEditor.Editor
+    public class ControllerReferenceEditor : UnityEditor.Editor
     {
         static bool _details;
 

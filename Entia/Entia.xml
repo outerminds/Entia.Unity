@@ -563,7 +563,17 @@
     </member>
     <member name="F:Entia.Modules.Component.Segment.Types">
       <summary>
-            The selection of component types that are stored in this segment with the minimum and maximum indices of those types.
+            The selection of types that are stored in this segment.
+            </summary>
+    </member>
+    <member name="F:Entia.Modules.Component.Segment.Components">
+      <summary>
+            The selection of component types that are stored in this segment.
+            </summary>
+    </member>
+    <member name="F:Entia.Modules.Component.Segment.Tags">
+      <summary>
+            The selection of tag types that are stored in this segment.
             </summary>
     </member>
     <member name="F:Entia.Modules.Component.Segment.Entities">

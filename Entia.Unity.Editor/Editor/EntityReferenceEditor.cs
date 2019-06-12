@@ -8,6 +8,8 @@ namespace Entia.Unity.Editor
     {
         public IEntityReference Target => target as IEntityReference;
 
+        protected virtual void OnEnable() => ReferenceUtility.Update();
+
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();

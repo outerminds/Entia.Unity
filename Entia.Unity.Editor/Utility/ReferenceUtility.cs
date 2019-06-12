@@ -11,7 +11,6 @@ using UnityEngine.Profiling;
 
 namespace Entia.Unity.Editor
 {
-    [InitializeOnLoad]
     public static class ReferenceUtility
     {
         static readonly Dictionary<Type, string> _typeToLink = TypeUtility.AllTypes
@@ -23,13 +22,6 @@ namespace Entia.Unity.Editor
                 .SelectMany(pair => new[] { (Type: type, pair.Link), pair }))
             .DistinctBy(pair => pair.Type)
             .ToDictionary(pair => pair.Type, pair => pair.Link);
-        static bool _update;
-
-        static ReferenceUtility()
-        {
-            EditorApplication.update += () => { if (_update.Change(false)) EditorUtility.Delayed(Update, 10); };
-            Update();
-        }
 
         public static SerializedProperty Script(SerializedObject serialized)
         {
@@ -62,35 +54,36 @@ namespace Entia.Unity.Editor
 
         public static Disposable World(SerializedObject serialized, IWorldReference reference, ref ReorderableList modifiers)
         {
-            _update = true;
+            EditorGUI.BeginChangeCheck();
             EditorGUILayout.Space();
             using (LayoutUtility.Disable(EditorApplication.isPlayingOrWillChangePlaymode))
                 LayoutUtility.ScriptableList<WorldModifier>(serialized.FindProperty("_modifiers"), ref modifiers, TemplateUtility.CreateModifier);
             EditorGUILayout.Separator();
-            return Disposable.Empty;
+            return new Disposable(() => { if (EditorGUI.EndChangeCheck()) Update(); });
         }
 
         public static Disposable Controller(SerializedObject serialized, IControllerReference reference, ref ReorderableList nodes)
         {
-            _update = true;
+            EditorGUI.BeginChangeCheck();
             EditorGUILayout.Space();
             using (LayoutUtility.Disable(EditorApplication.isPlayingOrWillChangePlaymode))
                 LayoutUtility.ScriptableList<NodeReference>(serialized.FindProperty("_nodes"), ref nodes, TemplateUtility.CreateNode);
             EditorGUILayout.Separator();
-            return Disposable.Empty;
+            return new Disposable(() => { if (EditorGUI.EndChangeCheck()) Update(); });
         }
 
         public static Disposable Entity(IEntityReference reference)
         {
-            _update = true;
-            if (reference.World is World world)
+            if (reference.Entity && reference.World is World world)
+            {
+                reference.PostInitialize();
                 world.ShowEntity(reference.Entity.ToString(world), reference.Entity, nameof(EntityReferenceEditor), reference.Entity.ToString());
+            }
             return Disposable.Empty;
         }
 
         public static Disposable Component<T>(SerializedObject serialized, IEnumerable<T> references, out SerializedProperty property) where T : IComponentReference
         {
-            _update = true;
             var instances = references.Where(reference => reference.Entity && reference.World is World).ToArray();
             foreach (var instance in instances) instance.Raw = instance.Value;
             EditorGUI.BeginChangeCheck();
@@ -129,7 +122,6 @@ namespace Entia.Unity.Editor
 
         public static Disposable Resource<T>(SerializedObject serialized, IEnumerable<T> references, out SerializedProperty property) where T : IResourceReference
         {
-            _update = true;
             var instances = references.Where(reference => reference.World is World).ToArray();
             foreach (var instance in instances) instance.Raw = instance.Value;
             EditorGUI.BeginChangeCheck();

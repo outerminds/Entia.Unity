@@ -26,6 +26,8 @@ namespace Entia.Unity.Editor
         ReorderableList _modifiers;
         Receiver<OnProfile> _onProfile;
 
+        protected virtual void OnEnable() => ReferenceUtility.Update();
+
         public override void OnInspectorGUI()
         {
             using (ReferenceUtility.World(serializedObject, Target, ref _modifiers))

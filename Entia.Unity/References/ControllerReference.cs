@@ -73,7 +73,8 @@ namespace Entia.Unity
             if (!Application.isPlaying || _initialized.Change(true))
             {
                 var node = Create();
-                var result = world.Controllers().Control(node);
+                // NOTE: the 'Try' ensures that early crashes are still caught and logged
+                var result = Result.Try(node, world.Controllers().Control).Flatten();
                 if (result.TryMessages(out var messages))
                 {
                     _log = string.Join(Environment.NewLine, messages.Distinct().Select(message => $"-> {message}"));
