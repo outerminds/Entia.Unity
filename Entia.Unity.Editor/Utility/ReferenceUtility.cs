@@ -6,15 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditorInternal;
-using UnityEngine;
-using UnityEngine.Profiling;
 
 namespace Entia.Unity.Editor
 {
     [InitializeOnLoad]
     public static class ReferenceUtility
     {
-        static readonly Dictionary<Type, string> _typeToLink = TypeUtility.AllTypes
+        static readonly Lazy<Dictionary<Type, string>> _typeToLink = new Lazy<Dictionary<Type, string>>(() => TypeUtility.AllTypes
             .AsParallel()
             .SelectMany(type => type.GetCustomAttributes(typeof(GeneratedAttribute), true)
                 .OfType<GeneratedAttribute>()
@@ -22,7 +20,7 @@ namespace Entia.Unity.Editor
                 .Where(pair => pair.Type != null && !string.IsNullOrWhiteSpace(pair.Link))
                 .SelectMany(pair => new[] { (Type: type, pair.Link), pair }))
             .DistinctBy(pair => pair.Type)
-            .ToDictionary(pair => pair.Type, pair => pair.Link);
+            .ToDictionary(pair => pair.Type, pair => pair.Link));
 
         static ReferenceUtility() => EditorUtility.Delayed(Update);
 
@@ -45,7 +43,7 @@ namespace Entia.Unity.Editor
 
         public static bool TryFindScript(Type type, out MonoScript script)
         {
-            if (_typeToLink.TryGetValue(type, out var link))
+            if (_typeToLink.Value.TryGetValue(type, out var link))
             {
                 script = AssetDatabase.LoadAssetAtPath<MonoScript>(link);
                 return script != null;
