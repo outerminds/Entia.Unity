@@ -1,5 +1,3 @@
-using Entia.Modules;
-using Entia.Nodes;
 using UnityEngine;
 
 namespace Entia.Unity

@@ -7,7 +7,6 @@ using Entia.Modules.Build;
 using Entia.Modules.Component;
 using Entia.Modules.Group;
 using Entia.Modules.Message;
-using Entia.Modules.Query;
 using Entia.Nodes;
 using Entia.Phases;
 using Entia.Systems;
@@ -15,7 +14,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -88,6 +86,33 @@ namespace Entia.Unity.Editor
             else LayoutUtility.Label(label);
         }
 
+        public static bool ShowEntityFoldout(this World world, string label, Entity entity, Type type, params string[] path)
+        {
+            using (LayoutUtility.Horizontal())
+            {
+                var expanded = world.Components().TryGet<Unity<EntityReference>>(entity, out var component) ?
+                    LayoutUtility.PingFoldout(label, component.Value, type, path) :
+                    LayoutUtility.Foldout(label, type, path);
+                using (LayoutUtility.Disable(!EditorApplication.isPlaying))
+                {
+                    if (LayoutUtility.PlusButton())
+                    {
+                        var menu = new GenericMenu();
+                        foreach (var concrete in Concretes)
+                        {
+                            var content = new GUIContent(string.Join("/", concrete.Path().SkipLast().Append(concrete.Format())));
+                            if (world.Components().Has(entity, concrete)) menu.AddDisabledItem(content, false);
+                            else menu.AddItem(content, false, () => world.Components().Set(entity, concrete));
+                        }
+                        menu.ShowAsContext();
+                    }
+
+                    if (LayoutUtility.MinusButton()) world.Entities().Destroy(entity);
+                    return expanded;
+                }
+            }
+        }
+
         public static void ShowEntity(this World world, string label, Entity entity, params string[] path)
         {
             path = path.Append(entity.ToString()).ToArray();
@@ -99,32 +124,7 @@ namespace Entia.Unity.Editor
                     (value, index) => world.ShowComponent(value.GetType().Format(), entity, value, path.Append(index.ToString()).ToArray()),
                     entity.GetType(),
                     path: path,
-                    foldout: data =>
-                    {
-                        using (LayoutUtility.Horizontal())
-                        {
-                            var expanded = world.Components().TryGet<Unity<EntityReference>>(entity, out var component) ?
-                                LayoutUtility.PingFoldout(data.label, component.Value, data.type, data.path) :
-                                LayoutUtility.Foldout(data.label, data.type, data.path);
-                            using (LayoutUtility.Disable(!EditorApplication.isPlaying))
-                            {
-                                if (LayoutUtility.PlusButton())
-                                {
-                                    var menu = new GenericMenu();
-                                    foreach (var type in Concretes)
-                                    {
-                                        var content = new GUIContent(string.Join("/", type.Path().SkipLast().Append(type.Format())));
-                                        if (world.Components().Has(entity, type)) menu.AddDisabledItem(content, false);
-                                        else menu.AddItem(content, false, () => world.Components().Set(entity, type));
-                                    }
-                                    menu.ShowAsContext();
-                                }
-
-                                if (LayoutUtility.MinusButton()) world.Entities().Destroy(entity);
-                                return expanded;
-                            }
-                        }
-                    });
+                    foldout: data => world.ShowEntityFoldout(data.label, entity, data.type, data.path));
             }
         }
 
@@ -190,12 +190,12 @@ namespace Entia.Unity.Editor
             }
         }
 
-        public static void ShowGroups(this World world, Modules.Groups module) =>
+        public static void ShowGroups(this World world, IEnumerable<IGroup> groups, params string[] path) =>
             LayoutUtility.ChunksFoldout(
                 nameof(Modules.Groups),
-                module.ToArray(),
-                (group, index) => world.ShowGroup(group.Type.Format(), group, nameof(Modules.Groups), index.ToString()),
-                module.GetType());
+                groups.ToArray(),
+                (group, index) => world.ShowGroup(group.Type.Format(), group, path.Append(index.ToString()).ToArray()),
+                typeof(Modules.Groups));
 
         public static void ShowGroup(this World world, string label, IGroup group, params string[] path) =>
             world.ShowEntities(label, group.Entities, path);
@@ -224,8 +224,28 @@ namespace Entia.Unity.Editor
                 label,
                 resources.ToArray(),
                 (resource, index) => world.ShowResource(resource.GetType().Format(), resource, path.Append(index.ToString()).ToArray()),
-                resources.GetType(),
+                typeof(Modules.Resources),
                 path);
+
+        public static void ShowFamilies(this World world, string label, params string[] path) =>
+            world.ShowFamilies(label, world.Families().Roots(), path);
+
+        public static void ShowFamilies(this World world, string label, IEnumerable<Entity> roots, params string[] path) =>
+            LayoutUtility.ChunksFoldout(
+                label,
+                roots.ToArray(),
+                (entity, index) => world.ShowFamily(entity.ToString(world), entity, path.Append(index.ToString()).ToArray()),
+                typeof(Modules.Families),
+                path);
+
+        public static void ShowFamily(this World world, string label, Entity parent, params string[] path) =>
+            LayoutUtility.ChunksFoldout(
+                label,
+                world.Families().Children(parent).ToArray(),
+                (child, index) => world.ShowFamily(child.ToString(world), child, path.Append(index.ToString()).ToArray()),
+                typeof(Modules.Families),
+                path,
+                foldout: data => world.ShowEntityFoldout(data.label, parent, data.type, data.path));
 
         public static void ShowEmitter(this World _, string label, IEmitter emitter)
         {

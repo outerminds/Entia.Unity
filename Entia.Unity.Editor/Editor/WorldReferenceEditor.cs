@@ -73,9 +73,10 @@ namespace Entia.Unity.Editor
             {
                 case Modules.Entities entities: world.ShowEntities(label, entities, label); break;
                 case Modules.Components components: world.ShowComponents(label, world.Entities(), label); break;
-                case Modules.Resources resources: world.ShowResources(label, world.Resources(), label); break;
+                case Modules.Resources resources: world.ShowResources(label, resources, label); break;
                 case Modules.Messages messages: world.ShowEmitters(label, messages, label); break;
-                case Modules.Groups groups: world.ShowGroups(groups); break;
+                case Modules.Groups groups: world.ShowGroups(groups, label); break;
+                case Modules.Families families: world.ShowFamilies(label, families.Roots(), label); break;
                 case Modules.Controllers controllers: ShowControllers(controllers, world); break;
                 default:
                     if (_all)

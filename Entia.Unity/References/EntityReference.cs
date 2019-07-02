@@ -73,6 +73,27 @@ namespace Entia.Unity
             PostDispose();
         }
 
+        void OnTransformParentChanged()
+        {
+            if (World is World world && Entity)
+            {
+                var families = world.Families();
+                var parent = transform.parent;
+                if (parent == null)
+                {
+                    families.Reject(Entity);
+                    return;
+                }
+                var reference = parent.GetComponent<EntityReference>();
+                if (reference == null)
+                {
+                    families.Reject(Entity);
+                    return;
+                }
+                families.Adopt(reference.Entity, Entity);
+            }
+        }
+
         void PreInitialize() => _initialized.Change(_initialized | States.Pre);
 
         void Initialize(World world)
@@ -109,6 +130,7 @@ namespace Entia.Unity
                     }
                 }
 
+                OnTransformParentChanged();
                 if (enabled && gameObject.activeInHierarchy) OnEnable();
                 else OnDisable();
             }
