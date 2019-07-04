@@ -581,7 +581,7 @@
             The entities.
             </summary>
     </member>
-    <member name="M:Entia.Modules.Component.Segment.#ctor(System.Int32,Entia.Core.BitMask,System.Int32)">
+    <member name="M:Entia.Modules.Component.Segment.#ctor(System.UInt32,Entia.Core.BitMask,System.Int32)">
       <summary>
             Initializes a new instance of the <see cref="T:Entia.Modules.Component.Segment" /> class.
             </summary>
@@ -603,7 +603,7 @@
       <param name="type">The component type.</param>
       <returns>The component store.</returns>
     </member>
-    <member name="M:Entia.Modules.Component.Segment.Ensure">
+    <member name="M:Entia.Modules.Component.Segment.Store``1">
       <summary>
             Ensures that all component stores are at least of the same size as the <see cref="F:Entia.Modules.Component.Segment.Entities" /> array.
             If a component store not large enough, it is resized.

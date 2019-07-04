@@ -1,11 +1,7 @@
-﻿using Entia.Core;
-using Entia.Core.Documentation;
-using Entia.Dependables;
+﻿using Entia.Core.Documentation;
 using Entia.Modules;
-using Entia.Modules.Component;
 using Entia.Modules.Query;
 using Entia.Queriers;
-using Entia.Queryables;
 using UnityEngine;
 
 namespace Entia.Queryables

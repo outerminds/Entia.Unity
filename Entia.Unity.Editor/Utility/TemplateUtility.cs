@@ -161,7 +161,7 @@ using Entia.Core;
 using Entia.Modules;
 using Entia.Unity;
 
-namespace Entia.Modifiers
+namespace Modifiers
 {
 	public sealed class #NAME# : WorldModifier
 	{
