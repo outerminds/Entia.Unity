@@ -1,8 +1,5 @@
-﻿using Entia.Core;
-using Entia.Delegables;
+﻿using Entia.Delegables;
 using Entia.Dependables;
-using Entia.Unity;
-using UnityEngine;
 
 namespace Entia.Components
 {

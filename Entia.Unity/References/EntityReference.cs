@@ -2,11 +2,7 @@
 using Entia.Modules;
 using Entia.Components;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
-using Entia.Delegables;
-using Entia.Delegates;
 
 namespace Entia.Unity
 {
@@ -122,6 +118,7 @@ namespace Entia.Unity
                     GetComponents(list.Instance);
                     foreach (var component in list.Instance)
                     {
+                        if (component == null) continue;
                         switch (component)
                         {
                             case IComponentReference reference: reference.Initialize(Entity, World); break;
@@ -149,6 +146,7 @@ namespace Entia.Unity
                     GetComponents(list.Instance);
                     foreach (var component in list.Instance)
                     {
+                        if (component == null) continue;
                         switch (component)
                         {
                             case IComponentReference reference: reference.Dispose(); break;

@@ -97,5 +97,9 @@ namespace Entia.Unity
         public static T Unity<T>(this Components<Unity<T>> components, Entity entity) where T : Object => components.Get(entity).Value;
         public static T Unity<T>(this Components<Unity<T>>.Write components, Entity entity) where T : Object => components.Get(entity).Value;
         public static T Unity<T>(this Components<Unity<T>>.Read components, Entity entity) where T : Object => components.Get(entity).Value;
+
+        public static bool Unity<T>(this Modules.Components components, Entity entity, T @object) where T : Object => components.Set(entity, new Unity<T> { Value = @object });
+        public static bool Unity<T>(this AllComponents components, Entity entity, T @object) where T : Object => components.Set(entity, new Unity<T> { Value = @object });
+        public static bool Unity<T>(this Components<Unity<T>> components, Entity entity, T @object) where T : Object => components.Set(entity, new Unity<T> { Value = @object });
     }
 }

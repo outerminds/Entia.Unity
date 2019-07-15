@@ -60,6 +60,13 @@
       <param name="world">The world.</param>
       <returns>The module.</returns>
     </member>
+    <member name="M:Entia.Modules.WorldExtensions.Families(Entia.World)">
+      <summary>
+            Gets or create the <see cref="T:Entia.Modules.Families" /> module.
+            </summary>
+      <param name="world">The world.</param>
+      <returns>The module.</returns>
+    </member>
     <member name="M:Entia.Modules.WorldExtensions.Groups(Entia.World)">
       <summary>
             Gets or create the <see cref="T:Entia.Modules.Groups" /> module.
@@ -105,6 +112,13 @@
     <member name="M:Entia.Modules.WorldExtensions.Schedulers(Entia.World)">
       <summary>
             Gets or create the <see cref="T:Entia.Modules.Schedulers" /> module.
+            </summary>
+      <param name="world">The world.</param>
+      <returns>The module.</returns>
+    </member>
+    <member name="M:Entia.Modules.WorldExtensions.Serializers(Entia.World)">
+      <summary>
+            Gets or create the <see cref="T:Entia.Modules.Serializers" /> module.
             </summary>
       <param name="world">The world.</param>
       <returns>The module.</returns>
@@ -1117,6 +1131,10 @@
       <summary>
             Tag interface that all modules must implement.
             </summary>
+    </member>
+    <member>
+      <summary>Returns an enumerator that iterates through the collection.</summary>
+      <returns>An enumerator that can be used to iterate through the collection.</returns>
     </member>
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>
