@@ -1,4 +1,6 @@
 ﻿using Entia.Core;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -19,6 +21,13 @@ namespace Entia.Unity
 
         static void Main(string[] arguments)
         {
+            var tree = CSharpSyntaxTree.ParseText("public class Boba { public (int, int, int) A = (1, 2, 3); }");
+            var compilation = CSharpCompilation.Create("", new[] { tree }, new[] { MetadataReference.CreateFromFile(typeof(Tuple<>).Assembly.Location) });
+            var model = compilation.GetSemanticModel(tree);
+            var type = model.Types().OfType<INamedTypeSymbol>().FirstOrDefault();
+            var field = type.Members().OfType<IFieldSymbol>().FirstOrDefault();
+            var tuple = field.Type;
+
             var logger = new StringBuilder();
             var options = Options.Parse(arguments);
 

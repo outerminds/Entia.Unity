@@ -30,6 +30,7 @@ namespace Components
         public Generated.IsFrozen Reference1;
         [Require]
         public EntityReference Reference2;
+        public (float a, float b) Tuple;
     }
 
     namespace Inner

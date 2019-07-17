@@ -24,6 +24,9 @@ namespace Entia.Unity
                     path[path.Length - 1] += indexer;
                     foreach (var part in path) yield return part;
                     break;
+                case INamedTypeSymbol tuple when !tuple.TupleElements.IsDefaultOrEmpty:
+                    yield return nameof(ValueTuple);
+                    break;
                 case INamespaceSymbol @namespace when !@namespace.IsGlobalNamespace:
                     foreach (var part in @namespace.ConstituentNamespaces) yield return part.Name;
                     break;

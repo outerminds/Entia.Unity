@@ -22,6 +22,7 @@ namespace Components.Generated
 		public ref global::UnityEngine.BoxCollider2D Collider => ref base.Get((ref global::Components.Component1 data) => ref data.Collider, ref this._Collider);
 		public ref global::Components.Generated.IsFrozen Reference1 => ref base.Get((ref global::Components.Component1 data) => ref data.Reference1, ref this._Reference1);
 		public ref global::Entia.Unity.EntityReference Reference2 => ref base.Get((ref global::Components.Component1 data) => ref data.Reference2, ref this._Reference2);
+		public ref global::System.ValueTuple<global::System.Single, global::System.Single> Tuple => ref base.Get((ref global::Components.Component1 data) => ref data.Tuple, ref this._Tuple);
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(X))] [global::UnityEngine.Serialization.FormerlySerializedAsAttribute("Poulah")] [global::Entia.Unity.RequireAttribute()]
 		global::System.Single _X;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Entity))] [global::Entia.Unity.RequireAttribute()]
@@ -36,6 +37,8 @@ namespace Components.Generated
 		global::Components.Generated.IsFrozen _Reference1;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Reference2))] [global::Entia.Unity.RequireAttribute()]
 		global::Entia.Unity.EntityReference _Reference2;
+		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Tuple))]
+		global::System.ValueTuple<global::System.Single, global::System.Single> _Tuple;
 		public override global::Components.Component1 Raw
 		{
 			get => new global::Components.Component1
@@ -46,7 +49,8 @@ namespace Components.Generated
 				Component = this._Component,
 				Collider = this._Collider,
 				Reference1 = this._Reference1,
-				Reference2 = this._Reference2
+				Reference2 = this._Reference2,
+				Tuple = this._Tuple
 			};
 			set
 			{
@@ -57,6 +61,7 @@ namespace Components.Generated
 				this._Collider = value.Collider;
 				this._Reference1 = value.Reference1;
 				this._Reference2 = value.Reference2;
+				this._Tuple = value.Tuple;
 			}
 		}
 		void Reset()

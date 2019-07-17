@@ -1,8 +1,5 @@
 ﻿using Entia.Components;
 using Entia.Core;
-using Entia.Dependencies;
-using Entia.Modules.Group;
-using Entia.Modules.Query;
 using Entia.Phases;
 using Entia.Queryables;
 using Entia.Systems;
@@ -157,8 +154,13 @@ namespace Entia.Unity
         {
             var path = FormatPath(type);
 
-            if (type is INamedTypeSymbol named && named.TypeArguments.Length > 0)
-                path += $"<{string.Join(", ", named.TypeArguments.Select(FormatGenericPath))}>";
+            if (type is INamedTypeSymbol named)
+            {
+                if (named.TypeArguments.Length > 0)
+                    path += $"<{string.Join(", ", named.TypeArguments.Select(FormatGenericPath))}>";
+                else if (!named.TupleElements.IsDefaultOrEmpty)
+                    path += $"<{string.Join(", ", named.TupleElements.Select(field => FormatGenericPath(field.Type)))}>";
+            }
 
             return path;
         }
