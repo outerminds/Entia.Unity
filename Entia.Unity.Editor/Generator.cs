@@ -218,6 +218,7 @@ This may happen because the .Net Core Runtime is not installed on this machine.
             foreach (var value in Quoted("--output", settings.Output)) yield return value;
             foreach (var value in Quoted("--suffix", settings.Suffix)) yield return value;
             foreach (var value in Separated("--assemblies", settings.Assemblies)) yield return value;
+            foreach (var value in Separated("--defines", EditorUserBuildSettings.activeScriptCompilationDefines)) yield return value;
             foreach (var value in Quoted("--log", settings.Log)) yield return value;
 
             yield return "--timeout";

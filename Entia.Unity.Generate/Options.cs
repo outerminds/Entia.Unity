@@ -12,6 +12,7 @@ namespace Entia.Unity
         public string Log { get; private set; } = "";
         public TimeSpan Timeout { get; private set; } = TimeSpan.MaxValue;
         public (int process, long ticks, bool files, string pipe) Watch { get; private set; } = (0, 0L, false, "");
+        public string[] Defines { get; private set; } = { };
 
         public static Options Parse(params string[] arguments)
         {
@@ -32,6 +33,7 @@ namespace Entia.Unity
                     case "--inputs": options.Inputs = arguments[index + 1].Split(';', StringSplitOptions.RemoveEmptyEntries).Distinct().ToArray(); break;
                     case "--output": options.Output = arguments[index + 1]; break;
                     case "--assemblies": options.Assemblies = arguments[index + 1].Split(';', StringSplitOptions.RemoveEmptyEntries).Distinct().ToArray(); break;
+                    case "--defines": options.Defines = arguments[index + 1].Split(';', StringSplitOptions.RemoveEmptyEntries).Distinct().ToArray(); break;
                     case "--suffix": options.Suffix = arguments[index + 1]; break;
                     case "--log": options.Log = arguments[index + 1]; break;
                     case "--timeout":

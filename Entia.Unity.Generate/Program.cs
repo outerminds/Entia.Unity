@@ -215,7 +215,7 @@ namespace Entia.Unity
                 var inputFiles = await inputFilesTask;
                 inputFiles = inputFiles.Except(currentFiles).ToArray();
 
-                var result = await Generator.Generate(options.Suffix, Directory.GetCurrentDirectory(), inputFiles, currentFiles, assemblies);
+                var result = await Generator.Generate(options.Suffix, Directory.GetCurrentDirectory(), inputFiles, currentFiles, assemblies, options.Defines);
                 var outputFiles = result.Generated
                     .Select(generated => (path: AsPath(generated.type), generated.code))
                     .ToArray();

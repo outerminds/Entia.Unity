@@ -706,7 +706,7 @@ namespace {@namespace}
             }
         }
 
-        public static async Task<Result> Generate(string suffix, string root, string[] inputFiles, string[] currentFiles, string[] assemblies)
+        public static async Task<Result> Generate(string suffix, string root, string[] inputFiles, string[] currentFiles, string[] assemblies, string[] defines)
         {
             var referencesTask = Task.Run(() => new[]
                 {
@@ -721,13 +721,14 @@ namespace {@namespace}
                 .Select(assembly => MetadataReference.CreateFromFile(assembly))
                 .ToArray());
 
+            var options = CSharpParseOptions.Default.WithPreprocessorSymbols(defines);
             var inputTreesTask = Task.Run(() => inputFiles
                 .AsParallel()
-                .Select(file => CSharpSyntaxTree.ParseText(File.ReadAllText(file), path: file))
+                .Select(file => CSharpSyntaxTree.ParseText(File.ReadAllText(file), options, path: file))
                 .ToArray());
             var currentTreesTask = Task.Run(() => currentFiles
                 .AsParallel()
-                .Select(file => CSharpSyntaxTree.ParseText(File.ReadAllText(file), path: file))
+                .Select(file => CSharpSyntaxTree.ParseText(File.ReadAllText(file), options, path: file))
                 .ToArray());
 
             var references = await referencesTask;

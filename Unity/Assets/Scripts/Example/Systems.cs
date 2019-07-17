@@ -83,6 +83,7 @@ namespace Systems
         }
     }
 
+#if UNITY_2019
     public struct UpdatePosition : IRun
     {
         // 'Unity<Transform>' is a Unity-specific query that gives access
@@ -112,4 +113,5 @@ namespace Systems
             }
         }
     }
+#endif
 }
