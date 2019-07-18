@@ -1264,17 +1264,6 @@
             The entity that had a component of type <typeparamref name="T" /> disabled.
             </summary>
     </member>
-    <member name="T:Entia.Messages.OnException">
-      <summary>
-            Message emitted after an exception is thrown.
-            </summary>
-      <seealso cref="T:Entia.IMessage" />
-    </member>
-    <member name="F:Entia.Messages.OnException.Exception">
-      <summary>
-            The thrown exception.
-            </summary>
-    </member>
     <member name="T:Entia.Messages.Segment.OnCreate">
       <summary>
             Message emitted after a <see cref="T:Entia.Modules.Component.Segment" /> is created.
@@ -1338,6 +1327,17 @@
     <member name="F:Entia.Messages.OnPostDestroy.Entity">
       <summary>
             The destroyed entity.
+            </summary>
+    </member>
+    <member name="T:Entia.Messages.OnException">
+      <summary>
+            Message emitted after an exception is thrown.
+            </summary>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.OnException.Exception">
+      <summary>
+            The thrown exception.
             </summary>
     </member>
     <member name="T:Entia.IComponent">
