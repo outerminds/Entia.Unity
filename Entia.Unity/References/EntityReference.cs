@@ -6,9 +6,8 @@ using UnityEngine;
 
 namespace Entia.Unity
 {
-    public interface IEntityReference
+    public interface IEntityReference : IReference
     {
-        World World { get; }
         Entity Entity { get; }
 
         void PreInitialize();

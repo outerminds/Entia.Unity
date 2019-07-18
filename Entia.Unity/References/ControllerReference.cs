@@ -8,9 +8,8 @@ using UnityEngine;
 
 namespace Entia.Unity
 {
-    public interface IControllerReference
+    public interface IControllerReference : IReference
     {
-        World World { get; }
         Controller Controller { get; }
         INodeReference[] Nodes { get; }
 
@@ -85,11 +84,8 @@ $@"Failed to create controller for node '{node}'. See details below.
 
                 Controller = result.OrDefault();
 
-                if (Application.isPlaying)
-                {
-                    Run<Initialize>();
-                    Run<React.Initialize>();
-                }
+                Run<React.Initialize>();
+                if (Application.isPlaying) Run<Initialize>();
             }
         }
 
@@ -97,8 +93,8 @@ $@"Failed to create controller for node '{node}'. See details below.
         {
             if (_initialized && _disposed.Change(true))
             {
-                Run<React.Dispose>();
                 Run<Dispose>();
+                Run<React.Dispose>();
                 _initialized = false;
                 _disposed = false;
             }

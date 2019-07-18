@@ -9,7 +9,7 @@ namespace Entia.Unity.Editor
         public T Target => target as T;
         public IEnumerable<T> Targets => targets.OfType<T>();
 
-        public override bool RequiresConstantRepaint() => true;
+        public override bool RequiresConstantRepaint() => EditorApplication.isPlaying;
 
         protected virtual void OnInspectorGUI(SerializedProperty property)
         {

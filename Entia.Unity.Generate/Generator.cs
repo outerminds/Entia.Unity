@@ -3,6 +3,7 @@ using Entia.Core;
 using Entia.Phases;
 using Entia.Queryables;
 using Entia.Systems;
+using Entia.Unity.Editor;
 using Entia.Unity.Generation;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -393,9 +394,6 @@ $@"{indentation}	void Reset()
 {indentation}	{{
 {resetFields}
 {indentation}	}}";
-            string.Join(
-                Environment.NewLine,
-                requireFields.Select(field => $"{indentation}		this.{field.Name} = this.GetComponent<{FormatPath(field.Type)}>();"));
 
             var proxy = string.IsNullOrWhiteSpace(declaration) && string.IsNullOrWhiteSpace(extension) ? "" :
 $@"{indentation}using {proxies};
@@ -713,7 +711,7 @@ namespace {@namespace}
             var referencesTask = Task.Run(() => new[]
                 {
                     typeof(Entity).Assembly.Location,
-                    typeof(IDrawGizmo).Assembly.Location,
+                    typeof(DrawGizmos).Assembly.Location,
                     typeof(PreserveAttribute).Assembly.Location,
                     typeof(RequireAttribute).Assembly.Location,
                 }

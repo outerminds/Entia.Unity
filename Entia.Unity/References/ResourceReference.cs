@@ -5,9 +5,8 @@ using UnityEngine;
 
 namespace Entia.Unity
 {
-    public interface IResourceReference
+    public interface IResourceReference : IReference
     {
-        World World { get; }
         IResource Value { get; set; }
         IResource Raw { get; set; }
         Type Type { get; }

@@ -7,9 +7,8 @@ using UnityEngine;
 
 namespace Entia.Unity
 {
-    public interface IComponentReference
+    public interface IComponentReference : IReference
     {
-        World World { get; }
         Entity Entity { get; }
         IComponent Value { get; set; }
         IComponent Raw { get; set; }

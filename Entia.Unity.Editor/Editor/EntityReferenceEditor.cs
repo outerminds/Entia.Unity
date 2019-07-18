@@ -1,5 +1,4 @@
-﻿using Entia.Modules;
-using UnityEditor;
+﻿using UnityEditor;
 
 namespace Entia.Unity.Editor
 {
@@ -14,7 +13,7 @@ namespace Entia.Unity.Editor
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            using (ReferenceUtility.Entity(Target)) { }
+            using (ReferenceUtility.Entity(serializedObject, Target)) { }
         }
     }
 }

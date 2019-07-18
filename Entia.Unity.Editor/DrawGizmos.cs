@@ -1,11 +1,13 @@
+using Entia.Messages;
+using Entia.Modules;
 using UnityEditor;
 
 namespace Entia.Unity.Editor
 {
-    static class DrawGizmos
+    public static class DrawGizmos
     {
         [DrawGizmo((GizmoType)~0)]
-        public static void ControllerReference(ControllerReference controller, GizmoType type) =>
-            controller.Controller?.Run<Phases.DrawGizmo>(new Phases.DrawGizmo { Type = type });
+        public static void WorldReference(WorldReference world, GizmoType type) =>
+            world.World?.Messages().Emit(new OnDrawGizmo { Type = type });
     }
 }

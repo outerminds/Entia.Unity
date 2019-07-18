@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Entia.Core;
 using Entia.Modules;
@@ -9,9 +8,8 @@ using UnityEngine.SceneManagement;
 
 namespace Entia.Unity
 {
-    public interface IWorldReference
+    public interface IWorldReference : IReference
     {
-        World World { get; }
         IWorldModifier[] Modifiers { get; }
         World Create();
         void Initialize();

@@ -1,17 +1,18 @@
 using Entia.Injectables;
+using Entia.Messages;
 using Entia.Queryables;
 using Entia.Systems;
-using UnityEditor;
+using Entia.Unity;
 using UnityEngine;
 
 namespace Systems
 {
-    // 'IDrawGizmo' systems are called at draw gizmo time, thus the 'Gizmos' api can be used
-    public struct DrawVelocity : IDrawGizmo
+    // 'OnDrawGizmo' messages are emitted at draw gizmo time, thus the 'Gizmos' api can be used
+    public struct DrawVelocity : IReact<OnDrawGizmo>
     {
         public Group<Unity<Transform>, Read<Components.Velocity>> Group;
 
-        void IDrawGizmo.DrawGizmo(GizmoType type)
+        public void React(in OnDrawGizmo message)
         {
             foreach (ref readonly var item in Group)
             {
