@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "7e56cace05d3bf3f29a95e74b52a32f89d463acc"
+    "signature": "6355b1f711fbc408baa1459dfe9a4e4afa6ea2e2"
   },
   "compilationOptions": {},
   "targets": {
@@ -10,7 +10,7 @@
         "dependencies": {
           "Entia.Unity": "1.3.0",
           "Entia.Unity.Editor": "1.3.0",
-          "Microsoft.CodeAnalysis.CSharp": "3.1.0",
+          "Microsoft.CodeAnalysis.CSharp": "3.2.1",
           "Entia.Core": "1.3.0.0",
           "Entia": "1.3.0.0"
         },
@@ -18,10 +18,10 @@
           "Entia.Unity.Generate.dll": {}
         }
       },
-      "Microsoft.CodeAnalysis.Analyzers/2.6.2-beta2": {},
-      "Microsoft.CodeAnalysis.Common/3.1.0": {
+      "Microsoft.CodeAnalysis.Analyzers/2.9.3": {},
+      "Microsoft.CodeAnalysis.Common/3.2.1": {
         "dependencies": {
-          "Microsoft.CodeAnalysis.Analyzers": "2.6.2-beta2",
+          "Microsoft.CodeAnalysis.Analyzers": "2.9.3",
           "System.Collections.Immutable": "1.5.0",
           "System.Memory": "4.5.2",
           "System.Reflection.Metadata": "1.6.0",
@@ -31,8 +31,8 @@
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.CodeAnalysis.dll": {
-            "assemblyVersion": "3.1.0.0",
-            "fileVersion": "3.100.19.26603"
+            "assemblyVersion": "3.2.0.0",
+            "fileVersion": "3.200.119.40803"
           }
         },
         "resources": {
@@ -77,14 +77,14 @@
           }
         }
       },
-      "Microsoft.CodeAnalysis.CSharp/3.1.0": {
+      "Microsoft.CodeAnalysis.CSharp/3.2.1": {
         "dependencies": {
-          "Microsoft.CodeAnalysis.Common": "3.1.0"
+          "Microsoft.CodeAnalysis.Common": "3.2.1"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.CodeAnalysis.CSharp.dll": {
-            "assemblyVersion": "3.1.0.0",
-            "fileVersion": "3.100.19.26603"
+            "assemblyVersion": "3.2.0.0",
+            "fileVersion": "3.200.119.40803"
           }
         },
         "resources": {
@@ -199,26 +199,26 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Microsoft.CodeAnalysis.Analyzers/2.6.2-beta2": {
+    "Microsoft.CodeAnalysis.Analyzers/2.9.3": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-rg5Ql73AmGCMG5Q40Kzbndq7C7S4XvsJA+2QXfZBCy2dRqD+a7BSbx/3942EoRUJ/8Wh9+kLg2G2qC46o3f1Aw==",
-      "path": "microsoft.codeanalysis.analyzers/2.6.2-beta2",
-      "hashPath": "microsoft.codeanalysis.analyzers.2.6.2-beta2.nupkg.sha512"
+      "sha512": "sha512-cDKEoHdg3icjLrn9EJ4KIkJG+ahU1YouhB0J8EARhj6fTqA/3oUneak0hWbToLOBLOTePu/Oc1QEA4mwmMEYVA==",
+      "path": "microsoft.codeanalysis.analyzers/2.9.3",
+      "hashPath": "microsoft.codeanalysis.analyzers.2.9.3.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.Common/3.1.0": {
+    "Microsoft.CodeAnalysis.Common/3.2.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-G86i5RfF/dUyn/xA4P5Y3+G6srLX+3YBGoDBVzP8J+z/Wm17i1HHY9VpOMXJaR7GRz+rhKsy4fJnbSz4JtdE6g==",
-      "path": "microsoft.codeanalysis.common/3.1.0",
-      "hashPath": "microsoft.codeanalysis.common.3.1.0.nupkg.sha512"
+      "sha512": "sha512-oqvOYeQz0ZsobFCnkj8wpeSZEhvuEcq56TChfCgFNAcMrCAJr3ex8STcKZMPhNRXloT5KuBAekyeXABLiPhQRg==",
+      "path": "microsoft.codeanalysis.common/3.2.1",
+      "hashPath": "microsoft.codeanalysis.common.3.2.1.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.CSharp/3.1.0": {
+    "Microsoft.CodeAnalysis.CSharp/3.2.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-XA4igWS2ZMkfWV+kBe5ekLj14svm1ekx3Nw3Rrf9FA/vt7dKljUDcS02HPieHeSWVYnKKashQKkpWyr8xrdHSA==",
-      "path": "microsoft.codeanalysis.csharp/3.1.0",
-      "hashPath": "microsoft.codeanalysis.csharp.3.1.0.nupkg.sha512"
+      "sha512": "sha512-Ryuly1pmsQMBlFVeNk/QwdrE2BgAYY3VXX91ALJM37hU3c/H3XlcUfRblZ8XY1E3Ia3CQRkqtt9Lp+lMCSPVcQ==",
+      "path": "microsoft.codeanalysis.csharp/3.2.1",
+      "hashPath": "microsoft.codeanalysis.csharp.3.2.1.nupkg.sha512"
     },
     "Microsoft.NETCore.Platforms/2.1.2": {
       "type": "package",
