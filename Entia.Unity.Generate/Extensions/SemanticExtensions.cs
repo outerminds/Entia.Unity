@@ -144,9 +144,9 @@ namespace Entia.Unity
             method.IsImplicitlyDeclared : false;
 
         public static bool Implements(this ITypeSymbol symbol, ITypeSymbol type) =>
-            symbol == type ||
-            symbol.OriginalDefinition == type ||
-            symbol.AllInterfaces.Any(@interface => @interface == type || @interface.OriginalDefinition == type) ||
+            symbol.Equals(type) ||
+            symbol.OriginalDefinition.Equals(type) ||
+            symbol.AllInterfaces.Any(@interface => @interface.Equals(type) || @interface.OriginalDefinition.Equals(type)) ||
             (symbol.BaseType is INamedTypeSymbol @base && @base.Implements(type));
     }
 }
