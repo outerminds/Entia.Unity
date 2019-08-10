@@ -1,15 +1,13 @@
-﻿using Entia.Schedulables;
-using Entia.Schedulers;
-using Entia.Systems;
+﻿using Entia.Core;
 
 namespace Entia.Systems
 {
-    public interface IRunFixed : ISystem, ISchedulable<Schedulers.RunFixed>
+    public interface IRunFixed : ISystem, IImplementation<Schedulers.RunFixed>
     {
         void RunFixed();
     }
 
-    public interface IRunLate : ISystem, ISchedulable<Schedulers.RunLate>
+    public interface IRunLate : ISystem, IImplementation<Schedulers.RunLate>
     {
         void RunLate();
     }

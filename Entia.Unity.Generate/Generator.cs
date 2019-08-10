@@ -31,8 +31,6 @@ namespace Entia.Unity
 
         public readonly INamedTypeSymbol World;
         public readonly INamedTypeSymbol Entity;
-        public readonly INamedTypeSymbol Entities;
-        public readonly INamedTypeSymbol Builders;
         public readonly INamedTypeSymbol IComponent;
         public readonly INamedTypeSymbol IResource;
         public readonly INamedTypeSymbol IQueryable;
@@ -81,8 +79,6 @@ namespace Entia.Unity
 
             World = Global.Type<World>();
             Entity = Global.Type<Entity>();
-            Entities = Global.Type<Modules.Entities>();
-            Builders = Global.Type<Modules.Builders>();
             IComponent = Global.Type<IComponent>();
             IResource = Global.Type<IResource>();
             IQueryable = Global.Type<Entia.Queryables.IQueryable>();

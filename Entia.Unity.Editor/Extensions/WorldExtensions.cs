@@ -1,9 +1,11 @@
-﻿using Entia.Components;
+﻿using Entia.Analysis;
+using Entia.Build;
+using Entia.Components;
 using Entia.Core;
 using Entia.Dependencies;
+using Entia.Dependency;
 using Entia.Injectables;
 using Entia.Modules;
-using Entia.Modules.Build;
 using Entia.Modules.Component;
 using Entia.Modules.Group;
 using Entia.Modules.Message;
@@ -376,7 +378,7 @@ namespace Entia.Unity.Editor
                 var label = details ? fullLabel : string.IsNullOrWhiteSpace(currentNode.Name) ? type.Format() : currentNode.Name;
                 var result =
                     cache.TryGetValue(currentNode, out var value) ? value :
-                    cache[currentNode] = Result.And(world.Analyzers().Analyze(currentNode, node), world.Builders().Build(currentNode, node));
+                    cache[currentNode] = Result.And(world.Analyze(currentNode, node), world.Build(currentNode, node));
                 currentPath = currentPath.Append(fullLabel).ToArray();
 
                 void Descend()
@@ -452,9 +454,7 @@ namespace Entia.Unity.Editor
                                     {
                                         foreach (var field in fields)
                                         {
-                                            var dependencies = world.Dependers()
-                                                .Dependencies(field)
-                                                .Distinct()
+                                            var dependencies = world.Dependencies(field)
                                                 .Select(dependency => dependency.ToString())
                                                 .OrderBy(_ => _)
                                                 .ToArray();

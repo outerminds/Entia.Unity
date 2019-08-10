@@ -2,10 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Entia.Build;
 using Entia.Core;
 using Entia.Messages;
 using Entia.Modules;
-using Entia.Modules.Build;
 using Entia.Modules.Schedule;
 using Entia.Nodes;
 using Entia.Phases;

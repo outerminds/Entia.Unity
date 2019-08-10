@@ -1,10 +1,10 @@
-﻿using Entia.Dependables;
+﻿using Entia.Core;
 using Entia.Injectables;
 using Entia.Systems;
 
 namespace Entia.Unity.Systems
 {
-    public readonly struct UpdateTime : IRun, IDependable<Dependers.Unity>
+    public readonly struct UpdateTime : IRun, IImplementation<Dependers.Unity>
     {
         public readonly Resource<Resources.Time> Resource;
 

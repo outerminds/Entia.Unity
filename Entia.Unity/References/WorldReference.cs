@@ -35,9 +35,9 @@ namespace Entia.Unity
         public World Create()
         {
             var world = new World();
-            world.Builders().Set<Profile>(new Builders.Profile());
-            world.Builders().Set<Parallel>(new Builders.Parallel());
-            world.Analyzers().Set(new Analyzers.Parallel());
+            world.Container.Add<Profile, Builders.Profile>(new Builders.Profile());
+            world.Container.Add<Parallel, Builders.Parallel>(new Builders.Parallel());
+            world.Container.Add<Parallel, Analyzers.Parallel>(new Analyzers.Parallel());
 
             var resources = world.Resources();
             if (UnityEngine.Debug.isDebugBuild) resources.Set(new Resources.Debug { Name = $"{{ Name: {name}, Scene: {gameObject.scene.name} }}" });

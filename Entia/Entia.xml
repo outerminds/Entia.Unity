@@ -4,33 +4,10 @@
     <name>Entia</name>
   </assembly>
   <members>
-    <member name="T:Entia.Modules.Analysis.IAnalyzable">
+    <member name="T:Entia.Analyzables.IAnalyzable">
       <summary>
-            Tag interface that all analyzables must implement.
+            Tag interface that all analyzable types must implement.
             </summary>
-    </member>
-    <member name="T:Entia.Modules.Analysis.IAnalyzable`1">
-      <summary>
-            Tag interface that links an analyzable to its analyzer implementation.
-            </summary>
-    </member>
-    <member>
-      <summary>Returns an enumerator that iterates through the collection.</summary>
-      <returns>An enumerator that can be used to iterate through the collection.</returns>
-    </member>
-    <member name="M:Entia.Modules.WorldExtensions.Analyzers(Entia.World)">
-      <summary>
-            Gets or create the <see cref="T:Entia.Modules.Analyzers" /> module.
-            </summary>
-      <param name="world">The world.</param>
-      <returns>The module.</returns>
-    </member>
-    <member name="M:Entia.Modules.WorldExtensions.Builders(Entia.World)">
-      <summary>
-            Gets or create the <see cref="T:Entia.Modules.Builders" /> module.
-            </summary>
-      <param name="world">The world.</param>
-      <returns>The module.</returns>
     </member>
     <member name="M:Entia.Modules.WorldExtensions.Components(Entia.World)">
       <summary>
@@ -42,13 +19,6 @@
     <member name="M:Entia.Modules.WorldExtensions.Controllers(Entia.World)">
       <summary>
             Gets or create the <see cref="T:Entia.Modules.Controllers" /> module.
-            </summary>
-      <param name="world">The world.</param>
-      <returns>The module.</returns>
-    </member>
-    <member name="M:Entia.Modules.WorldExtensions.Dependers(Entia.World)">
-      <summary>
-            Gets or create the <see cref="T:Entia.Modules.Dependers" /> module.
             </summary>
       <param name="world">The world.</param>
       <returns>The module.</returns>
@@ -70,13 +40,6 @@
     <member name="M:Entia.Modules.WorldExtensions.Groups(Entia.World)">
       <summary>
             Gets or create the <see cref="T:Entia.Modules.Groups" /> module.
-            </summary>
-      <param name="world">The world.</param>
-      <returns>The module.</returns>
-    </member>
-    <member name="M:Entia.Modules.WorldExtensions.Injectors(Entia.World)">
-      <summary>
-            Gets or create the <see cref="T:Entia.Modules.Injectors" /> module.
             </summary>
       <param name="world">The world.</param>
       <returns>The module.</returns>
@@ -109,33 +72,12 @@
       <param name="world">The world.</param>
       <returns>The module.</returns>
     </member>
-    <member name="M:Entia.Modules.WorldExtensions.Schedulers(Entia.World)">
-      <summary>
-            Gets or create the <see cref="T:Entia.Modules.Schedulers" /> module.
-            </summary>
-      <param name="world">The world.</param>
-      <returns>The module.</returns>
-    </member>
     <member name="M:Entia.Modules.WorldExtensions.Serializers(Entia.World)">
       <summary>
             Gets or create the <see cref="T:Entia.Modules.Serializers" /> module.
             </summary>
       <param name="world">The world.</param>
       <returns>The module.</returns>
-    </member>
-    <member name="T:Entia.Modules.Build.IBuildable">
-      <summary>
-            Tag interface that all buildables must implement.
-            </summary>
-    </member>
-    <member name="T:Entia.Modules.Build.IBuildable`1">
-      <summary>
-            Tag interface that links a buildable to its builder implementation.
-            </summary>
-    </member>
-    <member>
-      <summary>Returns an enumerator that iterates through the collection.</summary>
-      <returns>An enumerator that can be used to iterate through the collection.</returns>
     </member>
     <member name="T:Entia.Modules.Components">
       <summary>
@@ -623,10 +565,6 @@
             If a component store not large enough, it is resized.
             </summary>
       <returns>Returns <c>true</c> if a component store was resized; otherwise, <c>false</c>.</returns>
-    </member>
-    <member>
-      <summary>Returns an enumerator that iterates through the collection.</summary>
-      <returns>An enumerator that can be used to iterate through the collection.</returns>
     </member>
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>
@@ -1123,10 +1061,6 @@
       <summary>Returns an enumerator that iterates through the collection.</summary>
       <returns>An enumerator that can be used to iterate through the collection.</returns>
     </member>
-    <member>
-      <summary>Returns an enumerator that iterates through the collection.</summary>
-      <returns>An enumerator that can be used to iterate through the collection.</returns>
-    </member>
     <member name="T:Entia.Modules.IModule">
       <summary>
             Tag interface that all modules must implement.
@@ -1148,196 +1082,9 @@
       <summary>Returns an enumerator that iterates through the collection.</summary>
       <returns>An enumerator that can be used to iterate through the collection.</returns>
     </member>
-    <member>
-      <summary>Returns an enumerator that iterates through the collection.</summary>
-      <returns>An enumerator that can be used to iterate through the collection.</returns>
-    </member>
-    <member name="T:Entia.Messages.OnAdd">
+    <member name="T:Entia.Buildables.IBuildable">
       <summary>
-            Message emitted after a component has been added to an entity.
-            </summary>
-      <seealso cref="T:Entia.IMessage" />
-    </member>
-    <member name="F:Entia.Messages.OnAdd.Entity">
-      <summary>
-            The entity that gained a component.
-            </summary>
-    </member>
-    <member name="F:Entia.Messages.OnAdd.Component">
-      <summary>
-            The component type that was added.
-            </summary>
-    </member>
-    <member name="T:Entia.Messages.OnAdd`1">
-      <summary>
-            Message emitted after a component of type <typeparamref name="T" /> has been added to an entity.
-            </summary>
-      <typeparam name="T">The component type.</typeparam>
-      <seealso cref="T:Entia.IMessage" />
-    </member>
-    <member name="F:Entia.Messages.OnAdd`1.Entity">
-      <summary>
-            The entity that gained a component of type <typeparamref name="T" />.
-            </summary>
-    </member>
-    <member name="T:Entia.Messages.OnRemove">
-      <summary>
-            Message emitted before a component will be removed from an entity.
-            </summary>
-      <seealso cref="T:Entia.IMessage" />
-    </member>
-    <member name="F:Entia.Messages.OnRemove.Entity">
-      <summary>
-            The entity that lost a component.
-            </summary>
-    </member>
-    <member name="F:Entia.Messages.OnRemove.Component">
-      <summary>
-            The component type that was removed.
-            </summary>
-    </member>
-    <member name="T:Entia.Messages.OnRemove`1">
-      <summary>
-            Message emitted before a component of type <typeparamref name="T" /> will be removed from an entity.
-            </summary>
-      <typeparam name="T">The component type.</typeparam>
-      <seealso cref="T:Entia.IMessage" />
-    </member>
-    <member name="F:Entia.Messages.OnRemove`1.Entity">
-      <summary>
-            The entity that lost a component of type <typeparamref name="T" />.
-            </summary>
-    </member>
-    <member name="T:Entia.Messages.OnEnable">
-      <summary>
-            Message emitted after a component has been enabled.
-            </summary>
-      <seealso cref="T:Entia.IMessage" />
-    </member>
-    <member name="F:Entia.Messages.OnEnable.Entity">
-      <summary>
-            The entity that had a component enabled.
-            </summary>
-    </member>
-    <member name="F:Entia.Messages.OnEnable.Component">
-      <summary>
-            The component type that was enabled.
-            </summary>
-    </member>
-    <member name="T:Entia.Messages.OnEnable`1">
-      <summary>
-            Message emitted after a component of type <typeparamref name="T" /> has been enabled.
-            </summary>
-      <typeparam name="T">The component type.</typeparam>
-      <seealso cref="T:Entia.IMessage" />
-    </member>
-    <member name="F:Entia.Messages.OnEnable`1.Entity">
-      <summary>
-            The entity that had a component of type <typeparamref name="T" /> enabled.
-            </summary>
-    </member>
-    <member name="T:Entia.Messages.OnDisable">
-      <summary>
-            Message emitted after a component has been disabled.
-            </summary>
-      <seealso cref="T:Entia.IMessage" />
-    </member>
-    <member name="F:Entia.Messages.OnDisable.Entity">
-      <summary>
-            The entity that had a component disabled.
-            </summary>
-    </member>
-    <member name="F:Entia.Messages.OnDisable.Component">
-      <summary>
-            The component type that was disabled.
-            </summary>
-    </member>
-    <member name="T:Entia.Messages.OnDisable`1">
-      <summary>
-            Message emitted after a component of type <typeparamref name="T" /> has been disabled.
-            </summary>
-      <typeparam name="T">The component type.</typeparam>
-      <seealso cref="T:Entia.IMessage" />
-    </member>
-    <member name="F:Entia.Messages.OnDisable`1.Entity">
-      <summary>
-            The entity that had a component of type <typeparamref name="T" /> disabled.
-            </summary>
-    </member>
-    <member name="T:Entia.Messages.Segment.OnCreate">
-      <summary>
-            Message emitted after a <see cref="T:Entia.Modules.Component.Segment" /> is created.
-            </summary>
-      <seealso cref="T:Entia.IMessage" />
-    </member>
-    <member name="F:Entia.Messages.Segment.OnCreate.Segment">
-      <summary>
-            The created segment.
-            </summary>
-    </member>
-    <member name="T:Entia.Messages.Segment.OnMove">
-      <summary>
-            Message emitted after an entity has been moved.
-            </summary>
-      <seealso cref="T:Entia.IMessage" />
-    </member>
-    <member name="F:Entia.Messages.Segment.OnMove.Entity">
-      <summary>
-            The moved entity.
-            </summary>
-    </member>
-    <member name="F:Entia.Messages.Segment.OnMove.Source">
-      <summary>
-            The source of the move.
-            </summary>
-    </member>
-    <member name="F:Entia.Messages.Segment.OnMove.Target">
-      <summary>
-            The target of the move.
-            </summary>
-    </member>
-    <member name="T:Entia.Messages.OnCreate">
-      <summary>
-            Message emitted every time an entity is created.
-            </summary>
-      <seealso cref="T:Entia.IMessage" />
-    </member>
-    <member name="F:Entia.Messages.OnCreate.Entity">
-      <summary>
-            The created entity.
-            </summary>
-    </member>
-    <member name="T:Entia.Messages.OnPreDestroy">
-      <summary>
-            Message emitted just before an entity is destroyed.
-            </summary>
-      <seealso cref="T:Entia.IMessage" />
-    </member>
-    <member name="F:Entia.Messages.OnPreDestroy.Entity">
-      <summary>
-            The entity about to be destroyed.
-            </summary>
-    </member>
-    <member name="T:Entia.Messages.OnPostDestroy">
-      <summary>
-            Message emitted just after an entity has been destroyed.
-            </summary>
-      <seealso cref="T:Entia.IMessage" />
-    </member>
-    <member name="F:Entia.Messages.OnPostDestroy.Entity">
-      <summary>
-            The destroyed entity.
-            </summary>
-    </member>
-    <member name="T:Entia.Messages.OnException">
-      <summary>
-            Message emitted after an exception is thrown.
-            </summary>
-      <seealso cref="T:Entia.IMessage" />
-    </member>
-    <member name="F:Entia.Messages.OnException.Exception">
-      <summary>
-            The thrown exception.
+            Tag interface that all buildables must implement.
             </summary>
     </member>
     <member name="T:Entia.IComponent">
@@ -2873,6 +2620,194 @@
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>
       <returns>An enumerator that can be used to iterate through the collection.</returns>
+    </member>
+    <member name="T:Entia.Messages.OnAdd">
+      <summary>
+            Message emitted after a component has been added to an entity.
+            </summary>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.OnAdd.Entity">
+      <summary>
+            The entity that gained a component.
+            </summary>
+    </member>
+    <member name="F:Entia.Messages.OnAdd.Component">
+      <summary>
+            The component type that was added.
+            </summary>
+    </member>
+    <member name="T:Entia.Messages.OnAdd`1">
+      <summary>
+            Message emitted after a component of type <typeparamref name="T" /> has been added to an entity.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.OnAdd`1.Entity">
+      <summary>
+            The entity that gained a component of type <typeparamref name="T" />.
+            </summary>
+    </member>
+    <member name="T:Entia.Messages.OnRemove">
+      <summary>
+            Message emitted before a component will be removed from an entity.
+            </summary>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.OnRemove.Entity">
+      <summary>
+            The entity that lost a component.
+            </summary>
+    </member>
+    <member name="F:Entia.Messages.OnRemove.Component">
+      <summary>
+            The component type that was removed.
+            </summary>
+    </member>
+    <member name="T:Entia.Messages.OnRemove`1">
+      <summary>
+            Message emitted before a component of type <typeparamref name="T" /> will be removed from an entity.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.OnRemove`1.Entity">
+      <summary>
+            The entity that lost a component of type <typeparamref name="T" />.
+            </summary>
+    </member>
+    <member name="T:Entia.Messages.OnEnable">
+      <summary>
+            Message emitted after a component has been enabled.
+            </summary>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.OnEnable.Entity">
+      <summary>
+            The entity that had a component enabled.
+            </summary>
+    </member>
+    <member name="F:Entia.Messages.OnEnable.Component">
+      <summary>
+            The component type that was enabled.
+            </summary>
+    </member>
+    <member name="T:Entia.Messages.OnEnable`1">
+      <summary>
+            Message emitted after a component of type <typeparamref name="T" /> has been enabled.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.OnEnable`1.Entity">
+      <summary>
+            The entity that had a component of type <typeparamref name="T" /> enabled.
+            </summary>
+    </member>
+    <member name="T:Entia.Messages.OnDisable">
+      <summary>
+            Message emitted after a component has been disabled.
+            </summary>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.OnDisable.Entity">
+      <summary>
+            The entity that had a component disabled.
+            </summary>
+    </member>
+    <member name="F:Entia.Messages.OnDisable.Component">
+      <summary>
+            The component type that was disabled.
+            </summary>
+    </member>
+    <member name="T:Entia.Messages.OnDisable`1">
+      <summary>
+            Message emitted after a component of type <typeparamref name="T" /> has been disabled.
+            </summary>
+      <typeparam name="T">The component type.</typeparam>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.OnDisable`1.Entity">
+      <summary>
+            The entity that had a component of type <typeparamref name="T" /> disabled.
+            </summary>
+    </member>
+    <member name="T:Entia.Messages.Segment.OnCreate">
+      <summary>
+            Message emitted after a <see cref="T:Entia.Modules.Component.Segment" /> is created.
+            </summary>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.Segment.OnCreate.Segment">
+      <summary>
+            The created segment.
+            </summary>
+    </member>
+    <member name="T:Entia.Messages.Segment.OnMove">
+      <summary>
+            Message emitted after an entity has been moved.
+            </summary>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.Segment.OnMove.Entity">
+      <summary>
+            The moved entity.
+            </summary>
+    </member>
+    <member name="F:Entia.Messages.Segment.OnMove.Source">
+      <summary>
+            The source of the move.
+            </summary>
+    </member>
+    <member name="F:Entia.Messages.Segment.OnMove.Target">
+      <summary>
+            The target of the move.
+            </summary>
+    </member>
+    <member name="T:Entia.Messages.OnCreate">
+      <summary>
+            Message emitted every time an entity is created.
+            </summary>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.OnCreate.Entity">
+      <summary>
+            The created entity.
+            </summary>
+    </member>
+    <member name="T:Entia.Messages.OnPreDestroy">
+      <summary>
+            Message emitted just before an entity is destroyed.
+            </summary>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.OnPreDestroy.Entity">
+      <summary>
+            The entity about to be destroyed.
+            </summary>
+    </member>
+    <member name="T:Entia.Messages.OnPostDestroy">
+      <summary>
+            Message emitted just after an entity has been destroyed.
+            </summary>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.OnPostDestroy.Entity">
+      <summary>
+            The destroyed entity.
+            </summary>
+    </member>
+    <member name="T:Entia.Messages.OnException">
+      <summary>
+            Message emitted after an exception is thrown.
+            </summary>
+      <seealso cref="T:Entia.IMessage" />
+    </member>
+    <member name="F:Entia.Messages.OnException.Exception">
+      <summary>
+            The thrown exception.
+            </summary>
     </member>
     <member name="T:Entia.Nodes.INode">
       <summary>
