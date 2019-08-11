@@ -66,33 +66,49 @@ namespace Entia.Unity.Editor
 
         void ShowModule(IModule module, World world)
         {
-            var label = module.GetType().Name;
+            var label = module.GetType().Format();
+            var path = new[] { label };
             switch (module)
             {
-                case Modules.Entities entities: world.ShowEntities(label, entities, label); break;
-                case Modules.Components components: world.ShowComponents(label, world.Entities(), label); break;
-                case Modules.Resources resources: world.ShowResources(label, resources, label); break;
-                case Modules.Messages messages: world.ShowEmitters(label, messages, label); break;
-                case Modules.Groups groups: world.ShowGroups(groups, label); break;
-                case Modules.Families families: world.ShowFamilies(label, families.Roots(), label); break;
+                case Modules.Entities entities: world.ShowEntities(label, entities, path); break;
+                case Modules.Components components: world.ShowComponents(label, world.Entities(), path); break;
+                case Modules.Resources resources: world.ShowResources(label, resources, path); break;
+                case Modules.Messages messages: world.ShowEmitters(label, messages, path); break;
+                case Modules.Groups groups: world.ShowGroups(groups, path); break;
+                case Modules.Families families: world.ShowFamilies(label, families.Roots(), path); break;
                 case Modules.Controllers controllers: ShowControllers(controllers, world); break;
                 default:
                     if (_all)
                     {
                         using (LayoutUtility.Disable())
                         {
-                            if (module is IEnumerable enumerable)
+                            switch (module)
                             {
-                                var array = enumerable.Cast<object>().ToArray();
-                                var format = module.GetType().Format();
-                                LayoutUtility.ChunksFoldout(
-                                    format,
-                                    array,
-                                    (item, _) => LayoutUtility.Label(item.GetType().FullFormat()),
-                                    module.GetType(),
-                                    new[] { format });
+                                case Boxes boxes:
+                                    LayoutUtility.ChunksFoldout(
+                                        label,
+                                        boxes.ToArray(),
+                                        (item, index) => LayoutUtility.Members(
+                                            $"{{ Type: {item.type.Format()}, Key: {item.key?.GetType().Format() ?? "null"}, Value: {item.value?.GetType().Format() ?? "null"} }}",
+                                            new { Key = item.key, Value = item.value },
+                                            item.type,
+                                            path.Append(index.ToString()).ToArray()),
+                                        module.GetType(),
+                                        path);
+                                    break;
+                                case IEnumerable enumerable:
+                                    var array = enumerable.Cast<object>().ToArray();
+                                    LayoutUtility.ChunksFoldout(
+                                        label,
+                                        array,
+                                        (item, _) => LayoutUtility.Label(item.GetType().FullFormat()),
+                                        module.GetType(),
+                                        path);
+                                    break;
+                                default:
+                                    LayoutUtility.Label(module.GetType().Format());
+                                    break;
                             }
-                            else LayoutUtility.Label(module.GetType().Format());
                         }
                     }
                     break;

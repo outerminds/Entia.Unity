@@ -316,27 +316,45 @@ namespace Entia.Unity.Editor
 
         public static void Field(FieldInfo field, object instance, params string[] path) =>
             Field(field, instance, value => Object(field.Name, value, field.FieldType, path.Append(field.Name).ToArray()));
+        public static void Field(FieldInfo field, object instance, Func<object, object> show, Func<bool> disable = null) =>
+            Member(
+                field,
+                field.FieldType,
+                () => field.GetValue(instance),
+                field.IsInitOnly ? default(Action<object>) : value => field.SetValue(instance, value),
+                show,
+                disable);
 
-        public static void Field(FieldInfo field, object instance, Func<object, object> show) =>
-            Field(field, instance, show, () => field.IsInitOnly || IsDisabled(field));
+        public static void Property(PropertyInfo property, object instance, params string[] path) =>
+            Property(property, instance, value => Object(property.Name, value, property.PropertyType, path.Append(property.Name).ToArray()));
+        public static void Property(PropertyInfo property, object instance, Func<object, object> show, Func<bool> disable = null) =>
+            Member(
+                property,
+                property.PropertyType,
+                () => property.GetValue(instance),
+                property.CanWrite ? value => property.SetValue(instance, value) : default(Action<object>),
+                show,
+                disable);
 
-        public static void Field(FieldInfo field, object instance, Func<object, object> show, Func<bool> disable)
+        public static void Member(MemberInfo member, Type type, Func<object> get, Action<object> set, Func<object, object> show, Func<bool> disable)
         {
-            using (Disable(disable()))
+            disable = disable ?? (() => false);
+            using (Disable(set == null || IsDisabled(member) || disable()))
             {
-                if (Result.Try(() => field.GetValue(instance)).TryValue(out var value))
+                set = set ?? (_ => { });
+                if (Option.Try(() => get()).TryValue(out var value))
                 {
                     EditorGUI.BeginChangeCheck();
                     value = show(value);
-                    if (EditorGUI.EndChangeCheck()) field.SetValue(instance, value);
+                    if (EditorGUI.EndChangeCheck()) Option.Try(() => set(value));
                 }
-                else Label($"{field.Name}: {field.FieldType.Format()}");
+                else Label($"{member.Name}: {type.Format()}");
             }
         }
 
         public static bool IsDisabled(MemberInfo member) =>
-            member.GetCustomAttributes<DisableAttribute>(true).Any() ||
-            member.DeclaringType.GetCustomAttributes<DisableAttribute>().Any();
+            member.IsDefined(typeof(DisableAttribute), true) ||
+            member.DeclaringType.IsDefined(typeof(DisableAttribute), true);
 
         public static object Object(string label, object value, Type type, params string[] path)
         {
@@ -387,11 +405,33 @@ namespace Entia.Unity.Editor
 
         public static object Fields(string label, object value, Type type, string[] path)
         {
-            var fields = value.GetType().InstanceFields().Where(field => field.IsPublic).ToArray();
+            var data = TypeUtility.GetData(value.GetType());
+            var fields = data.InstanceFields.Where(field => field.IsPublic).ToArray();
 
             if (fields.Length == 0) EditorGUILayout.LabelField(label, value.ToString());
             else if (Foldout(label, type, path))
-                using (Indent()) using (Vertical()) foreach (var field in fields) Field(field, value);
+            {
+                using (Indent()) using (Vertical()) foreach (var field in fields) Field(field, value, path);
+            }
+
+            return value;
+        }
+
+        public static object Members(string label, object value, Type type, string[] path)
+        {
+            var data = TypeUtility.GetData(value.GetType());
+            var fields = data.InstanceFields.Where(field => field.IsPublic).ToArray();
+            var properties = data.InstanceProperties.Where(property => property.CanRead && property.GetMethod.IsPublic).ToArray();
+
+            if (fields.Length == 0 && properties.Length == 0) EditorGUILayout.LabelField(label, value.ToString());
+            else if (Foldout(label, type, path))
+            {
+                using (Indent()) using (Vertical())
+                {
+                    foreach (var field in fields) Field(field, value, path);
+                    foreach (var property in properties) Property(property, value, path);
+                }
+            }
 
             return value;
         }

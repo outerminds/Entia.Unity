@@ -355,7 +355,7 @@ namespace Entia.Unity.Editor
                                                 $"{field.Name}: {field.FieldType.Format()}",
                                                 value,
                                                 current.Append(field.Name, field.FieldType.FullName, i.ToString()).ToArray()),
-                                            () => LayoutUtility.IsDisabled(field) || (!field.IsPublic && field.IsInitOnly));
+                                            () => !field.IsPublic && field.IsInitOnly);
                                     }
                                 }
                             }
