@@ -120,10 +120,14 @@ namespace Entia.Unity.Editor
             path = path.Append(entity.ToString()).ToArray();
             using (LayoutUtility.Disable(!world.Entities().Has(entity)))
             {
+                var components = world.Components().Get(entity)
+                    .Select(component => (component, name: component.GetType().Format()))
+                    .OrderBy(pair => pair.name)
+                    .ToArray();
                 LayoutUtility.ChunksFoldout(
                     label,
-                    world.Components().Get(entity).ToArray(),
-                    (value, index) => world.ShowComponent(value.GetType().Format(), entity, value, path.Append(index.ToString()).ToArray()),
+                    components,
+                    (pair, index) => world.ShowComponent(pair.name, entity, pair.component, path.Append(index.ToString()).ToArray()),
                     entity.GetType(),
                     path: path,
                     foldout: data => world.ShowEntityFoldout(data.label, entity, data.type, data.path));
@@ -143,13 +147,13 @@ namespace Entia.Unity.Editor
             var groups = entities
                 .SelectMany(entity => world.Components().Get(entity).Select(component => (entity, component)))
                 .GroupBy(pair => pair.component.GetType())
-                .Select(group => (group.Key, group.ToArray()))
+                .Select(group => (type: group.Key, name: group.Key.Format(), items: group.ToArray()))
+                .OrderBy(group => group.name)
                 .ToArray();
-
             LayoutUtility.ChunksFoldout(
                 label,
                 groups,
-                (group, index) => world.ShowComponents(group.Key.Format(), group.Item2, group.Key, path.Append(index.ToString()).ToArray()),
+                (group, index) => world.ShowComponents(group.name, group.items, group.type, path.Append(index.ToString()).ToArray()),
                 entities.GetType(),
                 path);
         }
@@ -158,7 +162,7 @@ namespace Entia.Unity.Editor
             LayoutUtility.ChunksFoldout(
                 label,
                 components.ToArray(),
-                (pair, index2) => world.ShowComponent(pair.entity.ToString(world), pair.entity, pair.component, path.Append(index2.ToString()).ToArray()),
+                (pair, index) => world.ShowComponent(pair.entity.ToString(world), pair.entity, pair.component, path.Append(index.ToString()).ToArray()),
                 type,
                 path.Append(type.FullName).ToArray());
 
@@ -195,8 +199,8 @@ namespace Entia.Unity.Editor
         public static void ShowGroups(this World world, IEnumerable<IGroup> groups, params string[] path) =>
             LayoutUtility.ChunksFoldout(
                 nameof(Modules.Groups),
-                groups.ToArray(),
-                (group, index) => world.ShowGroup(group.Type.Format(), group, path.Append(index.ToString()).ToArray()),
+                groups.Select(group => (group, name: group.Type.Format())).OrderBy(pair => pair.name).ToArray(),
+                (pair, index) => world.ShowGroup(pair.name, pair.group, path.Append(index.ToString()).ToArray()),
                 typeof(Modules.Groups));
 
         public static void ShowGroup(this World world, string label, IGroup group, params string[] path) =>
@@ -216,16 +220,16 @@ namespace Entia.Unity.Editor
         public static void ShowEmitters(this World world, string label, IEnumerable<IEmitter> emitters, params string[] path) =>
             LayoutUtility.ChunksFoldout(
                 label,
-                emitters.ToArray(),
-                (emitter, _) => world.ShowEmitter(emitter.Type.Format(), emitter),
+                emitters.Select(emitter => (emitter, name: emitter.Type.Format())).OrderBy(pair => pair.name).ToArray(),
+                (pair, _) => world.ShowEmitter(pair.name, pair.emitter),
                 emitters.GetType(),
                 path);
 
         public static void ShowResources(this World world, string label, IEnumerable<IResource> resources, params string[] path) =>
             LayoutUtility.ChunksFoldout(
                 label,
-                resources.ToArray(),
-                (resource, index) => world.ShowResource(resource.GetType().Format(), resource, path.Append(index.ToString()).ToArray()),
+                resources.Select(resource => (resource, name: resource.GetType().Format())).OrderBy(pair => pair.name).ToArray(),
+                (pair, index) => world.ShowResource(pair.name, pair.resource, path.Append(index.ToString()).ToArray()),
                 typeof(Modules.Resources),
                 path);
 
