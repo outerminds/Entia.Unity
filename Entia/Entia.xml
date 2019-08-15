@@ -72,13 +72,6 @@
       <param name="world">The world.</param>
       <returns>The module.</returns>
     </member>
-    <member name="M:Entia.Modules.WorldExtensions.Serializers(Entia.World)">
-      <summary>
-            Gets or create the <see cref="T:Entia.Modules.Serializers" /> module.
-            </summary>
-      <param name="world">The world.</param>
-      <returns>The module.</returns>
-    </member>
     <member name="T:Entia.Modules.Components">
       <summary>
             Module that stores and manages components.
@@ -1065,10 +1058,6 @@
       <summary>
             Tag interface that all modules must implement.
             </summary>
-    </member>
-    <member>
-      <summary>Returns an enumerator that iterates through the collection.</summary>
-      <returns>An enumerator that can be used to iterate through the collection.</returns>
     </member>
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>
