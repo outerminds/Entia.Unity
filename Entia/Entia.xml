@@ -1063,14 +1063,6 @@
       <summary>Returns an enumerator that iterates through the collection.</summary>
       <returns>An enumerator that can be used to iterate through the collection.</returns>
     </member>
-    <member>
-      <summary>Returns an enumerator that iterates through the collection.</summary>
-      <returns>An enumerator that can be used to iterate through the collection.</returns>
-    </member>
-    <member>
-      <summary>Returns an enumerator that iterates through the collection.</summary>
-      <returns>An enumerator that can be used to iterate through the collection.</returns>
-    </member>
     <member name="T:Entia.Buildables.IBuildable">
       <summary>
             Tag interface that all buildables must implement.

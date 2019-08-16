@@ -1,4 +1,5 @@
-﻿using Entia.Core.Documentation;
+﻿using Entia.Core;
+using Entia.Core.Documentation;
 using Entia.Modules;
 using Entia.Modules.Query;
 using Entia.Queriers;
@@ -24,7 +25,7 @@ namespace Entia.Queryables
             }
         }
 
-        [Querier]
+        [Implementation]
         static readonly Querier _querier = new Querier();
 
         public T Value => _value.Value.Value;
