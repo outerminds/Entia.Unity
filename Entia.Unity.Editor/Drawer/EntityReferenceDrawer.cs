@@ -17,8 +17,8 @@ namespace Entia.Unity.Editor
                 var types = reference.GetComponents<Component>()
                     .SelectMany(component =>
                         component is IComponentReference casted ? new[] { casted.Type } :
-                        new[] { component.GetType(), typeof(Unity<>).MakeGenericType(component.GetType()) })
-                    .Append(typeof(GameObject), typeof(Unity<GameObject>))
+                        new[] { component.GetType(), typeof(Components.Unity<>).MakeGenericType(component.GetType()) })
+                    .Append(typeof(GameObject), typeof(Components.Unity<GameObject>))
                     .ToArray();
                 var attributes = fieldInfo.GetCustomAttributes(false);
                 var missing = attributes

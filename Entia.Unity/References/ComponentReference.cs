@@ -1,5 +1,4 @@
 ﻿using Entia.Core;
-using Entia.Delegables;
 using Entia.Modules;
 using Entia.Modules.Component;
 using System;
@@ -23,7 +22,7 @@ namespace Entia.Unity
     public abstract class ComponentReference : MonoBehaviour { }
 
     [DisallowMultipleComponent]
-    public abstract class ComponentReference<T> : ComponentReference, IComponentReference, IDelegable<Delegates.Reference<T>> where T : struct, IComponent
+    public abstract class ComponentReference<T> : ComponentReference, IComponentReference where T : struct, IComponent
     {
         protected delegate ref TMember Mapper<TMember>(ref T component);
         protected delegate TMember From<TMember>(ref T component, World world);

@@ -3,17 +3,5 @@
   <assembly>
     <name>Entia.Unity</name>
   </assembly>
-  <members>
-    <member>
-      <summary>Returns an enumerator that iterates through the collection.</summary>
-      <returns>An enumerator that can be used to iterate through the collection.</returns>
-    </member>
-    <member name="M:Entia.Modules.WorldExtensions.Delegates(Entia.World)">
-      <summary>
-            Gets or create the <see cref="T:Entia.Modules.Delegates" /> module.
-            </summary>
-      <param name="world">The world.</param>
-      <returns>The module.</returns>
-    </member>
-  </members>
+  <members></members>
 </doc>

@@ -3,6 +3,7 @@ using Entia.Modules;
 using Entia.Components;
 using System;
 using UnityEngine;
+using Entia.Delegates;
 
 namespace Entia.Unity
 {
@@ -107,8 +108,6 @@ namespace Entia.Unity
             if (!Application.isPlaying || _initialized.Change(_initialized | States.Post))
             {
                 var components = World.Components();
-                var delegates = World.Delegates();
-
                 if (UnityEngine.Debug.isDebugBuild) components.Set(Entity, new Components.Debug { Name = Name });
                 components.Set(Entity, new Components.Unity<UnityEngine.GameObject> { Value = gameObject });
 
@@ -121,7 +120,10 @@ namespace Entia.Unity
                         switch (component)
                         {
                             case IComponentReference reference: reference.Initialize(Entity, World); break;
-                            default: delegates.Get(component.GetType()).Set(component, Entity, World); break;
+                            default:
+                                if (World.Container.TryGet<IDelegate>(component.GetType(), out var @delegate))
+                                    @delegate.Set(component, Entity, World);
+                                break;
                         }
                     }
                 }
@@ -138,8 +140,6 @@ namespace Entia.Unity
             if (_initialized == States.All && _disposed.Change(_disposed | States.Pre))
             {
                 var components = World.Components();
-                var delegates = World.Delegates();
-
                 using (var list = PoolUtility.Cache<Component>.Lists.Use())
                 {
                     GetComponents(list.Instance);
@@ -149,7 +149,10 @@ namespace Entia.Unity
                         switch (component)
                         {
                             case IComponentReference reference: reference.Dispose(); break;
-                            default: delegates.Get(component.GetType()).Remove(component, Entity, World); break;
+                            default:
+                                if (World.Container.TryGet<IDelegate>(component.GetType(), out var @delegate))
+                                    @delegate.Remove(component, Entity, World);
+                                break;
                         }
                     }
                 }
