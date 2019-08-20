@@ -4,11 +4,6 @@
     <name>Entia</name>
   </assembly>
   <members>
-    <member name="T:Entia.Analyzables.IAnalyzable">
-      <summary>
-            Tag interface that all analyzable types must implement.
-            </summary>
-    </member>
     <member name="M:Entia.Modules.WorldExtensions.Components(Entia.World)">
       <summary>
             Gets or create the <see cref="T:Entia.Modules.Components" /> module.
@@ -1062,11 +1057,6 @@
     <member>
       <summary>Returns an enumerator that iterates through the collection.</summary>
       <returns>An enumerator that can be used to iterate through the collection.</returns>
-    </member>
-    <member name="T:Entia.Buildables.IBuildable">
-      <summary>
-            Tag interface that all buildables must implement.
-            </summary>
     </member>
     <member name="T:Entia.IComponent">
       <summary>
@@ -2805,7 +2795,6 @@
             Represents a world-unique identifier used to logically group components.
             </summary>
       <seealso cref="T:Entia.Queryables.IQueryable" />
-      <seealso cref="T:Entia.Dependables.IDependable" />
     </member>
     <member name="F:Entia.Entity.Zero">
       <summary>
