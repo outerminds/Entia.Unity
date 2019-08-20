@@ -4,12 +4,14 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "nunit.framework.dll",
         "Entia.Unity.dll",
         "Entia.Core.dll",
         "Entia.dll"

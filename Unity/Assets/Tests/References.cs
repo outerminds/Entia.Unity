@@ -2,10 +2,9 @@
 using Entia.Core;
 using Entia.Modules;
 using Entia.Unity;
-using NUnit.Framework;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
@@ -21,26 +20,26 @@ public sealed class References
 
     static void CheckLiveEntity(IWorldReference world, IEntityReference entity)
     {
-        Assert.NotNull(entity.World, "entity.World != null");
+        Assert.IsNotNull(entity.World, "entity.World != null");
         Assert.AreEqual(entity.World, world.World, "entity.World == world.World");
         Assert.AreNotEqual(entity.Entity, Entity.Zero, "entity.Entity != Entity.Zero");
-        Assert.True(entity.World.Entities().Has(entity.Entity), "entity.World.Entities().Has(entity.Entity)");
+        Assert.IsTrue(entity.World.Entities().Has(entity.Entity), "entity.World.Entities().Has(entity.Entity)");
     }
 
     static void CheckDeadEntity(IEntityReference entity)
     {
-        Assert.Null(entity.World, "entity.World == null");
+        Assert.IsNull(entity.World, "entity.World == null");
         Assert.AreEqual(entity.Entity, Entity.Zero, "entity.Entity == Entity.Zero");
     }
 
     static void CheckLiveWorld(IWorldReference world, Scene scene)
     {
-        Assert.NotNull(world.World);
+        Assert.IsNotNull(world.World);
     }
 
     static void CheckDeadWorld(IWorldReference world, Scene scene)
     {
-        Assert.Null(world.World);
+        Assert.IsNull(world.World);
     }
 
     [UnityTest]
