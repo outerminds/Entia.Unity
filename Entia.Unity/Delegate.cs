@@ -35,6 +35,7 @@ namespace Entia.Delegates
         bool IDelegate.Remove(UnityEngine.Object value, Entity entity, World world) => value is T casted && Remove(casted, entity, world);
     }
 
+    [Preserve]
     public sealed class Unity<T> : Delegate<T> where T : UnityEngine.Object
     {
         public override Metadata Type => ComponentUtility.Concrete<Components.Unity<T>>.Data;

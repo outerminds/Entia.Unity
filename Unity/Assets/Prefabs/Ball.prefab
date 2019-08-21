@@ -150,6 +150,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _X: 2.15
+  _Entity: {fileID: 3956053603269825621}
+  _World: {fileID: 3956053603269825621}
+  _Component: 0
+  _Collider: {fileID: 0}
+  _Reference1: {fileID: 0}
+  _Reference2: {fileID: 3956053603269825621}
 --- !u!114 &4815951897988117120
 MonoBehaviour:
   m_ObjectHideFlags: 0

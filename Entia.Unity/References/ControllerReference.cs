@@ -83,7 +83,6 @@ $@"Failed to create controller for node '{node}'. See details below.
                 }
 
                 Controller = result.OrDefault();
-
                 Run<React.Initialize>();
                 if (Application.isPlaying) Run<Initialize>();
             }
