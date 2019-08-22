@@ -6,14 +6,9 @@ using UnityEngine;
 
 namespace Entia.Unity.Systems
 {
-    public readonly struct SynchronizeEntityReference : IReact<OnRemove<Unity<EntityReference>>>
+    public readonly struct SynchronizeEntityReference : IOnRemove<Unity<EntityReference>>
     {
-        public readonly Components<Unity<EntityReference>>.Read References;
-
-        void IReact<OnRemove<Unity<EntityReference>>>.React(in OnRemove<Unity<EntityReference>> message)
-        {
-            if (References.TryUnity(message.Entity, out var reference) && reference)
-                Object.Destroy(reference.gameObject);
-        }
+        void IOnRemove<Unity<EntityReference>>.OnRemove(Entity entity, ref Unity<EntityReference> component) =>
+            Object.Destroy(component.Value.gameObject);
     }
 }
