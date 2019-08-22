@@ -22,23 +22,20 @@ namespace Entia.Runners
         public Parallel(params IRunner[] children) { Children = children; }
 
         public IEnumerable<Type> Phases() => Children.SelectMany(child => child.Phases());
-        public IEnumerable<Phase> Phases(Controller controller) => Children.SelectMany(child => child.Phases(controller));
+        public IEnumerable<Phase> Schedule(Controller controller) => Children.SelectMany(child => child.Schedule(controller));
         public Option<Run<T>> Specialize<T>(Controller controller) where T : struct, IPhase
         {
-            var children = (items: new Run<T>[Children.Length], count: 0);
-            foreach (var child in Children) if (child.Specialize<T>(controller).TryValue(out var special)) children.Push(special);
-
-            switch (children.count)
+            var children = Children.Select(controller, (child, state) => child.Specialize<T>(state)).Choose().ToArray();
+            switch (children.Length)
             {
                 case 0: return Option.None();
-                case 1: return children.items[0];
+                case 1: return children[0];
                 default:
-                    var runs = children.ToArray();
                     void Run(in T phase) =>
                         JobUtility.Parallel(
-                            (phase, runs),
+                            (phase, children),
                             (in (T phase, Run<T>[] runs) state, int index) => state.runs[index](state.phase))
-                        .Schedule(runs.Length, 1)
+                        .Schedule(children.Length, 1)
                         .Complete();
                     return new Run<T>(Run);
             }
@@ -53,7 +50,7 @@ namespace Entia.Runners
         public Profile(TypeMap<IPhase, (CustomSampler, Recorder)> map, Node node, IRunner child) { Map = map; Child = child; }
 
         public IEnumerable<Type> Phases() => Child.Phases();
-        public IEnumerable<Phase> Phases(Controller controller) => Child.Phases(controller);
+        public IEnumerable<Phase> Schedule(Controller controller) => Child.Schedule(controller);
         public Option<Run<T>> Specialize<T>(Controller controller) where T : struct, IPhase
         {
             if (Child.Specialize<T>(controller).TryValue(out var child))

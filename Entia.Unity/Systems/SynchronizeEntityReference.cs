@@ -2,9 +2,7 @@
 using Entia.Messages;
 using Entia.Systems;
 using Entia.Components;
-using System.Collections.Generic;
 using UnityEngine;
-using Entia.Core;
 
 namespace Entia.Unity.Systems
 {
