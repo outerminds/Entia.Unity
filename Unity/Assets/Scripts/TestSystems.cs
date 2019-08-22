@@ -1,6 +1,7 @@
 ﻿using Entia;
 using Entia.Core;
 using Entia.Injectables;
+using Entia.Messages;
 using Entia.Queryables;
 using Entia.Systems;
 using UnityEngine;
@@ -66,7 +67,15 @@ namespace Systems
         }
     }
 
-    public unsafe struct Spawner : IRun
+    public unsafe struct Spawner : IRun,
+        IReact<OnCreate>,
+        IReact<OnPreDestroy>,
+        IReact<OnAdopt>,
+        IReact<OnReject>,
+        IReact<OnAdd<Components.Component1>>,
+        IReact<OnRemove<Entia.Components.Unity<Transform>>>,
+        IOnAdd<Components.Component1>,
+        IOnRemove<Entia.Components.Unity<Transform>>
     {
         [All(typeof(Entia.Components.Unity<>))]
         public struct Query : IQueryable
@@ -99,6 +108,7 @@ namespace Systems
         [All(typeof(Entia.Components.Unity<>))]
         public Group<Entity, Read<Components.Component1>, Maybe<Read<Components.Inner.Component2>>> Group2;
         public AllEntities Entities;
+        public AllFamilies Families;
         public Group<Entity> Group3;
 
         public void Run()
@@ -136,6 +146,61 @@ namespace Systems
                     break;
                 }
             }
+
+            if (Input.GetKey(KeyCode.A))
+            {
+                var source = Random.Range(0, Entities.Count);
+                var target = Random.Range(0, Entities.Count);
+                if (Entities.TryAt(source, out var parent) &&
+                    Entities.TryAt(target, out var child))
+                    Families.Adopt(parent, child);
+            }
+
+            if (Input.GetKey(KeyCode.R))
+            {
+                var index = Random.Range(0, Entities.Count);
+                if (Entities.TryAt(index, out var child)) Families.Reject(child);
+            }
+        }
+
+        public void React(in OnAdd<Components.Component1> message)
+        {
+            Debug.Log($"React OnAdd: {message.Entity}");
+        }
+
+        public void React(in OnRemove<Entia.Components.Unity<Transform>> message)
+        {
+            Debug.Log($"React OnRemove: {message.Entity}");
+        }
+
+        public void React(in OnCreate message)
+        {
+            Debug.Log($"React OnCreate: {message.Entity}");
+        }
+
+        public void React(in OnPreDestroy message)
+        {
+            Debug.Log($"React OnPreDestroy: {message.Entity}");
+        }
+
+        public void React(in OnAdopt message)
+        {
+            Debug.Log($"React OnAdopt: {message.Parent} | {message.Child}");
+        }
+
+        public void React(in OnReject message)
+        {
+            Debug.Log($"React OnReject: {message.Parent} | {message.Child}");
+        }
+
+        public void OnAdd(Entity entity, ref Components.Component1 component)
+        {
+            Debug.Log($"OnAdd: {entity} | {component}");
+        }
+
+        public void OnRemove(Entity entity, ref Entia.Components.Unity<Transform> transform)
+        {
+            Debug.Log($"OnRemove: {entity} | {transform.Value}", transform.Value);
         }
     }
 
