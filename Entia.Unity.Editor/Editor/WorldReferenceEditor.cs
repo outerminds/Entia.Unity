@@ -44,7 +44,7 @@ namespace Entia.Unity.Editor
             var messages = world.Messages();
             if (_onProfile != null)
             {
-                while (_onProfile.TryPop(out var message))
+                while (_onProfile.TryMessage(out var message))
                 {
                     _elapsed[message.Runner] = message.Elapsed;
                     Repaint();

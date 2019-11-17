@@ -48,10 +48,13 @@ namespace Entia.Unity
                 })
                 .Some()
                 .ToArray();
-            var node = Node.Sequence(name, children);
-            if (Debug.isDebugBuild) node = node.Profile();
-            return node;
+            return Node.Sequence(name, children);
         }
+
+        static Node Filter(Node node) =>
+            node.Value is Editor editor ? node :
+            node.Value is IAtomic ? Node.Sequence(node.Name) :
+            node.With(children: node.Children.Select(Filter));
 
         void Awake()
         {
@@ -72,6 +75,9 @@ namespace Entia.Unity
             if (!Application.isPlaying || _initialized.Change(true))
             {
                 var node = Create();
+                if (!Application.isPlaying) node = Filter(node);
+                if (Debug.isDebugBuild) node = node.Profile();
+
                 // NOTE: the 'Try' ensures that early crashes are still caught and logged
                 var result = Result.Try(node, world.Controllers().Control).Flatten();
                 if (result.TryMessages(out var messages))
@@ -84,7 +90,7 @@ $@"Failed to create controller for node '{node}'. See details below.
 
                 Controller = result.OrDefault();
                 Run<React.Initialize>();
-                if (Application.isPlaying) Run<Initialize>();
+                Run<Initialize>();
             }
         }
 

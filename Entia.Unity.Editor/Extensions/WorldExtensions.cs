@@ -264,8 +264,7 @@ namespace Entia.Unity.Editor
             void Node(Node node, IRunner profile = null, IRunner state = null, params string[] current)
             {
                 var type = node.Value.GetType();
-                var fullLabel = string.IsNullOrWhiteSpace(node.Name) ? type.Format() : $"{type.Format()}.{node.Name}";
-                var label = details ? fullLabel : string.IsNullOrWhiteSpace(node.Name) ? type.Format() : node.Name;
+                GetNodeLabels(node, details, out var fullLabel, out var label);
                 current = current.Append(fullLabel).ToArray();
 
                 void Descend()
@@ -377,9 +376,7 @@ namespace Entia.Unity.Editor
         {
             void Next(Node currentNode, params string[] currentPath)
             {
-                var type = currentNode.Value.GetType();
-                var fullLabel = string.IsNullOrWhiteSpace(currentNode.Name) ? type.Format() : $"{type.Format()}.{currentNode.Name}";
-                var label = details ? fullLabel : string.IsNullOrWhiteSpace(currentNode.Name) ? type.Format() : currentNode.Name;
+                GetNodeLabels(currentNode, details, out var fullLabel, out var label);
                 var result =
                     cache.TryGetValue(currentNode, out var value) ? value :
                     cache[currentNode] = Result.And(world.Analyze(currentNode, node), world.Build(currentNode, node));
@@ -416,7 +413,8 @@ namespace Entia.Unity.Editor
                         }
                     }
 
-                    for (var i = 0; i < currentNode.Children.Length; i++) Next(currentNode.Children[i], currentPath.Append(i.ToString()).ToArray());
+                    for (var i = 0; i < currentNode.Children.Length; i++)
+                        Next(currentNode.Children[i], currentPath.Append(i.ToString()).ToArray());
                 }
 
                 bool Label(MonoScript script = null, Type foldout = null)
@@ -495,6 +493,23 @@ namespace Entia.Unity.Editor
             }
 
             Next(node, path);
+        }
+
+        static void GetNodeLabels(Node node, bool details, out string fullLabel, out string label)
+        {
+            var type = node.Value.GetType();
+            string FullName() => string.IsNullOrWhiteSpace(node.Name) ? type.Format() : $"{type.Format()}.{node.Name}";
+
+            if (details)
+            {
+                fullLabel = FullName();
+                label = fullLabel;
+            }
+            else
+            {
+                fullLabel = FullName();
+                label = string.IsNullOrWhiteSpace(node.Name) ? type.Format() : node.Name;
+            }
         }
 
         public static void ShowReceiver(this World _, string label, IReceiver receiver) =>

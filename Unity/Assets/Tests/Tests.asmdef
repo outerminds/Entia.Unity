@@ -1,11 +1,7 @@
 {
     "name": "Tests",
     "references": [
-        "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner"
-    ],
-    "optionalUnityReferences": [
-        "TestAssemblies"
+        "UnityEngine.TestRunner"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -14,7 +10,8 @@
     "precompiledReferences": [
         "Entia.Unity.dll",
         "Entia.Core.dll",
-        "Entia.dll"
+        "Entia.dll",
+        "nunit.framework.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [
