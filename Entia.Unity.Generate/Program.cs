@@ -268,7 +268,7 @@ namespace Entia.Unity
                 logger.AppendLine();
             }
 
-            string AsPath(string[] type) => Path.Combine(type.Prepend(options.Output).ToArray()).ChangeExtension(".cs").Absolute();
+            string AsPath(string[] type) => Path.Combine(type.Prepend(options.Output)).ChangeExtension(".cs").Absolute();
 
             void Except(Exception exception)
             {

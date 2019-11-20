@@ -276,7 +276,7 @@ namespace Entia.Unity.Editor
         public static void Chunks<T>(T[] items, int size, Action<T, int> each, Type type, params string[] path)
         {
             (Type type, string[] path) Key(int index) =>
-                (type, path: path.Append(index.ToString(), size.ToString()).ToArray());
+                (type, path: path.Append(index.ToString(), size.ToString()));
 
             for (var i = 0; i < items.Length; i += size)
             {
@@ -315,7 +315,7 @@ namespace Entia.Unity.Editor
         }
 
         public static void Field(FieldInfo field, object instance, params string[] path) =>
-            Field(field, instance, value => Object(field.Name, value, field.FieldType, path.Append(field.Name).ToArray()));
+            Field(field, instance, value => Object(field.Name, value, field.FieldType, path.Append(field.Name)));
         public static void Field(FieldInfo field, object instance, Func<object, object> show, Func<bool> disable = null) =>
             Member(
                 field,
@@ -326,7 +326,7 @@ namespace Entia.Unity.Editor
                 disable);
 
         public static void Property(PropertyInfo property, object instance, params string[] path) =>
-            Property(property, instance, value => Object(property.Name, value, property.PropertyType, path.Append(property.Name).ToArray()));
+            Property(property, instance, value => Object(property.Name, value, property.PropertyType, path.Append(property.Name)));
         public static void Property(PropertyInfo property, object instance, Func<object, object> show, Func<bool> disable = null) =>
             Member(
                 property,
@@ -464,7 +464,7 @@ namespace Entia.Unity.Editor
                     {
                         for (var i = 0; i < list.Count; i++)
                         {
-                            var item = Object($"Element {i}", list[i], element, path.Append(i.ToString()).ToArray());
+                            var item = Object($"Element {i}", list[i], element, path.Append(i.ToString()));
                             if (!list.IsReadOnly) list[i] = item;
                         }
                     }
@@ -494,7 +494,7 @@ namespace Entia.Unity.Editor
                                 using (Vertical())
                                 {
                                     EditorGUI.BeginChangeCheck();
-                                    var modifiedKey = Object("Key", pair.key, element.key, path.Append(keySegment).ToArray());
+                                    var modifiedKey = Object("Key", pair.key, element.key, path.Append(keySegment));
                                     if (EditorGUI.EndChangeCheck())
                                     {
                                         dictionary.Remove(pair.key);
@@ -505,7 +505,7 @@ namespace Entia.Unity.Editor
                                 using (NoIndent()) using (Indent()) using (Vertical())
                                 {
                                     EditorGUI.BeginChangeCheck();
-                                    var modifiedValue = Object("Value", pair.value, element.value, path.Append(valueSegment).ToArray());
+                                    var modifiedValue = Object("Value", pair.value, element.value, path.Append(valueSegment));
                                     if (EditorGUI.EndChangeCheck()) dictionary[pair.key] = modifiedValue;
                                 }
                             }

@@ -52,7 +52,7 @@ namespace Entia.Unity.Editor
             LayoutUtility.ChunksFoldout(
                 label,
                 values.Cast<object>().ToArray(),
-                (item, index) => world.ShowValue(item.ToString(), item, path.Append(index.ToString()).ToArray()),
+                (item, index) => world.ShowValue(item.ToString(), item, path.Append(index.ToString())),
                 values.GetType(),
                 path);
 
@@ -117,7 +117,7 @@ namespace Entia.Unity.Editor
 
         public static void ShowEntity(this World world, string label, Entity entity, params string[] path)
         {
-            path = path.Append(entity.ToString()).ToArray();
+            path = path.Append(entity.ToString());
             using (LayoutUtility.Disable(!world.Entities().Has(entity)))
             {
                 var components = world.Components().Get(entity)
@@ -127,7 +127,7 @@ namespace Entia.Unity.Editor
                 LayoutUtility.ChunksFoldout(
                     label,
                     components,
-                    (pair, index) => world.ShowComponent(pair.name, entity, pair.component, path.Append(index.ToString()).ToArray()),
+                    (pair, index) => world.ShowComponent(pair.name, entity, pair.component, path.Append(index.ToString())),
                     entity.GetType(),
                     path: path,
                     foldout: data => world.ShowEntityFoldout(data.label, entity, data.type, data.path));
@@ -138,9 +138,9 @@ namespace Entia.Unity.Editor
             LayoutUtility.ChunksFoldout(
                 label,
                 entities.ToArray(),
-                (entity, index) => world.ShowEntity(entity.ToString(world), entity, path.Append(index.ToString()).ToArray()),
+                (entity, index) => world.ShowEntity(entity.ToString(world), entity, path.Append(index.ToString())),
                 entities.GetType(),
-                path.Append(entities.GetType().FullName).ToArray());
+                path.Append(entities.GetType().FullName));
 
         public static void ShowComponents(this World world, string label, IEnumerable<Entity> entities, params string[] path)
         {
@@ -153,7 +153,7 @@ namespace Entia.Unity.Editor
             LayoutUtility.ChunksFoldout(
                 label,
                 groups,
-                (group, index) => world.ShowComponents(group.name, group.items, group.type, path.Append(index.ToString()).ToArray()),
+                (group, index) => world.ShowComponents(group.name, group.items, group.type, path.Append(index.ToString())),
                 entities.GetType(),
                 path);
         }
@@ -162,9 +162,9 @@ namespace Entia.Unity.Editor
             LayoutUtility.ChunksFoldout(
                 label,
                 components.ToArray(),
-                (pair, index) => world.ShowComponent(pair.entity.ToString(world), pair.entity, pair.component, path.Append(index.ToString()).ToArray()),
+                (pair, index) => world.ShowComponent(pair.entity.ToString(world), pair.entity, pair.component, path.Append(index.ToString())),
                 type,
-                path.Append(type.FullName).ToArray());
+                path.Append(type.FullName));
 
         public static void ShowComponent(this World world, string label, Entity entity, IComponent component, params string[] path)
         {
@@ -176,7 +176,7 @@ namespace Entia.Unity.Editor
                 using (LayoutUtility.Vertical())
                 {
                     EditorGUI.BeginChangeCheck();
-                    component = LayoutUtility.Object(label, component, type, path.Append(type.FullName, entity.ToString()).ToArray()) as IComponent;
+                    component = LayoutUtility.Object(label, component, type, path.Append(type.FullName, entity.ToString())) as IComponent;
                     if (EditorGUI.EndChangeCheck() && component is IComponent current) world.Components().Set(entity, current);
                 }
 
@@ -200,7 +200,7 @@ namespace Entia.Unity.Editor
             LayoutUtility.ChunksFoldout(
                 nameof(Modules.Groups),
                 groups.Select(group => (group, name: group.Type.Format())).OrderBy(pair => pair.name).ToArray(),
-                (pair, index) => world.ShowGroup(pair.name, pair.group, path.Append(index.ToString()).ToArray()),
+                (pair, index) => world.ShowGroup(pair.name, pair.group, path.Append(index.ToString())),
                 typeof(Modules.Groups));
 
         public static void ShowGroup(this World world, string label, IGroup group, params string[] path) =>
@@ -229,7 +229,7 @@ namespace Entia.Unity.Editor
             LayoutUtility.ChunksFoldout(
                 label,
                 resources.Select(resource => (resource, name: resource.GetType().Format())).OrderBy(pair => pair.name).ToArray(),
-                (pair, index) => world.ShowResource(pair.name, pair.resource, path.Append(index.ToString()).ToArray()),
+                (pair, index) => world.ShowResource(pair.name, pair.resource, path.Append(index.ToString())),
                 typeof(Modules.Resources),
                 path);
 
@@ -240,7 +240,7 @@ namespace Entia.Unity.Editor
             LayoutUtility.ChunksFoldout(
                 label,
                 roots.ToArray(),
-                (entity, index) => world.ShowFamily(entity.ToString(world), entity, path.Append(index.ToString()).ToArray()),
+                (entity, index) => world.ShowFamily(entity.ToString(world), entity, path.Append(index.ToString())),
                 typeof(Modules.Families),
                 path);
 
@@ -248,7 +248,7 @@ namespace Entia.Unity.Editor
             LayoutUtility.ChunksFoldout(
                 label,
                 world.Families().Children(parent).ToArray(),
-                (child, index) => world.ShowFamily(child.ToString(world), child, path.Append(index.ToString()).ToArray()),
+                (child, index) => world.ShowFamily(child.ToString(world), child, path.Append(index.ToString())),
                 typeof(Modules.Families),
                 path,
                 foldout: data => world.ShowEntityFoldout(data.label, parent, data.type, data.path));
@@ -265,13 +265,13 @@ namespace Entia.Unity.Editor
             {
                 var type = node.Value.GetType();
                 GetNodeLabels(node, details, out var fullLabel, out var label);
-                current = current.Append(fullLabel).ToArray();
+                current = current.Append(fullLabel);
 
                 void Descend()
                 {
                     LayoutUtility.Show(true, type, current);
                     for (var i = 0; i < node.Children.Length; i++)
-                        Node(node.Children[i], profile, state, current.Append(i.ToString()).ToArray());
+                        Node(node.Children[i], profile, state, current.Append(i.ToString()));
                 }
 
                 (bool enabled, bool expanded) Label(Type foldout = null)
@@ -357,7 +357,7 @@ namespace Entia.Unity.Editor
                                             value => world.ShowValue(
                                                 $"{field.Name}: {field.FieldType.Format()}",
                                                 value,
-                                                current.Append(field.Name, field.FieldType.FullName, i.ToString()).ToArray()),
+                                                current.Append(field.Name, field.FieldType.FullName, i.ToString())),
                                             () => !field.IsPublic && field.IsInitOnly);
                                     }
                                 }
@@ -380,7 +380,7 @@ namespace Entia.Unity.Editor
                 var result =
                     cache.TryGetValue(currentNode, out var value) ? value :
                     cache[currentNode] = Result.And(world.Analyze(currentNode, node), world.Build(currentNode, node));
-                currentPath = currentPath.Append(fullLabel).ToArray();
+                currentPath = currentPath.Append(fullLabel);
 
                 void Descend()
                 {
@@ -403,18 +403,18 @@ namespace Entia.Unity.Editor
                                 phases,
                                 (phase, _) => LayoutUtility.Label(phase),
                                 typeof(IPhase),
-                                currentPath.Append(nameof(IPhase)).ToArray());
+                                currentPath.Append(nameof(IPhase)));
                             LayoutUtility.ChunksFoldout(
                                 nameof(Dependencies),
                                 dependencies,
                                 (dependency, _) => LayoutUtility.Label(dependency),
                                 typeof(IDependency),
-                                currentPath.Append(nameof(IDependency)).ToArray());
+                                currentPath.Append(nameof(IDependency)));
                         }
                     }
 
                     for (var i = 0; i < currentNode.Children.Length; i++)
-                        Next(currentNode.Children[i], currentPath.Append(i.ToString()).ToArray());
+                        Next(currentNode.Children[i], currentPath.Append(i.ToString()));
                 }
 
                 bool Label(MonoScript script = null, Type foldout = null)
@@ -465,7 +465,7 @@ namespace Entia.Unity.Editor
                                                 dependencies,
                                                 (dependency, _) => { using (LayoutUtility.Disable()) LayoutUtility.Label(dependency); },
                                                 typeof(IDependency),
-                                                currentPath.Append(field.Name, nameof(IDependency)).ToArray());
+                                                currentPath.Append(field.Name, nameof(IDependency)));
                                         }
                                     }
                                     else

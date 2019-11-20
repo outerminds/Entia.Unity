@@ -92,7 +92,7 @@ namespace Entia.Unity.Editor
                                             $"{{ Type: {item.type.Format()}, Key: {item.key?.GetType().Format() ?? "null"}, Value: {item.value?.GetType().Format() ?? "null"} }}",
                                             new { Key = item.key, Value = item.value },
                                             item.type,
-                                            path.Append(index.ToString()).ToArray()),
+                                            path.Append(index.ToString())),
                                         module.GetType(),
                                         path);
                                     break;

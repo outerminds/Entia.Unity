@@ -647,8 +647,8 @@ namespace {@namespace}
             {
                 path = type.Path().ToArray();
                 var file = type.File()?.Relative(context.Root);
-                if (file?.Contains("Editor") is true) path = path.Prepend("Editor").ToArray();
-                if (file?.Contains("Plugins") is true) path = path.Prepend("Plugins").ToArray();
+                if (file?.Contains("Editor") is true) path = path.Prepend("Editor");
+                if (file?.Contains("Plugins") is true) path = path.Prepend("Plugins");
             }
 
             return true;
@@ -660,7 +660,7 @@ namespace {@namespace}
             foreach (var (type, path) in types)
             {
                 if (type.Implements(context.ISystem))
-                    yield return (path.Prepend("Extensions").ToArray(), FormatExtensions(type, set, context));
+                    yield return (path.Prepend("Extensions"), FormatExtensions(type, set, context));
             }
         }
 
