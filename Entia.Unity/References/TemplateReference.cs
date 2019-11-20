@@ -39,9 +39,9 @@ namespace Entia.Experimental
             typeof(Values.Unity),
 
             typeof(Components.Debug),
+            typeof(Components.Unity<>),
             typeof(Components.Unity<Transform>),
             typeof(Components.Unity<GameObject>),
-            typeof(Components.Unity<>),
         };
 
         static Disposable Extract(IValue[] values, out UnityEngine.Object[] references, out int[] indices)
