@@ -1,25 +1,32 @@
-using Entia.Injectables;
+using Components;
+using Entia;
+using Entia.Components;
 using Entia.Messages;
-using Entia.Queryables;
 using Entia.Systems;
-using Entia.Unity;
+using Entia.Unity.Editor;
 using UnityEngine;
 
 namespace Systems
 {
     // 'OnDrawGizmo' messages are emitted at draw gizmo time, thus the 'Gizmos' api can be used
-    public struct DrawVelocity : IReact<OnDrawGizmo>
+    public struct DrawVelocity : IReactEach<OnDrawGizmo, Unity<Transform>, Components.Velocity>
     {
-        public Group<Unity<Transform>, Read<Components.Velocity>> Group;
+        public void React(in OnDrawGizmo message, Entity entity, ref Unity<Transform> transform, ref Components.Velocity velocity) =>
+            Gizmos.DrawRay(transform.Value.position, new Vector3(velocity.X, velocity.Y) * 3f);
+    }
 
-        public void React(in OnDrawGizmo message)
+    public struct SynchronizePosition :
+        IRunEach<Unity<Transform>, Position>,
+        IReactEach<OnValidate<Components.Generated.Position>>
+    {
+        public void Run(Entity entity, ref Unity<Transform> transform, ref Position position)
         {
-            foreach (ref readonly var item in Group)
-            {
-                var transform = item.Transform();
-                ref readonly var velocity = ref item.Velocity();
-                Gizmos.DrawRay(transform.position, new Vector3(velocity.X, velocity.Y) * 3f);
-            }
+            var current = transform.Value.position;
+            position.X = current.x;
+            position.Y = current.y;
         }
+
+        public void React(in OnValidate<Components.Generated.Position> message, Entity entity) =>
+            message.Reference.transform.position = new Vector3(message.Reference.X, message.Reference.Y);
     }
 }

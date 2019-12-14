@@ -327,15 +327,21 @@ $@"{indentation}{attributes}
             var @new = reference.Members(true).Any(member => member.Name == field.Name) ? "new " : "";
             var world = FormatPath(context.World);
 
-            if (string.IsNullOrWhiteSpace(from) && string.IsNullOrWhiteSpace(to))
-                return $"{indentation}{@new}public ref {type} {field.Name} => ref base.Get((ref {data} data) => ref data.{field.Name}, ref {name});";
-            else
-                return
+            // if (string.IsNullOrWhiteSpace(from) && string.IsNullOrWhiteSpace(to))
+            // return $"{indentation}{@new}public ref {type} {field.Name} => ref base.Get((ref {data} data) => ref data.{field.Name}, ref {name});";
+            return
 $@"{indentation}{@new}public {type} {field.Name}
 {indentation}{{
 {indentation}	get => base.Get((ref {data} data, {world} world) => data.{field.Name}{string.Format(from, "world")}, {name});
 {indentation}	set => base.Set((ref {data} data, {type} state, {world} _) => data.{field.Name} = state{string.Format(to, "")}, value, ref {name});
 {indentation}}}";
+            //             else
+            //                 return
+            // $@"{indentation}{@new}public {type} {field.Name}
+            // {indentation}{{
+            // {indentation}	get => base.Get((ref {data} data, {world} world) => data.{field.Name}{string.Format(from, "world")}, {name});
+            // {indentation}	set => base.Set((ref {data} data, {type} state, {world} _) => data.{field.Name} = state{string.Format(to, "")}, value, ref {name});
+            // {indentation}}}";
         }
 
         static string FormatData(int indent, INamedTypeSymbol data, INamedTypeSymbol reference, Context context)

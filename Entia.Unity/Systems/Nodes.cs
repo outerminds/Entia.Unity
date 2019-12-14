@@ -10,6 +10,6 @@ namespace Entia.Unity
                 System<Systems.LogException>(),
                 System<Systems.SynchronizeEntityReference>(),
                 System<Systems.UpdateTime>()
-            );
+            ).Editor();
     }
 }

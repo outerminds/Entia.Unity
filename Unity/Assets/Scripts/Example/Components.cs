@@ -5,6 +5,8 @@ using Entia.Unity;
 namespace Components
 {
     // Components are simple structs that implement the empty 'IComponent' interface.
+    public struct Position : IComponent { public float X, Y; }
+    // Components are simple structs that implement the empty 'IComponent' interface.
     public struct Velocity : IComponent { public float X, Y; }
 
     // Components may be empty to act as a tag on an entity.

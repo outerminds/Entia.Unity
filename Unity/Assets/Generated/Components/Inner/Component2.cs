@@ -7,18 +7,66 @@ namespace Components.Inner.Generated
 	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Inner.Component2), Link = "Assets/Scripts/TestComponents.cs", Path = new string[] { "Components", "Inner", "Component2" })][global::UnityEngine.AddComponentMenu("Components/Inner/Components.Inner.Component2")]
 	public sealed partial class Component2 : global::Entia.Unity.ComponentReference<global::Components.Inner.Component2>
 	{
-		public ref global::System.Int64 X => ref base.Get((ref global::Components.Inner.Component2 data) => ref data.X, ref this._X);
-		public ref global::System.Int64 A => ref base.Get((ref global::Components.Inner.Component2 data) => ref data.A, ref this._A);
-		public ref global::System.Int64 B => ref base.Get((ref global::Components.Inner.Component2 data) => ref data.B, ref this._B);
-		public ref global::System.Int64 C => ref base.Get((ref global::Components.Inner.Component2 data) => ref data.C, ref this._C);
-		public ref global::System.Int64 D => ref base.Get((ref global::Components.Inner.Component2 data) => ref data.D, ref this._D);
-		public ref global::System.Int64 E => ref base.Get((ref global::Components.Inner.Component2 data) => ref data.E, ref this._E);
-		public ref global::System.Int64 F => ref base.Get((ref global::Components.Inner.Component2 data) => ref data.F, ref this._F);
-		public ref global::System.Int64 G => ref base.Get((ref global::Components.Inner.Component2 data) => ref data.G, ref this._G);
-		public ref global::System.Int64 H => ref base.Get((ref global::Components.Inner.Component2 data) => ref data.H, ref this._H);
-		public ref global::System.Int64 I => ref base.Get((ref global::Components.Inner.Component2 data) => ref data.I, ref this._I);
-		public ref global::System.Int64 J => ref base.Get((ref global::Components.Inner.Component2 data) => ref data.J, ref this._J);
-		public ref global::System.Int64 K => ref base.Get((ref global::Components.Inner.Component2 data) => ref data.K, ref this._K);
+		public global::System.Int64 X
+		{
+			get => base.Get((ref global::Components.Inner.Component2 data, global::Entia.World world) => data.X, this._X);
+			set => base.Set((ref global::Components.Inner.Component2 data, global::System.Int64 state, global::Entia.World _) => data.X = state, value, ref this._X);
+		}
+		public global::System.Int64 A
+		{
+			get => base.Get((ref global::Components.Inner.Component2 data, global::Entia.World world) => data.A, this._A);
+			set => base.Set((ref global::Components.Inner.Component2 data, global::System.Int64 state, global::Entia.World _) => data.A = state, value, ref this._A);
+		}
+		public global::System.Int64 B
+		{
+			get => base.Get((ref global::Components.Inner.Component2 data, global::Entia.World world) => data.B, this._B);
+			set => base.Set((ref global::Components.Inner.Component2 data, global::System.Int64 state, global::Entia.World _) => data.B = state, value, ref this._B);
+		}
+		public global::System.Int64 C
+		{
+			get => base.Get((ref global::Components.Inner.Component2 data, global::Entia.World world) => data.C, this._C);
+			set => base.Set((ref global::Components.Inner.Component2 data, global::System.Int64 state, global::Entia.World _) => data.C = state, value, ref this._C);
+		}
+		public global::System.Int64 D
+		{
+			get => base.Get((ref global::Components.Inner.Component2 data, global::Entia.World world) => data.D, this._D);
+			set => base.Set((ref global::Components.Inner.Component2 data, global::System.Int64 state, global::Entia.World _) => data.D = state, value, ref this._D);
+		}
+		public global::System.Int64 E
+		{
+			get => base.Get((ref global::Components.Inner.Component2 data, global::Entia.World world) => data.E, this._E);
+			set => base.Set((ref global::Components.Inner.Component2 data, global::System.Int64 state, global::Entia.World _) => data.E = state, value, ref this._E);
+		}
+		public global::System.Int64 F
+		{
+			get => base.Get((ref global::Components.Inner.Component2 data, global::Entia.World world) => data.F, this._F);
+			set => base.Set((ref global::Components.Inner.Component2 data, global::System.Int64 state, global::Entia.World _) => data.F = state, value, ref this._F);
+		}
+		public global::System.Int64 G
+		{
+			get => base.Get((ref global::Components.Inner.Component2 data, global::Entia.World world) => data.G, this._G);
+			set => base.Set((ref global::Components.Inner.Component2 data, global::System.Int64 state, global::Entia.World _) => data.G = state, value, ref this._G);
+		}
+		public global::System.Int64 H
+		{
+			get => base.Get((ref global::Components.Inner.Component2 data, global::Entia.World world) => data.H, this._H);
+			set => base.Set((ref global::Components.Inner.Component2 data, global::System.Int64 state, global::Entia.World _) => data.H = state, value, ref this._H);
+		}
+		public global::System.Int64 I
+		{
+			get => base.Get((ref global::Components.Inner.Component2 data, global::Entia.World world) => data.I, this._I);
+			set => base.Set((ref global::Components.Inner.Component2 data, global::System.Int64 state, global::Entia.World _) => data.I = state, value, ref this._I);
+		}
+		public global::System.Int64 J
+		{
+			get => base.Get((ref global::Components.Inner.Component2 data, global::Entia.World world) => data.J, this._J);
+			set => base.Set((ref global::Components.Inner.Component2 data, global::System.Int64 state, global::Entia.World _) => data.J = state, value, ref this._J);
+		}
+		public global::System.Int64 K
+		{
+			get => base.Get((ref global::Components.Inner.Component2 data, global::Entia.World world) => data.K, this._K);
+			set => base.Set((ref global::Components.Inner.Component2 data, global::System.Int64 state, global::Entia.World _) => data.K = state, value, ref this._K);
+		}
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(X))]
 		global::System.Int64 _X;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(A))]

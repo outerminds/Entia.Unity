@@ -7,7 +7,8 @@ namespace Nodes
     public sealed class Draw : NodeReference
     {
         public override Node Node => Sequence(nameof(Draw),
-            System<Systems.DrawVelocity>()
+            System<Systems.DrawVelocity>(),
+            System<Systems.SynchronizePosition>()
         ).Editor();
     }
 }

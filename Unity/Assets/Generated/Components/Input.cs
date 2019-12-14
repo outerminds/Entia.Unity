@@ -7,8 +7,16 @@ namespace Components.Generated
 	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Input), Link = "Assets/Scripts/Example/Components.cs", Path = new string[] { "Components", "Input" })][global::UnityEngine.AddComponentMenu("Components/Components.Input")]
 	public sealed partial class Input : global::Entia.Unity.ComponentReference<global::Components.Input>
 	{
-		public ref global::System.Single Direction => ref base.Get((ref global::Components.Input data) => ref data.Direction, ref this._Direction);
-		public ref global::System.Boolean Jump => ref base.Get((ref global::Components.Input data) => ref data.Jump, ref this._Jump);
+		public global::System.Single Direction
+		{
+			get => base.Get((ref global::Components.Input data, global::Entia.World world) => data.Direction, this._Direction);
+			set => base.Set((ref global::Components.Input data, global::System.Single state, global::Entia.World _) => data.Direction = state, value, ref this._Direction);
+		}
+		public global::System.Boolean Jump
+		{
+			get => base.Get((ref global::Components.Input data, global::Entia.World world) => data.Jump, this._Jump);
+			set => base.Set((ref global::Components.Input data, global::System.Boolean state, global::Entia.World _) => data.Jump = state, value, ref this._Jump);
+		}
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Direction))] [global::Entia.Unity.DisableAttribute()]
 		global::System.Single _Direction;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Jump))] [global::Entia.Unity.DisableAttribute()]

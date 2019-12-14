@@ -7,7 +7,11 @@ namespace Components.Generated
 	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Components.Component1), Link = "Assets/Scripts/TestComponents.cs", Path = new string[] { "Components", "Component1" })][global::UnityEngine.AddComponentMenu("Components/Components.Component1")][global::UnityEngine.RequireComponent(typeof(global::UnityEngine.BoxCollider2D)), global::UnityEngine.RequireComponent(typeof(global::Components.Generated.IsFrozen)), global::UnityEngine.RequireComponent(typeof(global::Entia.Unity.EntityReference))]
 	public sealed partial class Component1 : global::Entia.Unity.ComponentReference<global::Components.Component1>
 	{
-		public ref global::System.Single X => ref base.Get((ref global::Components.Component1 data) => ref data.X, ref this._X);
+		public global::System.Single X
+		{
+			get => base.Get((ref global::Components.Component1 data, global::Entia.World world) => data.X, this._X);
+			set => base.Set((ref global::Components.Component1 data, global::System.Single state, global::Entia.World _) => data.X = state, value, ref this._X);
+		}
 		new public global::Entia.Unity.EntityReference Entity
 		{
 			get => base.Get((ref global::Components.Component1 data, global::Entia.World world) => data.Entity.FromEntia(world), this._Entity);
@@ -18,11 +22,31 @@ namespace Components.Generated
 			get => base.Get((ref global::Components.Component1 data, global::Entia.World world) => data.World.FromEntia(world), this._World);
 			set => base.Set((ref global::Components.Component1 data, global::Entia.Unity.EntityReference state, global::Entia.World _) => data.World = state.ToEntia(), value, ref this._World);
 		}
-		public ref global::System.Int32 Component => ref base.Get((ref global::Components.Component1 data) => ref data.Component, ref this._Component);
-		public ref global::UnityEngine.BoxCollider2D Collider => ref base.Get((ref global::Components.Component1 data) => ref data.Collider, ref this._Collider);
-		public ref global::Components.Generated.IsFrozen Reference1 => ref base.Get((ref global::Components.Component1 data) => ref data.Reference1, ref this._Reference1);
-		public ref global::Entia.Unity.EntityReference Reference2 => ref base.Get((ref global::Components.Component1 data) => ref data.Reference2, ref this._Reference2);
-		public ref global::System.ValueTuple<global::System.Single, global::System.Single> Tuple => ref base.Get((ref global::Components.Component1 data) => ref data.Tuple, ref this._Tuple);
+		public global::System.Int32 Component
+		{
+			get => base.Get((ref global::Components.Component1 data, global::Entia.World world) => data.Component, this._Component);
+			set => base.Set((ref global::Components.Component1 data, global::System.Int32 state, global::Entia.World _) => data.Component = state, value, ref this._Component);
+		}
+		public global::UnityEngine.BoxCollider2D Collider
+		{
+			get => base.Get((ref global::Components.Component1 data, global::Entia.World world) => data.Collider, this._Collider);
+			set => base.Set((ref global::Components.Component1 data, global::UnityEngine.BoxCollider2D state, global::Entia.World _) => data.Collider = state, value, ref this._Collider);
+		}
+		public global::Components.Generated.IsFrozen Reference1
+		{
+			get => base.Get((ref global::Components.Component1 data, global::Entia.World world) => data.Reference1, this._Reference1);
+			set => base.Set((ref global::Components.Component1 data, global::Components.Generated.IsFrozen state, global::Entia.World _) => data.Reference1 = state, value, ref this._Reference1);
+		}
+		public global::Entia.Unity.EntityReference Reference2
+		{
+			get => base.Get((ref global::Components.Component1 data, global::Entia.World world) => data.Reference2, this._Reference2);
+			set => base.Set((ref global::Components.Component1 data, global::Entia.Unity.EntityReference state, global::Entia.World _) => data.Reference2 = state, value, ref this._Reference2);
+		}
+		public global::System.ValueTuple<global::System.Single, global::System.Single> Tuple
+		{
+			get => base.Get((ref global::Components.Component1 data, global::Entia.World world) => data.Tuple, this._Tuple);
+			set => base.Set((ref global::Components.Component1 data, global::System.ValueTuple<global::System.Single, global::System.Single> state, global::Entia.World _) => data.Tuple = state, value, ref this._Tuple);
+		}
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(X))] [global::UnityEngine.Serialization.FormerlySerializedAsAttribute("Poulah")] [global::Entia.Unity.RequireAttribute()]
 		global::System.Single _X;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Entity))] [global::Entia.Unity.RequireAttribute()]

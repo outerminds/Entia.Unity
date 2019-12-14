@@ -100,6 +100,7 @@ $@"Failed to create controller for node '{node}'. See details below.
             {
                 Run<Dispose>();
                 Run<React.Dispose>();
+                Controller = null;
                 _initialized = false;
                 _disposed = false;
             }

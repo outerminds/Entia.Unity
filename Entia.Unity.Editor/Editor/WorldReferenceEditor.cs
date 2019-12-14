@@ -24,8 +24,8 @@ namespace Entia.Unity.Editor
         ReorderableList _modifiers;
         Receiver<OnProfile> _onProfile;
 
-        protected virtual void OnEnable() => ReferenceUtility.Update();
-        protected virtual void OnDestroy() => ReferenceUtility.Update();
+        protected virtual void OnEnable() => ReferenceUtility.Initialize();
+        protected virtual void OnDestroy() => ReferenceUtility.Initialize();
 
         public override void OnInspectorGUI()
         {

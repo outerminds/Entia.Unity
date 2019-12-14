@@ -24,7 +24,6 @@ namespace Entia.Unity
     [DisallowMultipleComponent]
     public abstract class ComponentReference<T> : ComponentReference, IComponentReference where T : struct, IComponent
     {
-        protected delegate ref TMember Mapper<TMember>(ref T component);
         protected delegate TMember From<TMember>(ref T component, World world);
         protected delegate void To<TMember>(ref T component, TMember value, World world);
 
@@ -60,10 +59,6 @@ namespace Entia.Unity
 
         protected ComponentReference() { Raw = DefaultUtility.Default<T>(); }
 
-        protected ref TMember Get<TMember>(Mapper<TMember> map, ref TMember member) => ref
-            World is World world && world.Components().Has<T>(Entity) ?
-            ref map(ref world.Components().Get<T>(Entity)) : ref member;
-
         protected TMember Get<TMember>(From<TMember> from, TMember member) =>
             World is World world && world.Components().Has<T>(Entity) ?
             from(ref world.Components().Get<T>(Entity), world) : member;
@@ -72,7 +67,7 @@ namespace Entia.Unity
         {
             if (World is World world && world.Components().Has<T>(Entity))
                 set(ref world.Components().Get<T>(Entity), value, world);
-            else member = value;
+            member = value;
         }
 
         protected virtual void Awake()

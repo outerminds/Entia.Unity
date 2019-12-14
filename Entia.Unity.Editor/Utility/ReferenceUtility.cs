@@ -43,7 +43,11 @@ namespace Entia.Unity.Editor
             .DistinctBy(pair => pair.Type)
             .ToDictionary(pair => pair.Type, pair => pair.Link));
 
-        static ReferenceUtility() => EditorUtility.Delayed(Update);
+        static ReferenceUtility()
+        {
+            EditorUtility.Delayed(Initialize);
+            EditorApplication.update += Update;
+        }
 
         public static SerializedProperty Script(SerializedObject serialized)
         {
@@ -83,11 +87,12 @@ namespace Entia.Unity.Editor
             EditorGUILayout.Separator();
 
             var apply = LayoutUtility.Apply(serialized);
+            OnPreInspector(serialized, reference);
             return new Disposable(() =>
             {
-                OnInspector(serialized, reference);
+                OnPostInspector(serialized, reference);
                 apply.Dispose();
-                if (EditorGUI.EndChangeCheck()) { Update(); OnValidate(reference); }
+                if (EditorGUI.EndChangeCheck()) { Initialize(); OnValidate(reference); }
             });
         }
 
@@ -100,11 +105,12 @@ namespace Entia.Unity.Editor
             EditorGUILayout.Separator();
 
             var apply = LayoutUtility.Apply(serialized);
+            OnPreInspector(serialized, reference);
             return new Disposable(() =>
             {
-                OnInspector(serialized, reference);
+                OnPostInspector(serialized, reference);
                 apply.Dispose();
-                if (EditorGUI.EndChangeCheck()) { Update(); OnValidate(reference); }
+                if (EditorGUI.EndChangeCheck()) { Initialize(); OnValidate(reference); }
             });
         }
 
@@ -117,9 +123,10 @@ namespace Entia.Unity.Editor
                 world.ShowEntity(reference.Entity.ToString(world), reference.Entity, nameof(EntityReferenceEditor), reference.Entity.ToString());
 
                 var apply = LayoutUtility.Apply(serialized);
+                OnPreInspector(serialized, reference);
                 return new Disposable(() =>
                 {
-                    OnInspector(serialized, reference);
+                    OnPostInspector(serialized, reference);
                     apply.Dispose();
                     if (EditorGUI.EndChangeCheck()) OnValidate(reference);
                 });
@@ -155,11 +162,12 @@ namespace Entia.Unity.Editor
                 }
             }
 
-            var disable = LayoutUtility.Disable(first.Type.GetCustomAttributes(false).OfType<DisableAttribute>().Any());
+            var disable = LayoutUtility.Disable(first.Type.IsDefined(typeof(DisableAttribute), false));
             var apply = LayoutUtility.Apply(serialized);
+            OnPreInspector(serialized, first);
             return new Disposable(() =>
             {
-                OnInspector(serialized, first);
+                OnPostInspector(serialized, first);
                 apply.Dispose();
                 disable.Dispose();
                 if (EditorGUI.EndChangeCheck())
@@ -173,13 +181,14 @@ namespace Entia.Unity.Editor
             foreach (var instance in instances) instance.Raw = instance.Value;
             EditorGUI.BeginChangeCheck();
 
-            var first = references.First();
             property = Script(serialized);
-            var disable = LayoutUtility.Disable(first.Type.GetCustomAttributes(false).OfType<DisableAttribute>().Any());
+            var first = references.First();
+            var disable = LayoutUtility.Disable(first.Type.IsDefined(typeof(DisableAttribute), false));
             var apply = LayoutUtility.Apply(serialized);
+            OnPreInspector(serialized, first);
             return new Disposable(() =>
             {
-                OnInspector(serialized, first);
+                OnPostInspector(serialized, first);
                 apply.Dispose();
                 disable.Dispose();
                 if (EditorGUI.EndChangeCheck())
@@ -187,21 +196,42 @@ namespace Entia.Unity.Editor
             });
         }
 
+        public static void Initialize()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode) return;
+
+            var references = UnityEngine.Object.FindObjectsOfType<WorldReference>();
+            foreach (var reference in references) reference.Dispose();
+            foreach (var reference in references) reference.Initialize();
+        }
+
         public static void Update()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode) return;
 
-            foreach (var reference in UnityEngine.Object.FindObjectsOfType<WorldReference>())
-                reference.Initialize();
+            var references = UnityEngine.Object.FindObjectsOfType<ControllerReference>()
+                .Where(reference => reference.isActiveAndEnabled)
+                .ToArray();
+            foreach (var reference in references) reference.Controller.Run<Phases.RunFixed>();
+            foreach (var reference in references) reference.Controller.Run<Phases.Run>();
+            foreach (var reference in references) reference.Controller.Run<Phases.RunLate>();
         }
 
-        static void OnInspector(SerializedObject serialized, IReference reference) =>
-            Cache<OnInspector>.Emit(nameof(OnInspector), serialized, reference);
-        static void OnInspector<T>(SerializedObject serialized, IReference reference) where T : IReference
+        static void OnPreInspector(SerializedObject serialized, IReference reference) =>
+            Cache<OnPreInspector>.Emit(nameof(OnPreInspector), serialized, reference);
+        static void OnPreInspector<T>(SerializedObject serialized, IReference reference) where T : IReference
         {
             var messages = reference.World.Messages();
-            messages.Emit(new OnInspector<T> { Reference = (T)reference, Serialized = serialized });
-            messages.Emit(new OnInspector { Reference = reference, Serialized = serialized });
+            messages.Emit(new OnPreInspector<T> { Reference = (T)reference, Serialized = serialized });
+            messages.Emit(new OnPreInspector { Reference = reference, Serialized = serialized });
+        }
+        static void OnPostInspector(SerializedObject serialized, IReference reference) =>
+            Cache<OnPostInspector>.Emit(nameof(OnPostInspector), serialized, reference);
+        static void OnPostInspector<T>(SerializedObject serialized, IReference reference) where T : IReference
+        {
+            var messages = reference.World.Messages();
+            messages.Emit(new OnPostInspector<T> { Reference = (T)reference, Serialized = serialized });
+            messages.Emit(new OnPostInspector { Reference = reference, Serialized = serialized });
         }
         static void OnValidate(IReference reference) =>
             Cache<OnValidate>.Emit(nameof(OnValidate), default, reference);

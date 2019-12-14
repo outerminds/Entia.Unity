@@ -47,6 +47,12 @@ namespace Entia.Unity.Editor
             return new Disposable(() => serialized.Some().Iterate(current => current.ApplyModifiedProperties()));
         }
 
+        public static Disposable Update(params SerializedObject[] serialized)
+        {
+            serialized.Some().Iterate(current => current.ApplyModifiedProperties());
+            return new Disposable(() => serialized.Some().Iterate(current => current.Update()));
+        }
+
         public static Disposable Box()
         {
             var area = EditorGUI.IndentedRect(EditorGUILayout.BeginVertical());

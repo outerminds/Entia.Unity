@@ -64,9 +64,7 @@ namespace Entia.Unity
         void OnDestroy()
         {
             // NOTE: no need to dispose the hierarchy since 'OnDestroy' will be called on the children for sure
-            PreDispose();
-            Dispose();
-            PostDispose();
+            this.DisposeAll();
         }
 
         void OnTransformParentChanged()

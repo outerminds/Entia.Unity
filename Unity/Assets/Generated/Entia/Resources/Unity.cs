@@ -6,8 +6,16 @@ namespace Entia.Resources.Generated
 	[global::Entia.Unity.Generation.GeneratedAttribute(Type = typeof(global::Entia.Resources.Unity), Link = "", Path = new string[] { "Entia", "Resources", "Unity" })][global::UnityEngine.AddComponentMenu("Entia/Resources/Entia.Resources.Unity")]
 	public sealed partial class Unity : global::Entia.Unity.ResourceReference<global::Entia.Resources.Unity>
 	{
-		public ref global::UnityEngine.SceneManagement.Scene Scene => ref base.Get((ref global::Entia.Resources.Unity data) => ref data.Scene, ref this._Scene);
-		public ref global::Entia.Unity.WorldReference Reference => ref base.Get((ref global::Entia.Resources.Unity data) => ref data.Reference, ref this._Reference);
+		public global::UnityEngine.SceneManagement.Scene Scene
+		{
+			get => base.Get((ref global::Entia.Resources.Unity data, global::Entia.World world) => data.Scene, this._Scene);
+			set => base.Set((ref global::Entia.Resources.Unity data, global::UnityEngine.SceneManagement.Scene state, global::Entia.World _) => data.Scene = state, value, ref this._Scene);
+		}
+		public global::Entia.Unity.WorldReference Reference
+		{
+			get => base.Get((ref global::Entia.Resources.Unity data, global::Entia.World world) => data.Reference, this._Reference);
+			set => base.Set((ref global::Entia.Resources.Unity data, global::Entia.Unity.WorldReference state, global::Entia.World _) => data.Reference = state, value, ref this._Reference);
+		}
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Scene))]
 		global::UnityEngine.SceneManagement.Scene _Scene;
 		[global::UnityEngine.SerializeField, global::UnityEngine.Serialization.FormerlySerializedAsAttribute(nameof(Reference))]

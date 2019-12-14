@@ -6,7 +6,7 @@ namespace Entia.Unity.Editor
 {
     public abstract class ResourceReferenceEditor<T> : DataReferenceEditor<T> where T : class, IResourceReference
     {
-        protected virtual void OnDestroy() => ReferenceUtility.Update();
+        protected virtual void OnDestroy() => ReferenceUtility.Initialize();
 
         public override void OnInspectorGUI()
         {

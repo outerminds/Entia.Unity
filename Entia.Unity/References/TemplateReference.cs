@@ -19,7 +19,6 @@ namespace Entia.Experimental
         static readonly object[] _types =
         {
             typeof(Values.Primitive), typeof(Values.Array), typeof(Values.Object),
-            typeof(Values.Primitive<>), typeof(Values.Array<>), typeof(Values.Object<>),
             typeof(Values.Primitive<bool>), typeof(Values.Array<bool>),
             typeof(Values.Primitive<char>), typeof(Values.Array<char>),
             typeof(Values.Primitive<byte>), typeof(Values.Array<byte>),
@@ -35,13 +34,15 @@ namespace Entia.Experimental
             typeof(Values.Primitive<decimal>), typeof(Values.Array<decimal>),
             typeof(Values.Primitive<string>), typeof(Values.Array<string>),
             typeof(Values.Primitive<object>), typeof(Values.Array<object>),
+            // NOTE: for some reason, Unity crashes when these generic definitions are placed before their concrete instances
+            typeof(Values.Primitive<>), typeof(Values.Array<>), typeof(Values.Object<>),
             typeof(Values.Entity),
             typeof(Values.Unity),
 
             typeof(Components.Debug),
-            typeof(Components.Unity<>),
             typeof(Components.Unity<Transform>),
             typeof(Components.Unity<GameObject>),
+            typeof(Components.Unity<>),
         };
 
         static Disposable Extract(IValue[] values, out UnityEngine.Object[] references, out int[] indices)
@@ -95,7 +96,23 @@ namespace Entia.Experimental
 
 namespace Entia.Experimental.Values
 {
-    public interface IValue { }
+    public readonly struct Member
+    {
+        public readonly string Name;
+        public readonly int Reference;
+
+        public Member(string name, int reference)
+        {
+            Name = name;
+            Reference = reference;
+        }
+    }
+
+    public interface IValue
+    {
+        object Value { get; }
+        Member[] Members { get; }
+    }
 
     /*
         - includes primitive types, strings, types, assemblies and some other types
@@ -119,9 +136,12 @@ namespace Entia.Experimental.Values
         }
 
         [Implementation]
-        static readonly Serializer<Primitive> _serializer = Serializer.Map(
+        static Serializer<Primitive> _serializer => Serializer.Map(
             (in Primitive primitive) => primitive.Value,
             (in object value) => new Primitive(value));
+
+        public Member[] Members => Dummy<Member>.Read.Array.Zero;
+        object IValue.Value => Value;
 
         public readonly object Value;
         public Primitive(object value) { Value = value; }
@@ -139,9 +159,12 @@ namespace Entia.Experimental.Values
         }
 
         [Implementation]
-        static readonly Serializer<Primitive<T>> _serializer = Serializer.Map(
+        static Serializer<Primitive<T>> _serializer => Serializer.Map(
             (in Primitive<T> primitive) => primitive.Value,
             (in T value) => new Primitive<T>(value));
+
+        public Member[] Members => Dummy<Member>.Read.Array.Zero;
+        object IValue.Value => Value;
 
         public readonly T Value;
         public Primitive(T value) { Value = value; }
@@ -163,7 +186,7 @@ namespace Entia.Experimental.Values
         }
 
         [Implementation]
-        static readonly Serializer<Object> _serializer = Serializer.Map(
+        static Serializer<Object> _serializer => Serializer.Map(
             (in Object @object) =>
             {
                 var fields = @object.Fields.Unzip();
@@ -179,7 +202,12 @@ namespace Entia.Experimental.Values
                 Serializer.Array<PropertyInfo>(),
                 Serializer.Blittable.Array<int>()));
 
-        // this is a clone of the original value
+        public Member[] Members => Enumerable.Concat(
+            Fields.Select(field => new Member(field.field.Name, field.reference)),
+            Properties.Select(property => new Member(property.property.Name, property.reference))
+        ).ToArray();
+        object IValue.Value => Value;
+
         public readonly object Value;
         public readonly (FieldInfo field, int reference)[] Fields;
         public readonly (PropertyInfo property, int reference)[] Properties;
@@ -208,7 +236,7 @@ namespace Entia.Experimental.Values
         }
 
         [Implementation]
-        static readonly Serializer<Object<T>> _serializer = Serializer.Map(
+        static Serializer<Object<T>> _serializer => Serializer.Map(
             (in Object<T> @object) =>
             {
                 var fields = @object.Fields.Unzip();
@@ -224,7 +252,12 @@ namespace Entia.Experimental.Values
                 Serializer.Array<PropertyInfo>(),
                 Serializer.Blittable.Array<int>()));
 
-        // this is a clone of the original value
+        public Member[] Members => Enumerable.Concat(
+            Fields.Select(field => new Member(field.field.Name, field.reference)),
+            Properties.Select(property => new Member(property.property.Name, property.reference))
+        ).ToArray();
+        object IValue.Value => Value;
+
         public readonly T Value;
         public readonly (FieldInfo field, int reference)[] Fields;
         public readonly (PropertyInfo property, int reference)[] Properties;
@@ -252,12 +285,14 @@ namespace Entia.Experimental.Values
         }
 
         [Implementation]
-        static readonly Serializer<Array> _serializer = Serializer.Map(
+        static Serializer<Array> _serializer => Serializer.Map(
             (in Array array) => (array.Value, array.Items.Unzip()).Flatten(),
             (in (System.Array value, int[] indices, int[] references) values) => new Array(values.value, values.indices.Zip(values.references)),
             Serializer.Tuple(default(Serializer<System.Array>), Serializer.Blittable.Array<int>(), Serializer.Blittable.Array<int>()));
 
-        // this is a clone of the original value
+        public Member[] Members => Items.Select(item => new Member($"{item.index}", item.reference));
+        object IValue.Value => Value;
+
         public readonly System.Array Value;
         public readonly (int index, int reference)[] Items;
 
@@ -283,12 +318,14 @@ namespace Entia.Experimental.Values
         }
 
         [Implementation]
-        static readonly Serializer<Array<T>> _serializer = Serializer.Map(
+        static Serializer<Array<T>> _serializer => Serializer.Map(
             (in Array<T> array) => (array.Value, array.Items.Unzip()).Flatten(),
             (in (T[] value, int[] indices, int[] references) values) => new Array<T>(values.value, values.indices.Zip(values.references)),
             Serializer.Tuple(default(Serializer<T[]>), Serializer.Blittable.Array<int>(), Serializer.Blittable.Array<int>()));
 
-        // this is a clone of the original value
+        public Member[] Members => Items.Select(item => new Member($"{item.index}", item.reference));
+        object IValue.Value => Value;
+
         public readonly T[] Value;
         public readonly (int index, int reference)[] Items;
 
@@ -329,10 +366,16 @@ namespace Entia.Experimental.Values
         }
 
         [Implementation]
-        static readonly Serializer<Entity> _serializer = Serializer.Map(
+        static Serializer<Entity> _serializer => Serializer.Map(
             (in Entity entity) => (entity.Children, entity.Components),
             (in (int[] children, int[] components) values) => new Entity(values.children, values.components),
             Serializer.Tuple(Serializer.Blittable.Array<int>(), Serializer.Blittable.Array<int>()));
+
+        public Member[] Members => Enumerable.Concat(
+            Children.Select(child => new Member($"{child}", child)),
+            Components.Select(component => new Member($"{component}", component))
+        ).ToArray();
+        object IValue.Value => Entia.Entity.Zero;
 
         public readonly int[] Children;
         public readonly int[] Components;
@@ -354,6 +397,9 @@ namespace Entia.Experimental.Values
                 return true;
             }
         }
+
+        public Member[] Members => Dummy<Member>.Read.Array.Zero;
+        object IValue.Value => Value;
 
         public readonly UnityEngine.Object Value;
         public Unity(UnityEngine.Object value) { Value = value; }
@@ -662,7 +708,7 @@ namespace Entia.Experimental.Templating
 
     public readonly struct Template<T>
     {
-        public static readonly Template<T> Empty = new Template<T>(0, new IValue[1]);
+        public static readonly Template<T> Empty = new Template<T>(0, Dummy<IValue>.Read.Array.One);
 
         public static implicit operator Template(in Template<T> template) =>
             new Template(template.Index, template.Values);
@@ -679,7 +725,7 @@ namespace Entia.Experimental.Templating
 
     public readonly struct Template
     {
-        public static readonly Template Empty = new Template(0, new IValue[1]);
+        public static readonly Template Empty = new Template(0, Dummy<IValue>.Read.Array.One);
 
         public readonly int Index;
         public readonly IValue[] Values;
@@ -688,6 +734,51 @@ namespace Entia.Experimental.Templating
         {
             Index = index;
             Values = values;
+        }
+
+        public static Conflict[] Differentiate(Template left, Template right)
+        {
+            var setA = new HashSet<int>();
+            var setB = new HashSet<int>();
+
+            IEnumerable<Conflict> Conflicts(IValue valueA, IValue valueB, params string[] path)
+            {
+                var membersA = valueA?.Members.Where(member => setA.Add(member.Reference)).ToArray() ?? Dummy<Member>.Read.Array.Zero;
+                var membersB = valueB?.Members.Where(member => setB.Add(member.Reference)).ToArray() ?? Dummy<Member>.Read.Array.Zero;
+
+                if (membersA.Length == 0 && membersB.Length == 0)
+                    return Equals(valueA?.Value, valueB?.Value) ?
+                        Dummy<Conflict>.Read.Array.Zero :
+                        new[] { new Conflict(valueA, valueB, path) };
+                else
+                {
+                    return membersA.SelectMany(memberA => membersB
+                        .Where(memberB => memberA.Name == memberB.Name)
+                        .SelectMany(memberB => Conflicts(
+                            left.Values[memberA.Reference],
+                            right.Values[memberB.Reference],
+                            path.Append(memberA.Name))));
+                }
+            }
+
+            return Conflicts(left.Values[left.Index], right.Values[right.Index]).ToArray();
+        }
+
+        // the omission of primitive fields/items prevents from diffing them properly
+        // define a function that resolves conflicts and combines templates
+    }
+
+    public readonly struct Conflict
+    {
+        public readonly IValue ValueA;
+        public readonly IValue ValueB;
+        public readonly string[] Path;
+
+        public Conflict(IValue valueA, IValue valueB, params string[] path)
+        {
+            ValueA = valueA;
+            ValueB = valueB;
+            Path = path;
         }
     }
 }

@@ -7,6 +7,20 @@ namespace Entia.Unity
 
     public static class EntityExtensions
     {
+        public static void InitializeAll(this IEntityReference entity, World world)
+        {
+            entity.PreInitialize();
+            entity.Initialize(world);
+            entity.PostInitialize();
+        }
+
+        public static void DisposeAll(this IEntityReference entity)
+        {
+            entity.PreDispose();
+            entity.Dispose();
+            entity.PostDispose();
+        }
+
         public static IEnumerable<Entity> Entities(this GameObject gameObject, bool self = true, Reach? upwards = null, Reach? downwards = null)
         {
             if (self)
