@@ -15,7 +15,8 @@ namespace Nodes
             // Any number of systems can be added here.
             System<Systems.UpdateInput>(),
             System<Systems.UpdateVelocity>(),
-            System<Systems.UpdatePosition>()
+            System<Systems.UpdatePosition>(),
+            System<Systems.SynchronizeTransform>()
         );
     }
 }

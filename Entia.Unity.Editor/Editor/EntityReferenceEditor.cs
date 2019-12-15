@@ -7,9 +7,6 @@ namespace Entia.Unity.Editor
     {
         public IEntityReference Target => target as IEntityReference;
 
-        protected virtual void OnEnable() => ReferenceUtility.Initialize();
-        protected virtual void OnDestroy() => ReferenceUtility.Initialize();
-
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();

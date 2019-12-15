@@ -20,7 +20,7 @@ namespace Entia.Unity
         void PostDispose();
     }
 
-    [DisallowMultipleComponent]
+    [ExecuteInEditMode, DisallowMultipleComponent]
     public sealed class EntityReference : MonoBehaviour, IEntityReference
     {
         [System.Flags]
@@ -93,7 +93,7 @@ namespace Entia.Unity
         void Initialize(World world)
         {
             if (world == null) return;
-            if (!Application.isPlaying || _initialized.Change(_initialized | States.Current))
+            if (_initialized.Change(_initialized | States.Current))
             {
                 World = world;
                 Entity = World.Entities().Create();
@@ -103,7 +103,7 @@ namespace Entia.Unity
         void PostInitialize()
         {
             if (World == null || Entity == Entity.Zero) return;
-            if (!Application.isPlaying || _initialized.Change(_initialized | States.Post))
+            if (_initialized.Change(_initialized | States.Post))
             {
                 var components = World.Components();
                 if (UnityEngine.Debug.isDebugBuild) components.Set(Entity, new Components.Debug { Name = Name });

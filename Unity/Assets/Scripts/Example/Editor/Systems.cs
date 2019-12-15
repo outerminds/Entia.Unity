@@ -3,7 +3,6 @@ using Entia;
 using Entia.Components;
 using Entia.Messages;
 using Entia.Systems;
-using Entia.Unity.Editor;
 using UnityEngine;
 
 namespace Systems
@@ -15,18 +14,12 @@ namespace Systems
             Gizmos.DrawRay(transform.Value.position, new Vector3(velocity.X, velocity.Y) * 3f);
     }
 
-    public struct SynchronizePosition :
-        IRunEach<Unity<Transform>, Position>,
-        IReactEach<OnValidate<Components.Generated.Position>>
+    public struct SynchronizePosition : IRunEach<Unity<Transform>, Position>, IReactEach<OnValidate<Components.Generated.Position>>
     {
-        public void Run(Entity entity, ref Unity<Transform> transform, ref Position position)
-        {
-            var current = transform.Value.position;
-            position.X = current.x;
-            position.Y = current.y;
-        }
+        public void Run(Entity entity, ref Unity<Transform> transform, ref Position position) =>
+            position = transform.Value.position;
 
         public void React(in OnValidate<Components.Generated.Position> message, Entity entity) =>
-            message.Reference.transform.position = new Vector3(message.Reference.X, message.Reference.Y);
+            message.Reference.transform.position = message.Reference.Value;
     }
 }

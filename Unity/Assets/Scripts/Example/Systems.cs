@@ -1,4 +1,3 @@
-using Components;
 using Entia;
 using Entia.Injectables;
 using Entia.Queryables;
@@ -89,26 +88,27 @@ namespace Systems
 #if UNITY_2019
     // The 'IRunEach<...>' interfaces simplify and optimized common
     // iteration patterns in systems.
-    public struct UpdatePosition : IRunEach<Entia.Components.Unity<Transform>, Components.Velocity>
+    public struct UpdatePosition : IRunEach<Components.Position, Components.Velocity>
     {
-        public readonly Group<Unity<Transform>, Write<Components.Velocity>> Group;
-
-        // 'Unity<Transform>' is a Unity-specific query that gives access
-        // to Unity components.
-        public void Run(Entity entity, ref Entia.Components.Unity<Transform> transform, ref Velocity velocity)
+        public void Run(Entity entity, ref Components.Position position, ref Components.Velocity velocity)
         {
-            var position = transform.Value.position;
-            position += new Vector3(velocity.X, velocity.Y);
+            position += new Vector2(velocity.X, velocity.Y);
 
             // Fake a floor.
-            if (position.y < 0)
+            if (position.Y < 0)
             {
-                position.y = 0;
+                position.Y = 0;
                 velocity.Y = 0;
             }
-
-            transform.Value.position = position;
         }
     }
 #endif
+
+    // 'Unity<Transform>' is a Unity-specific query that gives access
+    // to Unity components.
+    public struct SynchronizeTransform : IRunEach<Entia.Components.Unity<Transform>, Components.Position>
+    {
+        public void Run(Entity entity, ref Entia.Components.Unity<Transform> transform, ref Components.Position position) =>
+            transform.Value.position = position;
+    }
 }

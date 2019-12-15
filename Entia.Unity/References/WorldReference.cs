@@ -16,7 +16,7 @@ namespace Entia.Unity
         void Dispose();
     }
 
-    [DisallowMultipleComponent]
+    [ExecuteInEditMode, DisallowMultipleComponent]
     public sealed class WorldReference : MonoBehaviour, IWorldReference
     {
         public World World { get; private set; }
@@ -49,12 +49,25 @@ namespace Entia.Unity
 
         public void Initialize()
         {
-            if (!Application.isPlaying || _initialized.Change(true))
+            var scene = gameObject.scene;
+            if (scene.isLoaded) Initialize(scene);
+            else SceneManager.sceneLoaded += OnLoaded;
+        }
+
+        public void Dispose()
+        {
+            if (World == null) return;
+            if (World.TryScene(out var scene)) Dispose(scene);
+        }
+
+        void Initialize(Scene scene)
+        {
+            if (_initialized.Change(true))
             {
                 World = Create();
-                World.TryScene(out var scene);
-                SceneManager.sceneUnloaded += Unload;
+                SceneManager.sceneUnloaded += OnUnloaded;
                 Application.quitting += Dispose;
+                SceneManager.sceneLoaded -= OnLoaded;
 
                 var roots = scene.GetRootGameObjects();
                 foreach (var resource in roots.SelectMany(root => root.GetComponentsInChildren<IResourceReference>()))
@@ -71,13 +84,16 @@ namespace Entia.Unity
             }
         }
 
-        public void Dispose()
+        void Dispose(Scene scene)
         {
             if (World == null) return;
-
-            var resources = World.Resources();
-            if (_initialized && resources.TryScene(out var scene) && _disposed.Change(true))
+            if (_initialized && _disposed.Change(true))
             {
+                SceneManager.sceneLoaded -= OnLoaded;
+                SceneManager.sceneUnloaded -= OnUnloaded;
+                Application.quitting -= Dispose;
+
+                var resources = World.Resources();
                 var roots = scene.GetRootGameObjects();
                 var entities = roots.SelectMany(root => root.GetComponentsInChildren<IEntityReference>()).ToArray();
                 foreach (var entity in entities) entity.PreDispose();
@@ -92,18 +108,21 @@ namespace Entia.Unity
 
                 // NOTE: remove the resource in case the world is accessed through the static registry before it is GC'd
                 resources.Remove<Resources.Unity>();
-                SceneManager.sceneUnloaded -= Unload;
-                Application.quitting -= Dispose;
                 World = null;
                 _initialized = false;
                 _disposed = false;
             }
         }
 
-        void Unload(Scene scene)
+        void OnLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (gameObject.scene == scene) Initialize(scene);
+        }
+
+        void OnUnloaded(Scene scene)
         {
             if (World == null) return;
-            if (World.TryScene(out var other) && scene == other) Dispose();
+            if (World.TryScene(out var other) && scene == other) Dispose(other);
         }
     }
 }

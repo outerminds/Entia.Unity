@@ -7,9 +7,9 @@ namespace Entia.Unity
     {
         public static readonly Node Default =
             Sequence(nameof(Unity),
-                System<Systems.LogException>(),
+                System<Systems.LogException>().Editor(),
                 System<Systems.SynchronizeEntityReference>(),
-                System<Systems.UpdateTime>()
-            ).Editor();
+                System<Systems.UpdateTime>().Editor()
+            );
     }
 }

@@ -21,7 +21,7 @@ namespace Entia.Unity
     [RequireComponent(typeof(EntityReference))]
     public abstract class ComponentReference : MonoBehaviour { }
 
-    [DisallowMultipleComponent]
+    [ExecuteInEditMode, DisallowMultipleComponent]
     public abstract class ComponentReference<T> : ComponentReference, IComponentReference where T : struct, IComponent
     {
         protected delegate TMember From<TMember>(ref T component, World world);
@@ -31,26 +31,28 @@ namespace Entia.Unity
         public Entity Entity { get; private set; }
 
         public abstract T Raw { get; set; }
-
-        IComponent IComponentReference.Value
+        public T Value
         {
             get
             {
-                if (_initialized && !_disposed && World.Components().TryGet<T>(Entity, out var component)) return component;
+                if (World is World world && world.Components().TryGet<T>(Entity, out var component)) return component;
                 return Raw;
             }
             set
             {
-                if (value is T casted)
-                {
-                    if (_initialized && !_disposed && World.Components().Has<T>(Entity)) World.Components().Set(Entity, casted);
-                    else Raw = casted;
-                }
+                if (World is World world && world.Components().Has<T>(Entity)) world.Components().Set(Entity, value);
+                Raw = value;
             }
         }
-        IComponent IComponentReference.Raw { get => Raw; set => Raw = value is T component ? component : default; }
+
         Type IComponentReference.Type => typeof(T);
         Metadata IComponentReference.Metadata => ComponentUtility.Concrete<T>.Data;
+        IComponent IComponentReference.Raw { get => Raw; set => Raw = value is T component ? component : default; }
+        IComponent IComponentReference.Value
+        {
+            get => Value;
+            set { if (value is T casted) Value = casted; }
+        }
 
         [NonSerialized]
         bool _initialized;
@@ -83,7 +85,7 @@ namespace Entia.Unity
         void Initialize(Entity entity, World world)
         {
             if (entity == Entia.Entity.Zero || world == null) return;
-            if (!Application.isPlaying || _initialized.Change(true))
+            if (_initialized.Change(true))
             {
                 World = world;
                 Entity = entity;

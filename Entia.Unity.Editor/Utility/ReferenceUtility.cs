@@ -46,6 +46,7 @@ namespace Entia.Unity.Editor
         static ReferenceUtility()
         {
             EditorUtility.Delayed(Initialize);
+            EditorApplication.playModeStateChanged += _ => Initialize();
             EditorApplication.update += Update;
         }
 
@@ -201,20 +202,31 @@ namespace Entia.Unity.Editor
             if (EditorApplication.isPlayingOrWillChangePlaymode) return;
 
             var references = UnityEngine.Object.FindObjectsOfType<WorldReference>();
-            foreach (var reference in references) reference.Dispose();
-            foreach (var reference in references) reference.Initialize();
+            references.Iterate(reference => reference.Dispose());
+            references.Iterate(reference => reference.Initialize());
         }
 
         public static void Update()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode) return;
 
-            var references = UnityEngine.Object.FindObjectsOfType<ControllerReference>()
+            var controllers = UnityEngine.Object.FindObjectsOfType<ControllerReference>()
                 .Where(reference => reference.isActiveAndEnabled)
+                .Select(reference => reference.Controller)
+                .Some()
                 .ToArray();
-            foreach (var reference in references) reference.Controller.Run<Phases.RunFixed>();
-            foreach (var reference in references) reference.Controller.Run<Phases.Run>();
-            foreach (var reference in references) reference.Controller.Run<Phases.RunLate>();
+            controllers.Iterate(controller => controller.Run<Phases.RunFixed>());
+            controllers.Iterate(controller => controller.Run<Phases.Run>());
+            controllers.Iterate(controller => controller.Run<Phases.RunLate>());
+
+            UnityEngine.Object.FindObjectsOfType<ComponentReference>()
+                .OfType<IComponentReference>()
+                .Where(reference => reference.World is World)
+                .Iterate(reference => reference.Raw = reference.Value);
+            UnityEngine.Object.FindObjectsOfType<ResourceReference>()
+                .OfType<IResourceReference>()
+                .Where(reference => reference.World is World)
+                .Iterate(reference => reference.Raw = reference.Value);
         }
 
         static void OnPreInspector(SerializedObject serialized, IReference reference) =>

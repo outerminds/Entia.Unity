@@ -11,5 +11,8 @@ namespace Entia.Nodes
             public override Result<IRunner> Build(in Editor data, in Context context) =>
                 context.Build(Node.Sequence(context.Node.Name, context.Node.Children));
         }
+
+        public readonly bool Only;
+        public Editor(bool only) { Only = only; }
     }
 }

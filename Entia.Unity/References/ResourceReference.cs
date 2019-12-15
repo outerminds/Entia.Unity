@@ -17,7 +17,7 @@ namespace Entia.Unity
 
     public abstract class ResourceReference : MonoBehaviour { }
 
-    [DisallowMultipleComponent]
+    [ExecuteInEditMode, DisallowMultipleComponent]
     public abstract class ResourceReference<T> : ResourceReference, IResourceReference where T : struct, IResource
     {
         protected delegate ref TMember Mapper<TMember>(ref T resource);
@@ -27,25 +27,27 @@ namespace Entia.Unity
         public World World { get; private set; }
 
         public abstract T Raw { get; set; }
-
-        IResource IResourceReference.Value
+        public T Value
         {
             get
             {
-                if (_initialized && !_disposed) return World.Resources().Get<T>();
+                if (World is World world) return world.Resources().Get<T>();
                 return Raw;
             }
             set
             {
-                if (value is T casted)
-                {
-                    if (_initialized && !_disposed) World.Resources().Set(casted);
-                    else Raw = casted;
-                }
+                if (World is World world && world.Resources().Has<T>()) world.Resources().Set(value);
+                Raw = value;
             }
         }
-        IResource IResourceReference.Raw { get => Raw; set => Raw = value is T resource ? resource : default; }
+
         Type IResourceReference.Type => typeof(T);
+        IResource IResourceReference.Raw { get => Raw; set => Raw = value is T resource ? resource : default; }
+        IResource IResourceReference.Value
+        {
+            get => Value;
+            set { if (value is T casted) Value = casted; }
+        }
 
         [NonSerialized]
         bool _initialized;
@@ -79,7 +81,7 @@ namespace Entia.Unity
         void Initialize(World world)
         {
             if (world == null) return;
-            if (!Application.isPlaying || _initialized.Change(true))
+            if (_initialized.Change(true))
             {
                 World = world;
                 World.Resources().Set(Raw);

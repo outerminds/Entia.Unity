@@ -17,9 +17,20 @@ namespace Entia.Unity
         void Dispose();
     }
 
-    [RequireComponent(typeof(WorldReference))]
+    [ExecuteInEditMode, RequireComponent(typeof(WorldReference))]
     public sealed class ControllerReference : MonoBehaviour, IControllerReference
     {
+        static Node Filter(Node node) => Application.isPlaying ? FilterPlaying(node) : FilterEditing(node);
+
+        static Node FilterPlaying(Node node) =>
+            node.Value is Editor editor && editor.Only ? Node.Sequence(node.Name) :
+            node.With(children: node.Children.Select(FilterPlaying));
+
+        static Node FilterEditing(Node node) =>
+            node.Value is Editor ? node :
+            node.Value is IAtomic ? Node.Sequence(node.Name) :
+            node.With(children: node.Children.Select(FilterEditing));
+
         public World World => Controller?.World;
         public Controller Controller { get; private set; }
         public INodeReference[] Nodes => _nodes;
@@ -51,11 +62,6 @@ namespace Entia.Unity
             return Node.Sequence(name, children);
         }
 
-        static Node Filter(Node node) =>
-            node.Value is Editor editor ? node :
-            node.Value is IAtomic ? Node.Sequence(node.Name) :
-            node.With(children: node.Children.Select(Filter));
-
         void Awake()
         {
             if (gameObject.TryWorld(out var world)) Initialize(world);
@@ -72,10 +78,9 @@ namespace Entia.Unity
         void Initialize(World world)
         {
             if (world == null) return;
-            if (!Application.isPlaying || _initialized.Change(true))
+            if (_initialized.Change(true))
             {
-                var node = Create();
-                if (!Application.isPlaying) node = Filter(node);
+                var node = Filter(Create());
                 if (Debug.isDebugBuild) node = node.Profile();
 
                 // NOTE: the 'Try' ensures that early crashes are still caught and logged
@@ -108,35 +113,35 @@ $@"Failed to create controller for node '{node}'. See details below.
 
         void Enable()
         {
-            if (Controller == null)
+            if (Application.isPlaying && Controller == null)
             {
                 if (_initialized) Debug.LogError(
 $@"Failed to enable 'null' controller. See details below.
 {_log}");
             }
-            else Controller.Enable();
+            Controller?.Enable();
         }
 
         void Disable()
         {
-            if (Controller == null)
+            if (Application.isPlaying && Controller == null)
             {
                 if (_initialized) Debug.LogError(
 $@"Failed to disable 'null' controller. See details below.
 {_log}");
             }
-            else Controller.Disable();
+            Controller?.Disable();
         }
 
         void Run<T>() where T : struct, IPhase
         {
-            if (Controller == null)
+            if (Application.isPlaying && Controller == null)
             {
                 Debug.LogError(
 $@"Failed to run phase of type '{typeof(T).Format()}' since the controller is 'null'. See details below.
 {_log}");
             }
-            else Controller.Run<T>();
+            Controller?.Run<T>();
         }
 
         void IControllerReference.Initialize(World world) => Initialize(world);
