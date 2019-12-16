@@ -83,8 +83,12 @@ namespace Entia.Unity.Editor
         {
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.Space();
+
+            EditorGUI.BeginChangeCheck();
             using (LayoutUtility.Disable(EditorApplication.isPlayingOrWillChangePlaymode))
-                LayoutUtility.ScriptableList<WorldModifier>(serialized.FindProperty("_modifiers"), ref modifiers, TemplateUtility.CreateModifier);
+                LayoutUtility.ScriptableList<WorldModifier>(serialized.FindProperty("_modifiers"), ref modifiers, ScriptUtility.CreateModifier);
+            if (EditorGUI.EndChangeCheck()) Initialize();
+
             EditorGUILayout.Separator();
 
             var apply = LayoutUtility.Apply(serialized);
@@ -93,7 +97,7 @@ namespace Entia.Unity.Editor
             {
                 OnPostInspector(serialized, reference);
                 apply.Dispose();
-                if (EditorGUI.EndChangeCheck()) { Initialize(); OnValidate(reference); }
+                if (EditorGUI.EndChangeCheck()) OnValidate(reference);
             });
         }
 
@@ -101,8 +105,12 @@ namespace Entia.Unity.Editor
         {
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.Space();
+
+            EditorGUI.BeginChangeCheck();
             using (LayoutUtility.Disable(EditorApplication.isPlayingOrWillChangePlaymode))
-                LayoutUtility.ScriptableList<NodeReference>(serialized.FindProperty("_nodes"), ref nodes, TemplateUtility.CreateNode);
+                LayoutUtility.ScriptableList<NodeReference>(serialized.FindProperty("_nodes"), ref nodes, ScriptUtility.CreateNode);
+            if (EditorGUI.EndChangeCheck()) Initialize();
+
             EditorGUILayout.Separator();
 
             var apply = LayoutUtility.Apply(serialized);
@@ -111,7 +119,7 @@ namespace Entia.Unity.Editor
             {
                 OnPostInspector(serialized, reference);
                 apply.Dispose();
-                if (EditorGUI.EndChangeCheck()) { Initialize(); OnValidate(reference); }
+                if (EditorGUI.EndChangeCheck()) { OnValidate(reference); }
             });
         }
 

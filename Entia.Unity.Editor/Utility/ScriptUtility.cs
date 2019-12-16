@@ -1,14 +1,11 @@
-﻿using System;
-using System.IO;
-using Entia.Core;
-using Entia.Unity;
+﻿using System.IO;
 using UnityEditor;
 using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
 
 namespace Entia.Unity.Editor
 {
-    public static class TemplateUtility
+    public static class ScriptUtility
     {
         sealed class OnAssetNamed : EndNameEditAction
         {

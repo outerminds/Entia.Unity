@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Entia.Core;
 using Entia.Experimental;
 using Entia.Experimental.Templating;
 using UnityEngine;
@@ -12,9 +13,12 @@ public class Boba : MonoBehaviour
 
     void OnValidate()
     {
-        var conflicts = Template.Differentiate(TemplateA?.Template ?? Template.Empty, TemplateB?.Template ?? Template.Empty);
-        Debug.Log(string.Join(
-            Environment.NewLine,
-            conflicts.Select(conflict => $" -> {string.Join(".", conflict.Path)}: ({conflict.ValueA}, {conflict.ValueB})")));
+        if (Validate.Change(false))
+        {
+            var conflicts = Template.Differentiate(TemplateA?.Template ?? Template.Empty, TemplateB?.Template ?? Template.Empty);
+            Debug.Log(string.Join(
+                Environment.NewLine,
+                conflicts.Select(conflict => $" -> {string.Join(".", conflict.Path)}: ({conflict.ValueA}, {conflict.ValueB})")));
+        }
     }
 }
