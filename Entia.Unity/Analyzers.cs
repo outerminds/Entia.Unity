@@ -8,8 +8,10 @@ namespace Entia.Analyzers
 {
     public sealed class Parallel : Analyzer<Entia.Nodes.Parallel>
     {
-        Result<Unit> Unity(Node node, IDependency[] dependencies) =>
-            dependencies.OfType<Dependencies.Unity>().Select(_ => Result.Failure($"'{node}' depends on Unity.")).All();
+        Result<Unit> Unity(Node node, IDependency[] dependencies) => dependencies
+            .OfType<Dependencies.Unity>()
+            .Select(_ => Result.Failure($"'{node}' depends on Unity.").AsResult())
+            .All();
 
         public override Result<IDependency[]> Analyze(in Nodes.Parallel data, in Context context) => context.Node.Children
             .Select(context, (child, state) => state.Analyze(child).Map(dependencies => (child, dependencies)))

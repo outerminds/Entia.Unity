@@ -47,23 +47,21 @@ namespace Entia.Experimental
 
         static Disposable Extract(IValue[] values, out UnityEngine.Object[] references, out int[] indices)
         {
-            var referencesList = new List<UnityEngine.Object>();
-            var indicesList = new List<int>();
-
-            for (int i = 0; i < values.Length; i++)
+            IEnumerable<(UnityEngine.Object, int)> Collect()
             {
-                ref var value = ref values[i];
-                if (value is Values.Unity unity)
+                for (int i = 0; i < values.Length; i++)
                 {
-                    referencesList.Add(unity.Value);
-                    indicesList.Add(i);
-                    value = default;
+                    if (values[i] is Values.Unity unity)
+                    {
+                        yield return (unity.Value, i);
+                        values[i] = default;
+                    }
                 }
             }
 
-            var referencesArray = references = referencesList.ToArray();
-            var indicesArray = indices = indicesList.ToArray();
-            return new Disposable(() => Restore(values, referencesArray, indicesArray));
+            var pair = Collect().ToArray().Unzip();
+            (references, indices) = pair;
+            return new Disposable(() => Restore(values, pair.Item1, pair.Item2));
         }
 
         static void Restore(IValue[] values, UnityEngine.Object[] references, int[] indices)
@@ -764,8 +762,8 @@ namespace Entia.Experimental.Templating
             return Conflicts(left.Values[left.Index], right.Values[right.Index]).ToArray();
         }
 
-        // the omission of primitive fields/items prevents from diffing them properly
-        // define a function that resolves conflicts and combines templates
+        // - the omission of primitive fields/items prevents from diffing them properly
+        // - define a function that resolves conflicts and combines templates
     }
 
     public readonly struct Conflict

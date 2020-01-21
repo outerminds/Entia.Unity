@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "1cb35c9766154cb96b22db604219a1678bf8346e"
+    "signature": ""
   },
   "compilationOptions": {},
   "targets": {
@@ -10,7 +10,7 @@
         "dependencies": {
           "Entia.Unity": "1.4.0",
           "Entia.Unity.Editor": "1.4.0",
-          "Microsoft.CodeAnalysis.CSharp": "3.3.0",
+          "Microsoft.CodeAnalysis.CSharp": "3.4.0",
           "Entia.Core": "1.4.0.0",
           "Entia": "1.4.0.0"
         },
@@ -18,10 +18,10 @@
           "Entia.Unity.Generate.dll": {}
         }
       },
-      "Microsoft.CodeAnalysis.Analyzers/2.9.3": {},
-      "Microsoft.CodeAnalysis.Common/3.3.0": {
+      "Microsoft.CodeAnalysis.Analyzers/2.9.6": {},
+      "Microsoft.CodeAnalysis.Common/3.4.0": {
         "dependencies": {
-          "Microsoft.CodeAnalysis.Analyzers": "2.9.3",
+          "Microsoft.CodeAnalysis.Analyzers": "2.9.6",
           "System.Collections.Immutable": "1.5.0",
           "System.Memory": "4.5.3",
           "System.Reflection.Metadata": "1.6.0",
@@ -31,8 +31,8 @@
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.CodeAnalysis.dll": {
-            "assemblyVersion": "3.3.0.0",
-            "fileVersion": "3.300.19.41501"
+            "assemblyVersion": "3.4.0.0",
+            "fileVersion": "3.400.19.56804"
           }
         },
         "resources": {
@@ -77,14 +77,14 @@
           }
         }
       },
-      "Microsoft.CodeAnalysis.CSharp/3.3.0": {
+      "Microsoft.CodeAnalysis.CSharp/3.4.0": {
         "dependencies": {
-          "Microsoft.CodeAnalysis.Common": "3.3.0"
+          "Microsoft.CodeAnalysis.Common": "3.4.0"
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.CodeAnalysis.CSharp.dll": {
-            "assemblyVersion": "3.3.0.0",
-            "fileVersion": "3.300.19.41501"
+            "assemblyVersion": "3.4.0.0",
+            "fileVersion": "3.400.19.56804"
           }
         },
         "resources": {
@@ -199,26 +199,26 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Microsoft.CodeAnalysis.Analyzers/2.9.3": {
+    "Microsoft.CodeAnalysis.Analyzers/2.9.6": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-cDKEoHdg3icjLrn9EJ4KIkJG+ahU1YouhB0J8EARhj6fTqA/3oUneak0hWbToLOBLOTePu/Oc1QEA4mwmMEYVA==",
-      "path": "microsoft.codeanalysis.analyzers/2.9.3",
-      "hashPath": "microsoft.codeanalysis.analyzers.2.9.3.nupkg.sha512"
+      "sha512": "sha512-Kmms3TxGQMNb95Cu/3K+0bIcMnV4qf/phZBLAB0HUi65rBPxP4JO3aM2LoAcb+DFS600RQJMZ7ZLyYDTbLwJOQ==",
+      "path": "microsoft.codeanalysis.analyzers/2.9.6",
+      "hashPath": "microsoft.codeanalysis.analyzers.2.9.6.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.Common/3.3.0": {
+    "Microsoft.CodeAnalysis.Common/3.4.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-hK0BGWD2ZlTCZ/KD84LQrD95lwJuRg8++uVGeiLq+klmcsNf3g7j/QvXowZX5Wi+oL9egCFxI7d3A4GtpQAl0A==",
-      "path": "microsoft.codeanalysis.common/3.3.0",
-      "hashPath": "microsoft.codeanalysis.common.3.3.0.nupkg.sha512"
+      "sha512": "sha512-3ncA7cV+iXGA1VYwe2UEZXcvWyZSlbexWjM9AvocP7sik5UD93qt9Hq0fMRGk0jFRmvmE4T2g+bGfXiBVZEhLw==",
+      "path": "microsoft.codeanalysis.common/3.4.0",
+      "hashPath": "microsoft.codeanalysis.common.3.4.0.nupkg.sha512"
     },
-    "Microsoft.CodeAnalysis.CSharp/3.3.0": {
+    "Microsoft.CodeAnalysis.CSharp/3.4.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-C0acBZTXLgi72UpV+E2zT+joclyPxNQ+zuHnvE0bS6hJA4i7kBBdW7qaLEwVP6a9MrrtL869StzvXqMc/0PvTg==",
-      "path": "microsoft.codeanalysis.csharp/3.3.0",
-      "hashPath": "microsoft.codeanalysis.csharp.3.3.0.nupkg.sha512"
+      "sha512": "sha512-/LsTtgcMN6Tu1oo7/WYbRAHL4/ubXC/miEakwTpcZKJKtFo7D0AK95Hw0dbGxul6C8WJu60v6NP2435TDYZM+Q==",
+      "path": "microsoft.codeanalysis.csharp/3.4.0",
+      "hashPath": "microsoft.codeanalysis.csharp.3.4.0.nupkg.sha512"
     },
     "Microsoft.NETCore.Platforms/2.1.2": {
       "type": "package",
