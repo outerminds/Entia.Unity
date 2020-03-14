@@ -452,9 +452,9 @@ $@"{proxy}
                 if (current is INamedTypeSymbol named && named.Implements(context.IQueryable))
                 {
                     var definition = named.OriginalDefinition;
-                    if (context.Entity.Equals(definition))
+                    if (SymbolEqualityComparer.Default.Equals(context.Entity, definition))
                         yield return new Extension { Outer = named, Inner = named };
-                    else if (context.Write.Equals(definition))
+                    else if (SymbolEqualityComparer.Default.Equals(context.Write, definition))
                         yield return new Extension
                         {
                             Outer = named,
@@ -463,7 +463,7 @@ $@"{proxy}
                             State = !named.TypeArguments[0].Implements(context.IEnabled),
                             Ref = true
                         };
-                    else if (context.Read.Equals(definition))
+                    else if (SymbolEqualityComparer.Default.Equals(context.Read, definition))
                         yield return new Extension
                         {
                             Outer = named,
@@ -473,7 +473,7 @@ $@"{proxy}
                             Ref = true,
                             Readonly = true
                         };
-                    else if (context.Unity.Equals(definition))
+                    else if (SymbolEqualityComparer.Default.Equals(context.Unity, definition))
                     {
                         yield return new Extension
                         {
@@ -482,7 +482,7 @@ $@"{proxy}
                             Accesses = new string[] { "Value" }
                         };
                     }
-                    else if (context.Maybe.Equals(definition))
+                    else if (SymbolEqualityComparer.Default.Equals(context.Maybe, definition))
                     {
                         foreach (var field in named.InstanceFields().DistinctBy(field => field.Type))
                         {
@@ -538,7 +538,8 @@ $@"{proxy}
                     if (extension.Try is int @try)
                     {
                         var maybe = string.Join(".", extension.Accesses.Take(@try).Prepend(item));
-                        var returnName = extension.Outer.OriginalDefinition.Equals(context.Unity) ? innerName : outerName;
+                        var returnName = SymbolEqualityComparer.Default.Equals(extension.Outer.OriginalDefinition, context.Unity) ?
+                            innerName : outerName;
 
                         yield return ($"{indentation}public static bool ", $"Try{name}(in this {queryName} {item}, out {returnName} {value})", $@" => {maybe}.TryGet(out {value});");
                         yield return ($"{indentation}public static {returnModifier}{innerName} ", $"{name}(in this {queryName} {item}, out bool {success})", $@" => {accessModifier}{maybe}.Get(out {success});");
@@ -573,7 +574,7 @@ $@"{proxy}
                 system.Fields()
                     .Select(field => field.Type)
                     .OfType<INamedTypeSymbol>()
-                    .Where(type => context.Groups.Any(group => group.Equals(type.OriginalDefinition)))
+                    .Where(type => context.Groups.Any(group => SymbolEqualityComparer.Default.Equals(group, type.OriginalDefinition)))
                     .SelectMany(type => type.InstanceConstructors
                         .Where(constructor => constructor.Parameters.Length > 0)
                         .Select(constructor => constructor.Parameters[0].Type))

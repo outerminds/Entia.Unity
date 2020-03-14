@@ -51,13 +51,11 @@ namespace Entia.Unity
         {
             if (gameObject.TryWorld(out var world))
             {
-                using (var list = PoolUtility.Cache<IEntityReference>.Lists.Use())
-                {
-                    GetComponentsInChildren(true, list.Instance);
-                    foreach (var entity in list.Instance) entity.PreInitialize();
-                    foreach (var entity in list.Instance) entity.Initialize(world);
-                    foreach (var entity in list.Instance) entity.PostInitialize();
-                }
+                using var list = PoolUtility.Cache<IEntityReference>.Lists.Use();
+                GetComponentsInChildren(true, list.Instance);
+                foreach (var entity in list.Instance) entity.PreInitialize();
+                foreach (var entity in list.Instance) entity.Initialize(world);
+                foreach (var entity in list.Instance) entity.PostInitialize();
             }
         }
 
@@ -107,7 +105,7 @@ namespace Entia.Unity
             {
                 var components = World.Components();
                 if (UnityEngine.Debug.isDebugBuild) components.Set(Entity, new Components.Debug { Name = Name });
-                components.Set(Entity, new Components.Unity<UnityEngine.GameObject> { Value = gameObject });
+                components.Set(Entity, new Components.Unity<GameObject> { Value = gameObject });
 
                 using (var list = PoolUtility.Cache<Component>.Lists.Use())
                 {
@@ -155,7 +153,7 @@ namespace Entia.Unity
                     }
                 }
 
-                components.Remove<Components.Unity<UnityEngine.GameObject>>(Entity);
+                components.Remove<Components.Unity<GameObject>>(Entity);
             }
         }
 

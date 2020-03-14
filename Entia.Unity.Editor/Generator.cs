@@ -68,25 +68,23 @@ namespace Entia.Unity.Editor
             var task = Task
                 .Run(() =>
                 {
-                    using (var client = new NamedPipeClientStream(".", tool, PipeDirection.InOut, PipeOptions.WriteThrough))
+                    using var client = new NamedPipeClientStream(".", tool, PipeDirection.InOut, PipeOptions.WriteThrough);
+                    do
                     {
-                        do
+                        try { client.Connect(); }
+                        catch
                         {
-                            try { client.Connect(); }
-                            catch
-                            {
-                                Thread.Sleep(100);
-                                if (process.HasExited) throw new ConnectionException();
-                            }
+                            Thread.Sleep(100);
+                            if (process.HasExited) throw new ConnectionException();
                         }
-                        while (!client.IsConnected);
-
-                        var count = Encoding.UTF32.GetBytes(input, 0, input.Length, buffer, 0);
-                        client.Write(buffer, 0, count);
-
-                        count = client.Read(buffer, 0, buffer.Length);
-                        output = Encoding.UTF32.GetString(buffer, 0, count);
                     }
+                    while (!client.IsConnected);
+
+                    var count = Encoding.UTF32.GetBytes(input, 0, input.Length, buffer, 0);
+                    client.Write(buffer, 0, count);
+
+                    count = client.Read(buffer, 0, buffer.Length);
+                    output = Encoding.UTF32.GetString(buffer, 0, count);
                 })
                 .Timeout(settings.Timeout)
                 .Do(() =>

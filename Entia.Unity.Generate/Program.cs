@@ -138,61 +138,59 @@ namespace Entia.Unity
             var watcher = Watch(logger, options, arguments);
 
             Console.WriteLine($"-> Server: {options.Watch}");
-            using (var server = new NamedPipeServerStream(options.Watch.pipe, PipeDirection.InOut, 1))
+            using var server = new NamedPipeServerStream(options.Watch.pipe, PipeDirection.InOut, 1);
+            async Task Do()
             {
-                async Task Do()
+                try
                 {
-                    try
+                    var count = server.Read(buffer, 0, buffer.Length);
+                    var request = Encoding.UTF32.GetString(buffer, 0, count).Replace(@"""", "");
+                    Console.WriteLine($"-> Request: {request}");
+
+                    var changes = request.Split(';', StringSplitOptions.RemoveEmptyEntries);
+                    if (changes.Length == 0 || Change(changes))
                     {
-                        var count = server.Read(buffer, 0, buffer.Length);
-                        var request = Encoding.UTF32.GetString(buffer, 0, count).Replace(@"""", "");
-                        Console.WriteLine($"-> Request: {request}");
-
-                        var changes = request.Split(';', StringSplitOptions.RemoveEmptyEntries);
-                        if (changes.Length == 0 || Change(changes))
-                        {
-                            logger.Clear();
-                            Console.WriteLine($"-> Generate...");
-                            await RunAsync(logger, options, arguments).Timeout(options.Timeout);
-                        }
-
-                        response = "Success";
+                        logger.Clear();
+                        Console.WriteLine($"-> Generate...");
+                        await RunAsync(logger, options, arguments).Timeout(options.Timeout);
                     }
-                    catch (Exception exception) { response = exception.ToString(); }
-                    finally
-                    {
-                        Console.WriteLine($"-> Response: {response}");
 
-                        var count = Encoding.UTF32.GetBytes(response, 0, response.Length, buffer, 0);
-                        server.Write(buffer, 0, count);
-
-                        Console.WriteLine($"-> Wait For Pipe Drain");
-                        server.WaitForPipeDrain();
-
-                        Console.WriteLine($"-> Disconnect");
-                        server.Disconnect();
-                        Console.WriteLine($"-> Done");
-                        Console.WriteLine();
-                    }
+                    response = "Success";
                 }
-
-                while (true)
+                catch (Exception exception) { response = exception.ToString(); }
+                finally
                 {
-                    Console.WriteLine($"-> Wait For Connection");
-                    Console.WriteLine();
-                    server.WaitForConnection();
+                    Console.WriteLine($"-> Response: {response}");
 
-                    try
-                    {
-                        watcher.Dispose();
-                        _semaphore.Wait();
-                        Do().Wait();
-                    }
-                    finally
-                    {
-                        _semaphore.Release();
-                        watcher = Watch(logger, options, arguments);
-                    }
+                    var count = Encoding.UTF32.GetBytes(response, 0, response.Length, buffer, 0);
+                    server.Write(buffer, 0, count);
+
+                    Console.WriteLine($"-> Wait For Pipe Drain");
+                    server.WaitForPipeDrain();
+
+                    Console.WriteLine($"-> Disconnect");
+                    server.Disconnect();
+                    Console.WriteLine($"-> Done");
+                    Console.WriteLine();
+                }
+            }
+
+            while (true)
+            {
+                Console.WriteLine($"-> Wait For Connection");
+                Console.WriteLine();
+                server.WaitForConnection();
+
+                try
+                {
+                    watcher.Dispose();
+                    _semaphore.Wait();
+                    Do().Wait();
+                }
+                finally
+                {
+                    _semaphore.Release();
+                    watcher = Watch(logger, options, arguments);
                 }
             }
         }
