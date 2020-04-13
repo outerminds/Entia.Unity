@@ -70,11 +70,11 @@ namespace Entia.Unity
         public static string ChangeExtension(this string path, string extension) => Path.ChangeExtension(path, extension);
         public static string ChangeFileName(this string path, string name) => Path.Combine(path.Directory(), name) + path.Extension();
         public static string Decapitalize(this string value) =>
-            string.IsNullOrEmpty(value) ? value :
-            value[0].ToString().ToLower() + value.Substring(1);
+            string.IsNullOrEmpty(value) || char.IsLower(value[0]) ? value :
+            char.ToLower(value[0]) + value.Substring(1);
         public static string Capitalize(this string value) =>
-            string.IsNullOrEmpty(value) ? value :
-            value[0].ToString().ToUpper() + value.Substring(1);
+            string.IsNullOrEmpty(value) || char.IsUpper(value[0]) ? value :
+            char.ToUpper(value[0]) + value.Substring(1);
 
         public static string Justify(this string value, int length) => value + new string(' ', Math.Max(length - value.Length, 0));
 

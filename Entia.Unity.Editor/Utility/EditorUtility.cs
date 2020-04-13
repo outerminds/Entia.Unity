@@ -11,15 +11,16 @@ namespace Entia.Unity
             else
             {
                 var count = 0;
-                var callback = default(EditorApplication.CallbackFunction);
-                EditorApplication.update += callback = () =>
+                void Update()
                 {
                     if (condition(++count))
                     {
                         action();
-                        EditorApplication.update -= callback;
+                        EditorApplication.update -= Update;
                     }
-                };
+
+                }
+                EditorApplication.update += Update;
             }
         }
 

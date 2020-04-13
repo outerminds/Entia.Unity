@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditorInternal;
+using UnityEngine;
 
 namespace Entia.Unity.Editor
 {
@@ -45,7 +46,7 @@ namespace Entia.Unity.Editor
 
         static ReferenceUtility()
         {
-            EditorUtility.Delayed(Initialize);
+            EditorUtility.Delayed(Initialize, 10);
             EditorApplication.playModeStateChanged += _ => Initialize();
             EditorApplication.update += Update;
         }
@@ -56,7 +57,7 @@ namespace Entia.Unity.Editor
             iterator.Next(true);
             iterator.NextVisible(false);
 
-            using (LayoutUtility.Disable())
+            using (Layout.Disable())
             {
                 if (TryFindScript(serialized.targetObject.GetType(), out var script))
                     EditorGUILayout.ObjectField("Script", script, typeof(MonoScript), false);
@@ -85,13 +86,13 @@ namespace Entia.Unity.Editor
             EditorGUILayout.Space();
 
             EditorGUI.BeginChangeCheck();
-            using (LayoutUtility.Disable(EditorApplication.isPlayingOrWillChangePlaymode))
-                LayoutUtility.ScriptableList<WorldModifier>(serialized.FindProperty("_modifiers"), ref modifiers, ScriptUtility.CreateModifier);
+            using (Layout.Disable(EditorApplication.isPlayingOrWillChangePlaymode))
+                Layout.ScriptableList<WorldModifier>(serialized.FindProperty("_modifiers"), ref modifiers, ScriptUtility.CreateModifier);
             if (EditorGUI.EndChangeCheck()) Initialize();
 
             EditorGUILayout.Separator();
 
-            var apply = LayoutUtility.Apply(serialized);
+            var apply = Layout.Apply(serialized);
             OnPreInspector(serialized, reference);
             return new Disposable(() =>
             {
@@ -107,13 +108,13 @@ namespace Entia.Unity.Editor
             EditorGUILayout.Space();
 
             EditorGUI.BeginChangeCheck();
-            using (LayoutUtility.Disable(EditorApplication.isPlayingOrWillChangePlaymode))
-                LayoutUtility.ScriptableList<NodeReference>(serialized.FindProperty("_nodes"), ref nodes, ScriptUtility.CreateNode);
+            using (Layout.Disable(EditorApplication.isPlayingOrWillChangePlaymode))
+                Layout.ScriptableList<NodeReference>(serialized.FindProperty("_nodes"), ref nodes, ScriptUtility.CreateNode);
             if (EditorGUI.EndChangeCheck()) Initialize();
 
             EditorGUILayout.Separator();
 
-            var apply = LayoutUtility.Apply(serialized);
+            var apply = Layout.Apply(serialized);
             OnPreInspector(serialized, reference);
             return new Disposable(() =>
             {
@@ -131,7 +132,7 @@ namespace Entia.Unity.Editor
                 EditorGUI.BeginChangeCheck();
                 world.ShowEntity(reference.Entity.ToString(world), reference.Entity, nameof(EntityReferenceEditor), reference.Entity.ToString());
 
-                var apply = LayoutUtility.Apply(serialized);
+                var apply = Layout.Apply(serialized);
                 OnPreInspector(serialized, reference);
                 return new Disposable(() =>
                 {
@@ -150,29 +151,29 @@ namespace Entia.Unity.Editor
             EditorGUI.BeginChangeCheck();
 
             var first = references.First();
-            using (LayoutUtility.Horizontal())
+            using (Layout.Horizontal())
             {
                 property = Script(serialized);
-                using (LayoutUtility.Disable(!EditorApplication.isPlaying))
+                using (Layout.Disable(!EditorApplication.isPlaying))
                 {
                     if (first.World is World world && first.Entity)
                     {
                         if (world.Components().Has(first.Entity, first.Type))
                         {
-                            if (LayoutUtility.MinusButton())
+                            if (Layout.MinusButton())
                                 foreach (var reference in references) reference.World?.Components().Remove(reference.Entity, reference.Type);
                         }
                         else
                         {
-                            if (LayoutUtility.PlusButton())
+                            if (Layout.PlusButton())
                                 foreach (var reference in references) reference.World?.Components().Set(reference.Entity, reference.Raw);
                         }
                     }
                 }
             }
 
-            var disable = LayoutUtility.Disable(first.Type.IsDefined(typeof(DisableAttribute), false));
-            var apply = LayoutUtility.Apply(serialized);
+            var disable = Layout.Disable(first.Type.IsDefined(typeof(DisableAttribute), false));
+            var apply = Layout.Apply(serialized);
             OnPreInspector(serialized, first);
             return new Disposable(() =>
             {
@@ -192,8 +193,8 @@ namespace Entia.Unity.Editor
 
             property = Script(serialized);
             var first = references.First();
-            var disable = LayoutUtility.Disable(first.Type.IsDefined(typeof(DisableAttribute), false));
-            var apply = LayoutUtility.Apply(serialized);
+            var disable = Layout.Disable(first.Type.IsDefined(typeof(DisableAttribute), false));
+            var apply = Layout.Apply(serialized);
             OnPreInspector(serialized, first);
             return new Disposable(() =>
             {
@@ -207,16 +208,20 @@ namespace Entia.Unity.Editor
 
         public static void Initialize()
         {
-            if (EditorApplication.isPlayingOrWillChangePlaymode) return;
+            // NOTE: it seems that 'isPlaying' can get desynchronized from 'isPlayingOrWillChangePlaymode',
+            // so both must be checked
+            if (Application.isPlaying || EditorApplication.isPlayingOrWillChangePlaymode) return;
 
             var references = UnityEngine.Object.FindObjectsOfType<WorldReference>();
-            references.Iterate(reference => reference.Dispose());
             references.Iterate(reference => reference.Initialize());
+            references.Iterate(reference => reference.Dispose());
         }
 
         public static void Update()
         {
-            if (EditorApplication.isPlayingOrWillChangePlaymode) return;
+            // NOTE: it seems that 'isPlaying' can get desynchronized from 'isPlayingOrWillChangePlaymode',
+            // so both must be checked
+            if (Application.isPlaying || EditorApplication.isPlayingOrWillChangePlaymode) return;
 
             var controllers = UnityEngine.Object.FindObjectsOfType<ControllerReference>()
                 .Where(reference => reference.isActiveAndEnabled)

@@ -40,7 +40,7 @@ namespace Entia.Unity
             world.Container.Add<Parallel, Analyzers.Parallel>(new Analyzers.Parallel());
 
             var resources = world.Resources();
-            if (UnityEngine.Debug.isDebugBuild) resources.Set(new Resources.Debug { Name = $"{{ Name: {name}, Scene: {gameObject.scene.name} }}" });
+            if (Debug.isDebugBuild) resources.Set(new Resources.Debug { Name = $"{{ Name: {name}, Scene: {gameObject.scene.name} }}" });
             resources.Set(new Resources.Unity { Scene = gameObject.scene, Reference = this });
 
             foreach (var modifier in _modifiers) modifier?.Modify(world);

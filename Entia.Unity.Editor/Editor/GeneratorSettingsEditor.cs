@@ -36,13 +36,13 @@ $@"Generator process:
             }
             else EditorGUILayout.HelpBox("Generator process was not found.", MessageType.Warning);
 
-            using (LayoutUtility.Disable(!valid || alive))
+            using (Layout.Disable(!valid || alive))
                 if (GUILayout.Button("Birth")) Generator.Birth(tool, Target, true);
 
-            using (LayoutUtility.Disable(!valid))
+            using (Layout.Disable(!valid))
                 if (GUILayout.Button("Generate")) Generator.Generate(tool, Target, true);
 
-            using (LayoutUtility.Disable(!valid || !alive))
+            using (Layout.Disable(!valid || !alive))
                 if (GUILayout.Button("Kill")) Generator.Kill(tool, Target, true);
         }
     }

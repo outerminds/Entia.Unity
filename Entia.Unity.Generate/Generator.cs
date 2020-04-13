@@ -192,8 +192,8 @@ namespace Entia.Unity
             (bool changed, string type, string from, string to) Descend(ITypeSymbol current) =>
                 FormatConvertedType(current, replacements, conversions, declarations, context);
 
-            const string toEntia = nameof(Generation.GeneratorExtensions.ToEntia);
-            const string fromEntia = nameof(Generation.GeneratorExtensions.FromEntia);
+            const string toEntia = nameof(GeneratorExtensions.ToEntia);
+            const string fromEntia = nameof(GeneratorExtensions.FromEntia);
 
             if (conversions.TryGetValue(type, out var conversion)) return conversion;
             if (replacements.TryGetValue(type, out var replacement)) return conversions[type] = (true, Descend(replacement.type).type, replacement.from, replacement.to);

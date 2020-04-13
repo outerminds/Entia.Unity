@@ -44,7 +44,7 @@ namespace Entia.Unity.Editor
 
         Vector2 Size(Rect position, string errors)
         {
-            var size = EditorStyles.helpBox.CalcSize(new GUIContent(errors, LayoutUtility.ErrorIcon));
+            var size = EditorStyles.helpBox.CalcSize(new GUIContent(errors, Layout.ErrorIcon));
             size.x = Mathf.Max(size.x, position.width);
             size.y = Mathf.Max(size.y, 32f);
             return size;

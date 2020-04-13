@@ -55,12 +55,12 @@ namespace Entia.Unity.Editor
 
         void ShowModules(World world)
         {
-            using (LayoutUtility.Horizontal())
+            using (Layout.Horizontal())
             {
-                EditorGUILayout.LabelField(nameof(Modules), LayoutUtility.BoldLabel);
-                _all = LayoutUtility.Toggle("All", _all);
+                EditorGUILayout.LabelField(nameof(Modules), Layout.BoldLabel);
+                _all = Layout.Toggle("All", _all);
             }
-            using (LayoutUtility.Indent()) foreach (var module in world) ShowModule(module, world);
+            using (Layout.Indent()) foreach (var module in world) ShowModule(module, world);
         }
 
         void ShowModule(IModule module, World world)
@@ -79,15 +79,15 @@ namespace Entia.Unity.Editor
                 default:
                     if (_all)
                     {
-                        using (LayoutUtility.Disable())
+                        using (Layout.Disable())
                         {
                             switch (module)
                             {
                                 case Boxes boxes:
-                                    LayoutUtility.ChunksFoldout(
+                                    Layout.ChunksFoldout(
                                         label,
                                         boxes.ToArray(),
-                                        (item, index) => LayoutUtility.Members(
+                                        (item, index) => Layout.Members(
                                             $"{{ Type: {item.type.Format()}, Key: {item.key?.GetType().Format() ?? "null"}, Value: {item.value?.GetType().Format() ?? "null"} }}",
                                             new { Key = item.key, Value = item.value },
                                             item.type,
@@ -97,15 +97,15 @@ namespace Entia.Unity.Editor
                                     break;
                                 case IEnumerable enumerable:
                                     var array = enumerable.Cast<object>().ToArray();
-                                    LayoutUtility.ChunksFoldout(
+                                    Layout.ChunksFoldout(
                                         label,
                                         array,
-                                        (item, _) => LayoutUtility.Label(item.GetType().FullFormat()),
+                                        (item, _) => Layout.Label(item.GetType().FullFormat()),
                                         module.GetType(),
                                         path);
                                     break;
                                 default:
-                                    LayoutUtility.Label(module.GetType().Format());
+                                    Layout.Label(module.GetType().Format());
                                     break;
                             }
                         }
@@ -115,17 +115,17 @@ namespace Entia.Unity.Editor
         }
 
         void ShowControllers(Modules.Controllers module, World world) =>
-            LayoutUtility.ChunksFoldout(
+            Layout.ChunksFoldout(
                 nameof(Modules.Controllers),
                 module.ToArray(),
                 (controller, index) => world.ShowController(controller, _elapsed, _details, nameof(Modules.Controllers), index.ToString()),
                 module.GetType(),
                 foldout: data =>
                 {
-                    using (LayoutUtility.Horizontal())
+                    using (Layout.Horizontal())
                     {
-                        var expanded = LayoutUtility.Foldout(data.label, data.type, data.path);
-                        _details = LayoutUtility.Toggle("Details", _details);
+                        var expanded = Layout.Foldout(data.label, data.type, data.path);
+                        _details = Layout.Toggle("Details", _details);
                         return expanded;
                     }
                 });

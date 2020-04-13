@@ -33,12 +33,12 @@ namespace Entia.Unity.Editor
         {
             if (World is World world && Target?.Create() is Node node)
             {
-                using (LayoutUtility.Horizontal())
+                using (Layout.Horizontal())
                 {
-                    EditorGUILayout.LabelField(nameof(Node), LayoutUtility.BoldLabel);
-                    _details = LayoutUtility.Toggle("Details", _details);
+                    EditorGUILayout.LabelField(nameof(Node), Layout.BoldLabel);
+                    _details = Layout.Toggle("Details", _details);
                 }
-                using (LayoutUtility.Indent()) world.ShowNode(node, true, _cache, _details, nameof(ControllerReferenceEditor));
+                using (Layout.Indent()) world.ShowNode(node, true, _cache, _details, nameof(ControllerReferenceEditor));
             }
         }
     }

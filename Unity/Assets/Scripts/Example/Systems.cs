@@ -86,7 +86,7 @@ namespace Systems
     }
 
 #if UNITY_2019
-    // The 'IRunEach<...>' interfaces simplify and optimized common
+    // The 'IRunEach<...>' interfaces simplify and optimize common
     // iteration patterns in systems.
     public struct UpdatePosition : IRunEach<Components.Position, Components.Velocity>
     {
